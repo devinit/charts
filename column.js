@@ -5,7 +5,7 @@ function vb_column(svgSelector,config,csvDat) {
     svgWidth = parseFloat(setDefault(config.width,svg.attr("width"))),
     svgHeight = parseFloat(setDefault(config.height,svg.attr("height"))),
     pTop = parseFloat(setDefault(config.padding_top,100)),
-    pRight = parseFloat(setDefault(config.padding_right,100)),
+    pRight = parseFloat(setDefault(config.padding_right,0)),
     pBottom = parseFloat(setDefault(config.padding_bottom,100)),
     pLeft = parseFloat(setDefault(config.padding_left,100)),
     xRotation = parseFloat(setDefault(config.x_text_rotation,45)),
@@ -31,14 +31,37 @@ function vb_column(svgSelector,config,csvDat) {
         var format = d3.format(format_entry); 
     }catch(err){
         var format = d3.format(",.2f");
+        $('#id_label_format').value(",.2f");
     };
     
     if (filter_by=="None") {
         //Nothing to filter by, data is csvDat
         var data = csvDat;
-    }else if(selectedFilter!==null){
+        d3.select("select[name='filter_selection']").selectAll("option").remove();
+    }else if(selectedFilter===null){
+        d3.select("select[name='filter_selection']").selectAll("option").remove();
+        var uniqueFilters = d3.map(csvDat,function(d){return d[filter_by]}).keys();
+        d3.select("select[name='filter_selection']").selectAll("option").data(uniqueFilters)
+          .enter()
+          .append("option")
+          .attr("value",function(d){return d})
+          .text(function(d){return d});
+          
+        var selectedFilter = uniquefilters[0];
+          
+        var data = csvDat.filter(function(d){return d[filter_by]==selectedFilter});
+    }else{
         //Filter by selected filter
-      var data = csvDat.filter(function(d){return d[filter_by]==selectedFilter});
+        d3.select("select[name='filter_selection']").selectAll("option").remove();
+        var uniqueFilters = d3.map(csvDat,function(d){return d[filter_by]}).keys();
+        d3.select("select[name='filter_selection']").selectAll("option").data(uniqueFilters)
+          .enter()
+          .append("option")
+          .attr("value",function(d){return d})
+          .text(function(d){return d})
+          .property("selected",function(d){return d==selectedFilter?true:null;});
+          
+        var data = csvDat.filter(function(d){return d[filter_by]==selectedFilter});
     };
     
     //Now that data is filtered, let's sort it

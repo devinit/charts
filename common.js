@@ -63,7 +63,7 @@ function form2config(formSelector) {
     selects.each(function(){
       var select = d3.select(this),
       name = select.attr("name"),
-      option = select.select("option[selected='selected']");
+      option = select.select("option:checked");
       if (option.size()>0) {
         value = option.property("value");
         config[name] = value;
