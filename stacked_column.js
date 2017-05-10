@@ -1,4 +1,4 @@
-function vb_column(svgSelector,config,csvDat) {
+function vb_stacked_column(svgSelector,config,csvDat) {
     var svg = d3.select(svgSelector);
     //Parse configuration
     var svg_class = svg.attr("class"),
@@ -9,7 +9,7 @@ function vb_column(svgSelector,config,csvDat) {
     pBottom = parseFloat(setDefault(config.padding_bottom,100)),
     pLeft = parseFloat(setDefault(config.padding_left,100)),
     xRotation = parseFloat(setDefault(config.x_text_rotation,45)),
-    selectedColour = setDefault(config.colour,"#e84439"),
+    selectedColours= setDefault(config.colour.split(','),['#e84439']),
     xIndicator = setDefault(config.x_indicator,Object.keys(csvDat[0])[0]),
     yIndicator = setDefault(config.y_indicator,Object.keys(csvDat[0])[1]),
     sort =  setDefault(config.sort,""),
@@ -25,8 +25,11 @@ function vb_column(svgSelector,config,csvDat) {
     x_label = setDefault(config.x_label,""),
     y_label = setDefault(config.y_label,""),
     ymaxauto = setDefault(config.y_maximum,"auto"),
-    y_maximum_value = setDefault(config.y_maximum_value,1);
-    
+    y_maximum_value = setDefault(config.y_maximum_value,1),
+    groupBy = setDefault(config.group_by,""),
+    divisor = parseFloat(setDefault(config.unit_divisor,1)),
+    legend_position = setDefault(config.legend_position,"tl");
+
     try{
         var format = d3.format(format_entry); 
     }catch(err){
@@ -64,32 +67,69 @@ function vb_column(svgSelector,config,csvDat) {
         var data = csvDat.filter(function(d){return d[filter_by]==selectedFilter});
     };
     
+    //After filter, apply grouping function
+    var nestedData = d3.nest()
+      .key(function(d)
+      {
+        return d[xIndicator];
+      })
+      .entries(data);
+    
+    var groupedData = [];
+    var keyObj = {};
+    for(var i = 0; i < nestedData.length; i++){
+      var keyEntry = nestedData[i];
+      var obj = {};
+      var total = 0;
+      obj[xIndicator] = keyEntry.key;
+      for(var j = 0; j < keyEntry.values.length; j++){
+        var keyValue = keyEntry.values[j];
+        obj[keyValue[groupBy]] = parseFloat(keyValue[yIndicator])/divisor;
+        keyObj[keyValue[groupBy]] = true;
+        if (!isNaN(parseFloat(keyValue[yIndicator]))) {
+            total+= parseFloat(keyValue[yIndicator])/divisor;
+        };
+      };
+      obj.total = total;
+      groupedData.push(obj);
+    };
+    var keys = Object.keys(keyObj);
+    for(var i = 0; i < groupedData.length; i++){
+      for(key in keyObj){
+        if (groupedData[i][key] === undefined) {
+            groupedData[i][key] = 0;
+        };
+      };
+    };
+    
+    var c = d3.scaleOrdinal().domain(keys).range(selectedColours);
+    
     //Now that data is filtered, let's sort it
-    var xType = columnType(data.map(function(d){return d[xIndicator]}));
-    var yType = columnType(data.map(function(d){return d[yIndicator]}));               
+    var xType = columnType(groupedData.map(function(d){return d[xIndicator]}));
+    var yType = columnType(groupedData.map(function(d){return d.total}));               
     if (sort=="xasc") {
       if (xType=="string") {
-        data.sort(function(a,b) {return d3.ascending(a[xIndicator],b[xIndicator]);})
+        groupedData.sort(function(a,b) {return d3.ascending(a[xIndicator],b[xIndicator]);})
       }else{
-        data.sort(function(a,b){return NaNSafeSort(a[xIndicator],b[xIndicator]);})
+        groupedData.sort(function(a,b){return NaNSafeSort(a[xIndicator],b[xIndicator]);})
       };
     }else if (sort=="xdes") {
       if (xType=="string") {
-        data.sort(function(a,b) {return d3.descending(a[xIndicator],b[xIndicator]);})
+        groupedData.sort(function(a,b) {return d3.descending(a[xIndicator],b[xIndicator]);})
       }else{
-        data.sort(function(a,b){return NaNSafeSort(b[xIndicator],a[xIndicator]);})
+        groupedData.sort(function(a,b){return NaNSafeSort(b[xIndicator],a[xIndicator]);})
       };
     }else if (sort=="yasc") {
       if (yType=="string") {
-        data.sort(function(a,b) {return d3.ascending(a[yIndicator],b[yIndicator]);})
+        groupedData.sort(function(a,b) {return d3.ascending(a[yIndicator],b[yIndicator]);})
       }else{
-        data.sort(function(a,b){return NaNSafeSort(a[yIndicator],b[yIndicator]);})
+        groupedData.sort(function(a,b){return NaNSafeSort(a[yIndicator],b[yIndicator]);})
       };
     }else if (sort=="ydes") {
       if (yType=="string") {
-        data.sort(function(a,b) {return d3.descending(a[yIndicator],b[yIndicator]);})
+        groupedData.sort(function(a,b) {return d3.descending(a[yIndicator],b[yIndicator]);})
       }else{
-        data.sort(function(a,b){return NaNSafeSort(b[yIndicator],a[yIndicator]);})
+        groupedData.sort(function(a,b){return NaNSafeSort(b[yIndicator],a[yIndicator]);})
       };
     };
 
@@ -99,12 +139,12 @@ function vb_column(svgSelector,config,csvDat) {
     
     //Axes can be handled before charted or not
     var x = d3.scaleBand().rangeRound([0, width]);
-    var xCategories = d3.map(data,function(d){return d[xIndicator]}).keys();
+    var xCategories = d3.map(groupedData,function(d){return d[xIndicator]}).keys();
     x.domain(xCategories);
     
     var y = d3.scaleLinear().rangeRound([height, 0]);
     if (ymaxauto=="auto") {
-      var ymax = d3.max(data, function(d) {return Number(d[yIndicator]); });
+      var ymax = d3.max(groupedData, function(d) {return Number(d.total); });
     }else{
       var ymax = parseFloat(y_maximum_value);
     };
@@ -112,6 +152,9 @@ function vb_column(svgSelector,config,csvDat) {
 
     if (svg_class=="charted") {
         //it's already charted, update it
+        
+        d3.selectAll('.legend').remove();
+        
         var g = d3.select("g.padding_wrapper")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
             
@@ -200,59 +243,123 @@ function vb_column(svgSelector,config,csvDat) {
           .style("text-anchor", xRotation>0?"start":"middle");
     };
     //I think the bars and labels can be updated outside of state
-     var bars = g.selectAll(".bar").data(data)
-        .attr("class", "bar")
-        .style("fill",selectedColour)
-        .attr("x", function(d) { return x(d[xIndicator]) + 2 + (width/xCategories.length)*(1/6); })
-        .attr("y", function(d) { return y(d[yIndicator]); })
-        .attr("width", d3.max([(width/xCategories.length)*(2/3),1]))
-        .attr("height", function(d) { return height - y(d[yIndicator]); });        
-        bars.enter().append("rect")
-        .attr("class", "bar")
-        .style("fill",selectedColour)
-        .attr("x", function(d) { return x(d[xIndicator]) + 2 + (width/xCategories.length)*(1/6); })
-        .attr("y", function(d) { return y(d[yIndicator]); })
-        .attr("width", d3.max([(width/xCategories.length)*(2/3),1]))
-        .attr("height", function(d) { return height - y(d[yIndicator]); });
-        
-      bars.exit().remove()
+     var stackData = d3.stack().keys(keys)(groupedData);
+    
+    var groups = g.selectAll(".group").data(stackData)
+      .attr("class","group")
+      .attr("fill",function(d){return c(d.key)});
       
-      var labels = g.selectAll(".label").data(data)
+    groups.enter().append("g")
+      .attr("class","group")
+      .attr("fill",function(d){return c(d.key)});
+      
+    groups.exit().remove();
+    
+    var groupLabels = g.selectAll(".groupLabel")
+    .data(
+      stackData[stackData.length-1].map(function(d){return {"y":d[d.length-1],"x":d.data[xIndicator]}})
+    )
+      .style("font-size",labelFontSize)
+      .attr("x", function(d) { return x(d.x) + 2 + (d3.max([(width/xCategories.length)-1,1]))/2 })
+      .attr("y", function(d) { return y(d.y) - labelFontSize/2 })
+      .text(function(d){return format(d.y)})
+      .style("opacity",function(d){return (d.y) > 0 ? 1 : 0 })
+      .attr("class","groupLabel")
+      .attr("fill","black")
+      .attr("text-anchor", "middle");
+      
+      if (labelsOnChart) {
+      groupLabels.enter().append("text")
+      .style("font-size",labelFontSize)
+      .attr("x", function(d) { return x(d.x) + 2 + (d3.max([(width/xCategories.length)-1,1]))/2 })
+      .attr("y", function(d) { return y(d.y) - labelFontSize/2 })
+      .text(function(d){return format(d.y)})
+      .style("opacity",function(d){return (d.y) > 0 ? 1 : 0 })
+      .attr("class","groupLabel")
+      .attr("fill","black")
+      .attr("text-anchor", "middle");
+      }else{
+        groupLabels.remove();
+      };
+      
+      groupLabels.exit().remove();
+      
+    var bars = g.selectAll(".group").data(stackData).selectAll(".bar").data(function(d){return d;})
+      .attr("class", "bar")
+      .attr("x", function(d) { return x(d.data[xIndicator]) + 2 + (width/xCategories.length)*(1/6); })
+      .attr("y", function(d) { return y(d[1]); })
+      .attr("width", d3.max([(width/xCategories.length)*(2/3),1]))
+      .attr("height", function(d) { return y(d[0]) - y(d[1]); });
+      
+      bars.enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return x(d.data[xIndicator]) + 2 + (width/xCategories.length)*(1/6); })
+      .attr("y", function(d) { return y(d[1]); })
+      .attr("width", d3.max([(width/xCategories.length)*(2/3),1]))
+      .attr("height", function(d) { return y(d[0]) - y(d[1]); });
+      
+    bars.exit().remove()
+    
+    var labels = g.selectAll(".group").data(stackData).selectAll(".label").data(function(d){return d;})
+      .attr("class","label")
+      .style("fill",function(d,i,j){return contrast(d3.select(j[i].parentNode).attr("fill"))})
+      .attr("text-anchor", "middle")
+      .style("font-size",labelFontSize)
+      .attr("x", function(d) { return x(d.data[xIndicator]) + 2 + (d3.max([(width/xCategories.length)-1,1]))/2 })
+      .attr("y", function(d) { return y(d[1]) + (y(d[0]) - y(d[1]))/2 + labelFontSize/2; })
+      .text(function(d){return format(d[1] - d[0])})
+      .each(function(d,i) {
+          var bbox = this.getBBox();
+          var barHeight = y(d[0]) - y(d[1]);
+          d.unsquished =  barHeight > bbox.height;
+          })
+        .style("opacity",function(d){return (d[1] - d[0]) > 0 && d.unsquished ? 1 : 0 });
+      
+      if (labelsOnChart) {
+        labels.enter().append("text")
         .attr("class","label")
+        .style("fill",function(d,i,j){return contrast(d3.select(j[i].parentNode).attr("fill"))})
         .attr("text-anchor", "middle")
         .style("font-size",labelFontSize)
-        .attr("x", function(d) { return x(d[xIndicator]) + 2 + (d3.max([(width/xCategories.length)-1, 1]))/2 })
-        .attr("y", function(d) { return y(d[yIndicator]) + (height - y(d[yIndicator]))/2 + labelFontSize/2; })
-        .text(function(d){return format(d[yIndicator])})
+        .attr("x", function(d) { return x(d.data[xIndicator]) + 2 + (d3.max([(width/xCategories.length)-1,1]))/2 })
+        .attr("y", function(d) { return y(d[1]) + (y(d[0]) - y(d[1]))/2 + labelFontSize/2; })
+        .text(function(d){return format(d[1] - d[0])})
         .each(function(d,i) {
-              var bbox = this.getBBox();
-              var barHeight = height - y(d[yIndicator]);
-              var barWidth = d3.max([(width/xCategories.length)*(2/3),1]);
-              d.unsquished =  (barHeight > bbox.height) & (barWidth > bbox.width);
-              })
-          .attr("y", function(d) { return d.unsquished?y(d[yIndicator]) + (height - y(d[yIndicator]))/2 + labelFontSize/2:y(d[yIndicator]) - labelFontSize/2; })
-          .style("fill",function(d){return d.unsquished?contrast(selectedColour):"black"});
+          var bbox = this.getBBox();
+          var barHeight = y(d[0]) - y(d[1]);
+          d.unsquished =  barHeight > bbox.height;
+          })
+        .style("opacity",function(d){return (d[1] - d[0]) > 0 && d.unsquished ? 1 : 0 });
         
-        if (labelsOnChart) {
-          labels.enter().append("text")
-          .attr("class","label")
-          .style("fill",contrast(selectedColour))
-          .attr("text-anchor", "middle")
-          .style("font-size",labelFontSize)
-          .attr("x", function(d) { return x(d[xIndicator]) + 2 + (d3.max([(width/xCategories.length)-1, 1]))/2 })
-          .attr("y", function(d) { return y(d[yIndicator]) + (height - y(d[yIndicator]))/2 + labelFontSize/2; })
-          .text(function(d){return format(d[yIndicator])})
-          .each(function(d,i) {
-              var bbox = this.getBBox();
-              var barHeight = height - y(d[yIndicator]);
-              var barWidth = d3.max([(width/xCategories.length)*(2/3),1]);
-              d.unsquished =  (barHeight > bbox.height) & (barWidth > bbox.width);
-              })
-          .attr("y", function(d) { return d.unsquished?y(d[yIndicator]) + (height - y(d[yIndicator]))/2 + labelFontSize/2:y(d[yIndicator]) - labelFontSize/2; })
-          .style("fill",function(d){return d.unsquished?contrast(selectedColour):"black"});
-          
-          labels.exit().remove();
-        }else{
-          labels.remove();
-        };
+        labels.exit().remove();
+      }else{
+        labels.remove();
+      };
+            
+    var legend = svg.append("g").attr("class","legend")
+        .attr("font-size", 10)
+        .attr("text-anchor", legend_position=="tr"?"end":"start")
+        .selectAll(".group")
+        .data(keys.slice().reverse())
+        .enter().append("g")
+        .attr("transform", function(d, i) {
+          if (legend_position=="tr" || legend_position=="tl") {
+            return "translate("+margin.left+"," + i * 20 + ")";
+          }
+          if (legend_position=="cr") {
+            return "translate("+(svgWidth-margin.right+20)+"," + (svgHeight/2 - (i * 20)) + ")";
+          }
+        });
+  
+    legend.append("rect")
+        .attr("x", legend_position=="tr"?width-19:0)
+        .attr("width", 19)
+        .attr("height", 19)
+        .attr("fill", c);
+  
+    legend.append("text")
+        .attr("x", legend_position=="tr"?width-20:20)
+        .attr("y", 9.5)
+        .attr("dy", "0.32em")
+        .text(function(d) { return d; });
 };

@@ -1,4 +1,4 @@
-function vb_column(svgSelector,config,csvDat) {
+function vb_bar(svgSelector,config,csvDat) {
     var svg = d3.select(svgSelector);
     //Parse configuration
     var svg_class = svg.attr("class"),
@@ -16,7 +16,6 @@ function vb_column(svgSelector,config,csvDat) {
     labelsOnChart = setDefault(config.labels_on_chart,false),
     labelFontSize = setDefault(config.label_font_size,10),
     format_entry = setDefault(config.label_format,",.2f"),
-    y_axis_ticks = parseFloat(setDefault(config.y_axis_ticks,"")),
     filter_by = setDefault(config.filter_by,"None"),
     selectedFilter = setDefault(config.filter_selection,null),
     margin = {top: pTop, right: pRight, bottom: pBottom, left: pLeft},
@@ -24,8 +23,8 @@ function vb_column(svgSelector,config,csvDat) {
     height = +svgHeight - margin.top - margin.bottom,
     x_label = setDefault(config.x_label,""),
     y_label = setDefault(config.y_label,""),
-    ymaxauto = setDefault(config.y_maximum,"auto"),
-    y_maximum_value = setDefault(config.y_maximum_value,1);
+    xmaxauto = setDefault(config.x_maximum,"auto"),
+    x_maximum_value = setDefault(config.x_maximum_value,1);
     
     try{
         var format = d3.format(format_entry); 
@@ -98,17 +97,17 @@ function vb_column(svgSelector,config,csvDat) {
     svg.attr("height",svgHeight);
     
     //Axes can be handled before charted or not
-    var x = d3.scaleBand().rangeRound([0, width]);
-    var xCategories = d3.map(data,function(d){return d[xIndicator]}).keys();
-    x.domain(xCategories);
+    var y = d3.scaleBand().rangeRound([height,0]);
+    var yCategories = d3.map(data,function(d){return d[yIndicator]}).keys();
+    y.domain(yCategories);
     
-    var y = d3.scaleLinear().rangeRound([height, 0]);
-    if (ymaxauto=="auto") {
-      var ymax = d3.max(data, function(d) {return Number(d[yIndicator]); });
+    var x = d3.scaleLinear().rangeRound([0, width]);
+    if (xmaxauto=="auto") {
+      var xmax = d3.max(data, function(d) {return Number(d[xIndicator]); });
     }else{
-      var ymax = parseFloat(y_maximum_value);
+      var xmax = parseFloat(x_maximum_value);
     };
-    y.domain([0, ymax]);
+    x.domain([0, xmax]);
 
     if (svg_class=="charted") {
         //it's already charted, update it
@@ -127,24 +126,11 @@ function vb_column(svgSelector,config,csvDat) {
             .attr("x",-1*((svgHeight+$('#yaxislabel').height()-margin.bottom+margin.top)/2));
             
         var xaxis = d3.select(".axis--x"),
-        yaxis = d3.select(".axis--y"),
-        rules = d3.select(".rules");
-        if (y_axis_ticks!="") {
-          var y_ticks = parseInt(y_axis_ticks);
-          rules.call(d3.axisLeft(y)
-            .tickSize(-width)
-            .ticks(y_ticks)
-            .tickFormat("")
-          )
-          yaxis.transition().duration(0).call(d3.axisLeft(y).ticks(y_ticks).tickFormat(format))
-        }else{
-          rules.call(d3.axisLeft(y)
-            .tickSize(-width)
-            .tickFormat("")
-          )
-          yaxis.transition().duration(0).call(d3.axisLeft(y).tickFormat(format))
-        };
-        xaxis.transition().duration(0).call(d3.axisBottom(x).tickSizeOuter(0))
+        yaxis = d3.select(".axis--y");
+        
+        yaxis.transition().duration(0).call(d3.axisLeft(y))
+        xaxis.transition().duration(0).call(d3.axisBottom(x).tickFormat(format).tickSizeOuter(0))
+        
         xaxis.attr("transform", "translate(0," + height + ")")
         xaxis.selectAll("text")
           .attr("transform", "rotate("+xRotation+")")
@@ -167,92 +153,60 @@ function vb_column(svgSelector,config,csvDat) {
             .attr("y",$('#yaxislabel').width())
             .attr("x",-1*((svgHeight+$('#yaxislabel').height()-margin.bottom+margin.top)/2));
         
-        if (y_axis_ticks!="") {
-            var y_ticks = parseInt(y_axis_ticks);
-            var rules = g.append("g")			
-            .attr("class", "rules")
-            .call(d3.axisLeft(y)
-                .tickSize(-width)
-                .ticks(y_ticks)
-                .tickFormat("")
-            );
-            var yaxis = g.append("g")
-              .attr("class", "axis axis--y")
-              .call(d3.axisLeft(y).ticks(y_ticks).tickFormat(format));
-          }else{
-            var rules = g.append("g")			
-            .attr("class", "rules")
-            .call(d3.axisLeft(y)
-                .tickSize(-width)
-                .tickFormat("")
-            );
-            var yaxis = g.append("g")
-              .attr("class", "axis axis--y")
-              .call(d3.axisLeft(y).tickFormat(format));
-          };
-          
+        
         var xaxis = g.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x).tickSizeOuter(0));
+            .call(d3.axisBottom(x).tickFormat(format).tickSizeOuter(0));
+    
+        var yaxis = g.append("g")
+            .attr("class", "axis axis--y")
+            .call(d3.axisLeft(y))
+
         xaxis.selectAll("text")
           .attr("transform", "rotate("+xRotation+")")
           .style("text-anchor", xRotation>0?"start":"middle");
     };
     //I think the bars and labels can be updated outside of state
-     var bars = g.selectAll(".bar").data(data)
-        .attr("class", "bar")
-        .style("fill",selectedColour)
-        .attr("x", function(d) { return x(d[xIndicator]) + 2 + (width/xCategories.length)*(1/6); })
-        .attr("y", function(d) { return y(d[yIndicator]); })
-        .attr("width", d3.max([(width/xCategories.length)*(2/3),1]))
-        .attr("height", function(d) { return height - y(d[yIndicator]); });        
-        bars.enter().append("rect")
-        .attr("class", "bar")
-        .style("fill",selectedColour)
-        .attr("x", function(d) { return x(d[xIndicator]) + 2 + (width/xCategories.length)*(1/6); })
-        .attr("y", function(d) { return y(d[yIndicator]); })
-        .attr("width", d3.max([(width/xCategories.length)*(2/3),1]))
-        .attr("height", function(d) { return height - y(d[yIndicator]); });
+      var bars = g.selectAll(".bar").data(data)
+          .attr("class", "bar")
+          .style("fill",selectedColour)
+          .attr("x", 2)
+          .attr("y", function(d) { return y(d[yIndicator]); })
+          .attr("height", d3.max([(height/yCategories.length)-1,1]))
+          .attr("width", function(d) { return x(d[xIndicator]); });
+          
+          bars.enter().append("rect")
+          .attr("class", "bar")
+          .style("fill",selectedColour)
+          .attr("x", 2)
+          .attr("y", function(d) { return y(d[yIndicator]); })
+          .attr("height", d3.max([(height/yCategories.length)-1,1]))
+          .attr("width", function(d) { return x(d[xIndicator]); });
+          
+        bars.exit().remove()
         
-      bars.exit().remove()
-      
-      var labels = g.selectAll(".label").data(data)
-        .attr("class","label")
-        .attr("text-anchor", "middle")
-        .style("font-size",labelFontSize)
-        .attr("x", function(d) { return x(d[xIndicator]) + 2 + (d3.max([(width/xCategories.length)-1, 1]))/2 })
-        .attr("y", function(d) { return y(d[yIndicator]) + (height - y(d[yIndicator]))/2 + labelFontSize/2; })
-        .text(function(d){return format(d[yIndicator])})
-        .each(function(d,i) {
-              var bbox = this.getBBox();
-              var barHeight = height - y(d[yIndicator]);
-              var barWidth = d3.max([(width/xCategories.length)*(2/3),1]);
-              d.unsquished =  (barHeight > bbox.height) & (barWidth > bbox.width);
-              })
-          .attr("y", function(d) { return d.unsquished?y(d[yIndicator]) + (height - y(d[yIndicator]))/2 + labelFontSize/2:y(d[yIndicator]) - labelFontSize/2; })
-          .style("fill",function(d){return d.unsquished?contrast(selectedColour):"black"});
-        
-        if (labelsOnChart) {
-          labels.enter().append("text")
+        var labels = g.selectAll(".label").data(data)
           .attr("class","label")
           .style("fill",contrast(selectedColour))
           .attr("text-anchor", "middle")
           .style("font-size",labelFontSize)
-          .attr("x", function(d) { return x(d[xIndicator]) + 2 + (d3.max([(width/xCategories.length)-1, 1]))/2 })
-          .attr("y", function(d) { return y(d[yIndicator]) + (height - y(d[yIndicator]))/2 + labelFontSize/2; })
-          .text(function(d){return format(d[yIndicator])})
-          .each(function(d,i) {
-              var bbox = this.getBBox();
-              var barHeight = height - y(d[yIndicator]);
-              var barWidth = d3.max([(width/xCategories.length)*(2/3),1]);
-              d.unsquished =  (barHeight > bbox.height) & (barWidth > bbox.width);
-              })
-          .attr("y", function(d) { return d.unsquished?y(d[yIndicator]) + (height - y(d[yIndicator]))/2 + labelFontSize/2:y(d[yIndicator]) - labelFontSize/2; })
-          .style("fill",function(d){return d.unsquished?contrast(selectedColour):"black"});
+          .attr("x", function(d) { return x(d[xIndicator]/2) })
+          .attr("y", function(d) { return y(d[yIndicator]) + d3.max([((height/yCategories.length)-1)/2,1]); })
+          .text(function(d){return format(d[xIndicator])});
           
-          labels.exit().remove();
-        }else{
-          labels.remove();
-        };
+          if (labelsOnChart) {
+            labels.enter().append("text")
+            .attr("class","label")
+            .style("fill",contrast(selectedColour))
+            .attr("text-anchor", "middle")
+            .style("font-size",labelFontSize)
+            .attr("x", function(d) { return x(d[xIndicator]/2) })
+            .attr("y", function(d) { return y(d[yIndicator]) + d3.max([((height/yCategories.length)-1)/2,1]); })
+            .text(function(d){return format(d[xIndicator])});
+            
+            labels.exit().remove();
+          }else{
+            labels.remove();
+          };
 };

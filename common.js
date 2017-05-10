@@ -72,3 +72,54 @@ function form2config(formSelector) {
     
     return(config);
 };
+function mergeWithFirstEqualZero(first, second){
+    var secondSet = d3.set(); second.forEach(function(d) { secondSet.add(d.label); });
+
+    var onlyFirst = first
+        .filter(function(d){ return !secondSet.has(d.label) })
+        .map(function(d) { return {label: d.label, value: 0}; });
+    return d3.merge([ second, onlyFirst ])
+        .sort(function(a,b) {
+            return d3.ascending(a.label, b.label);
+        });
+};
+function wrap(text, width) {
+  text.each(function() {
+    var text = d3.select(this),
+        words = text.text().split(/\s+/).reverse(),
+        word,
+        line = [],
+        lineNumber = 0,
+        lineHeight = 1, // ems
+        y = text.attr("y"),
+        dy = parseFloat(text.attr("dy")),
+		fontsize = parseFloat(text.style("font-size"))
+        tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+    while (word = words.pop()) {
+      line.push(word);
+      tspan.text(line.join(" "));
+      if (tspan.node().getComputedTextLength() > width) {
+        line.pop();
+        tspan.text(line.join(" "));
+        line = [word];
+        tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", fontsize ).text(word);
+      }
+    }
+  });
+};
+function pointIsInArc(pt, ptData, d3Arc) {
+	// Center of the arc is assumed to be 0,0
+	// (pt.x, pt.y) are assumed to be relative to the center
+	var r1 = d3Arc.innerRadius()(ptData),
+		r2 = d3Arc.outerRadius()(ptData),
+		theta1 = d3Arc.startAngle()(ptData),
+		theta2 = d3Arc.endAngle()(ptData);
+	
+	var dist = Math.sqrt(pt.x * pt.x + pt.y * pt.y),
+		angle = Math.atan2(pt.x, -pt.y);
+	
+	angle = (angle < 0) ? (angle + Math.PI * 2) : angle;
+		
+	return (r1 * r1 <= dist) && (dist <= r2 * r2) && 
+		   (theta1 <= angle) && (angle <= theta2);
+};
