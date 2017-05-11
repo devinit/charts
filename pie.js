@@ -1,5 +1,8 @@
 function vb_pie(svgSelector,config,csvDat) {
     var svg = d3.select(svgSelector);
+    //Append style
+    var cssText = "path.slice{stroke-width:2px;stroke: #fff;}polyline{opacity: 1;stroke: #a9a6aa;stroke-width: 2px;fill: none;}";
+    svg.append("style").text(cssText);
     //Parse configuration
     var svg_class = svg.attr("class"),
     svgWidth = parseFloat(setDefault(config.width,svg.attr("width"))),
