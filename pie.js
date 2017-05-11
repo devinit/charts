@@ -2,7 +2,6 @@ function vb_pie(svgSelector,config,csvDat) {
     var svg = d3.select(svgSelector);
     //Append style
     var cssText = "path.slice{stroke-width:2px;stroke: #fff;}polyline{opacity: 1;stroke: #a9a6aa;stroke-width: 2px;fill: none;}";
-    svg.append("style").text(cssText);
     //Parse configuration
     var svg_class = svg.attr("class"),
     svgWidth = parseFloat(setDefault(config.width,svg.attr("width"))),
@@ -177,12 +176,14 @@ function vb_pie(svgSelector,config,csvDat) {
     if (svg_class=="charted") {
         var duration = 200;
         //it's already charted, update it
+        svg.select("style").text(cssText);
         var g = d3.select("g.padding_wrapper")
             .attr("transform", "translate(" + (margin.left+(width/2)) + "," + (margin.top+(height/2)) + ")")
             
     }else{
         var duration = 0;
         //it's not charted, chart it
+        svg.append("style").text(cssText);
         svg.attr("class","charted");
         var g = svg.append("g").attr("class","padding_wrapper")
             .attr("transform", "translate(" + (margin.left+(width/2)) + "," + (margin.top+(height/2)) + ")")

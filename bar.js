@@ -2,7 +2,6 @@ function vb_bar(svgSelector,config,csvDat) {
     var svg = d3.select(svgSelector);
     //Append style
     var cssText = ".axis--y .tick line, .axis--x .tick line {display:none;}.tick text {color:#a9a6aa;}.axis--y .domain {display:none;}.domain {stroke:#443e42;}.rules .tick line {stroke:#a9a6aa;}.rules .domain {display:none;}#yaxislabel {color:#443e42;}#xaxislabel {color:#443e42;}#visTitle {color:#e84439;}.legend text {color:#443e42;}";
-    svg.append("style").text(cssText);
     //Parse configuration
     var svg_class = svg.attr("class"),
     svgWidth = parseFloat(setDefault(config.width,svg.attr("width"))),
@@ -114,6 +113,7 @@ function vb_bar(svgSelector,config,csvDat) {
 
     if (svg_class=="charted") {
         //it's already charted, update it
+        svg.select("style").text(cssText);
         var g = d3.select("g.padding_wrapper")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
             
@@ -141,6 +141,7 @@ function vb_bar(svgSelector,config,csvDat) {
         
     }else{
         //it's not charted, chart it
+        svg.append("style").text(cssText);
         svg.attr("class","charted");
         var g = svg.append("g").attr("class","padding_wrapper")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
