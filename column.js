@@ -47,7 +47,7 @@ function vb_column(svgSelector,config,csvDat) {
           .attr("value",function(d){return d})
           .text(function(d){return d});
           
-        var selectedFilter = uniquefilters[0];
+        var selectedFilter = uniqueFilters[0];
           
         var data = csvDat.filter(function(d){return d[filter_by]==selectedFilter});
     }else{
