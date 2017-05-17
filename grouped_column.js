@@ -321,7 +321,7 @@ function vb_grouped_column(svgSelector,config,csvDat) {
       };
             
     var legend = svg.append("g").attr("class","legend")
-        .attr("font-size", 10)
+        .attr("font-size", 14)
         .attr("text-anchor", legend_position=="tr"?"end":"start")
         .selectAll(".group")
         .data(keys.slice().reverse())

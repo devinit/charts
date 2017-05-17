@@ -49,7 +49,7 @@ function vb_donut(svgSelector,config,csvDat) {
         //Filter by selected filter
         d3.select("select[name='filter_selection']").selectAll("option").remove();
         var uniqueFilters = d3.map(csvDat,function(d){return d[filter_by]}).keys();
-        d3.select("select[name='filter_selection']").selectAll("option").filteredData(uniqueFilters)
+        d3.select("select[name='filter_selection']").selectAll("option").data(uniqueFilters)
           .enter()
           .append("option")
           .attr("value",function(d){return d})
