@@ -1,7 +1,7 @@
-function vb_grouped_column(svgSelector,config,csvDat) {
+function vb_area(svgSelector,config,csvDat) {
     var svg = d3.select(svgSelector);
     //Append style
-    var cssText = ".axis--y .tick line, .axis--x .tick line {display:none;}.tick text {color:#a9a6aa;}.axis--y .domain {display:none;}.domain {stroke:#443e42;}.rules .tick line {stroke:#a9a6aa;}.rules .domain {display:none;}#yaxislabel {color:#443e42;}#xaxislabel {color:#443e42;}#visTitle {color:#e84439;}.legend text {color:#443e42;}",
+    var cssText = ".axis--y .tick line, .axis--x .tick line {display:none;}.tick text {color:#a9a6aa;}.axis--y .domain {display:none;}.domain {stroke:#443e42;}.rules .tick line {stroke:#a9a6aa;}.rules .domain {display:none;}#yaxislabel {color:#443e42;}#xaxislabel {color:#443e42;}#visTitle {color:#e84439;}.legend text {color:#443e42;}.axis text{font-size:10px;}",
     cssInjection = setDefault(config.inject_css,"");
     cssText = cssText+cssInjection;
     //Parse configuration
@@ -142,16 +142,13 @@ function vb_grouped_column(svgSelector,config,csvDat) {
     svg.attr("height",svgHeight);
     
     //Axes can be handled before charted or not
-    var x0 = d3.scaleBand().rangeRound([0, width]).paddingInner(0.1);
+    var x = d3.scaleBand().rangeRound([0, width]);
     var xCategories = d3.map(groupedData,function(d){return d[xIndicator]}).keys();
-    x0.domain(xCategories);
-    
-    var x1 = d3.scaleBand().padding(0.05);
-    x1.domain(keys).rangeRound([0,x0.bandwidth()]);
+    x.domain(xCategories);
     
     var y = d3.scaleLinear().rangeRound([height, 0]);
     if (ymaxauto=="auto") {
-      var ymax = d3.max(data, function(d) {return Number(d[yIndicator]); })/divisor;
+      var ymax = d3.max(groupedData, function(d) {return Number(d.total); });
     }else{
       var ymax = parseFloat(y_maximum_value);
     };
@@ -195,7 +192,7 @@ function vb_grouped_column(svgSelector,config,csvDat) {
           )
           yaxis.transition().duration(0).call(d3.axisLeft(y).tickFormat(format))
         };
-        xaxis.transition().duration(0).call(d3.axisBottom(x0).tickSizeOuter(0))
+        xaxis.transition().duration(0).call(d3.axisBottom(x).tickSizeOuter(0))
         xaxis.attr("transform", "translate(0," + height + ")")
         xaxis.selectAll("text")
           .attr("transform", "rotate("+xRotation+")")
@@ -246,87 +243,112 @@ function vb_grouped_column(svgSelector,config,csvDat) {
         var xaxis = g.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x0).tickSizeOuter(0));
+            .call(d3.axisBottom(x).tickSizeOuter(0));
         xaxis.selectAll("text")
           .attr("transform", "rotate("+xRotation+")")
           .style("text-anchor", xRotation>0?"start":"middle");
     };
     //I think the bars and labels can be updated outside of state
-    var groups = g.selectAll(".group").data(groupedData)
+    var stackData = d3.stack().keys(keys)(groupedData);
+     
+    var area = d3.area()
+        .x(function(d,i){return x(d.data[xIndicator]) + 2 + (d3.max([(width/xCategories.length)-1,1]))/2; })
+        .y0(function(d){return y(d[0]); })
+        .y1(function(d){return y(d[1]); })
+        
+          
+    var paths = g.selectAll(".area").data(stackData)
+        .attr("class","area")
+        .style("fill", function(d) { return c(d.key); })
+        .attr("d", area);
+        
+        paths.enter().append("path")
+        .attr("class","area")
+        .style("fill", function(d) { return c(d.key); })
+        .attr("d", area);
+        
+        paths.exit().remove();
+    
+    var groups = g.selectAll(".group").data(stackData)
       .attr("class","group")
-      .attr("transform",function(d){return "translate("+ x0(d[xIndicator]) + ",0)"});
+      .attr("fill",function(d){return c(d.key)});
       
     groups.enter().append("g")
       .attr("class","group")
-      .attr("transform",function(d){return "translate("+ x0(d[xIndicator]) + ",0)"});
+      .attr("fill",function(d){return c(d.key)});
       
     groups.exit().remove();
-      
-    var bars = g.selectAll(".group").data(groupedData).selectAll(".bar").data(function(d) { return keys.map(function(key) { return {key: key, value: d[key]}; }); })
-      .attr("class", "bar")
-      .attr("x", function(d) { return x1(d.key); })
-      .attr("y", function(d) { return y(d.value); })
-      .attr("width", x1.bandwidth())
-      .attr("height", function(d) { return height - y(d.value); })
-      .attr("fill", function(d) { return c(d.key); });
-      
-      bars.enter().append("rect")
-      .attr("class", "bar")
-      .attr("x", function(d) { return x1(d.key); })
-      .attr("y", function(d) { return y(d.value); })
-      .attr("width", x1.bandwidth())
-      .attr("height", function(d) { return height - y(d.value); })
-      .attr("fill", function(d) { return c(d.key); });
-      
-    bars.exit().remove()
     
-    var labels = g.selectAll(".group").data(groupedData).selectAll(".label").data(function(d) { return keys.map(function(key) { return {key: key, value: d[key]}; }); })
-      .attr("class","label")
-      .style("fill",function(d){return contrast(c(d.key))})
-      .attr("text-anchor", "middle")
+    var groupLabels = g.selectAll(".groupLabel")
+    .data(
+      stackData[stackData.length-1].map(function(d){return {"y":d[d.length-1],"x":d.data[xIndicator]}})
+    )
       .style("font-size",labelFontSize)
-      .attr("x", function(d) { return x1(d.key) + x1.bandwidth()/2; })
-      .attr("y", function(d) { return height/2 + y(d.value)/2 + labelFontSize/2; })
-      .text(function(d){return format(d.value)})
-      .each(function(d,i) {
-            var bbox = this.getBBox();
-            var barHeight = height - y(d.value);
-            var barWidth = x1.bandwidth();
-            d.unsquished =  (barHeight > bbox.height) && (barWidth > bbox.width);
-            })
-      .attr("y", function(d) { return d.unsquished?height/2 + y(d.value)/2 + labelFontSize/2:y(d.value) - labelFontSize/2; })
-      .style("fill",function(d){return d.unsquished?contrast(c(d.key)):"black"})
-      .style("opacity",function(d){return d.value>0?1:0});
+      .attr("x", function(d) { return x(d.x) + 2 + (d3.max([(width/xCategories.length)-1,1]))/2 })
+      .attr("y", function(d) { return y(d.y) - labelFontSize/2 })
+      .text(function(d){return format(d.y)})
+      .style("opacity",function(d){return (d.y) > 0 ? 1 : 0 })
+      .attr("class","groupLabel")
+      .attr("fill","black")
+      .attr("text-anchor", "middle");
       
       if (labelsOnChart) {
-        labels.enter().append("text")
-        .attr("class","label")
-        .style("fill",function(d){return contrast(c(d.key))})
-        .attr("text-anchor", "middle")
-        .style("font-size",labelFontSize)
-        .attr("x", function(d) { return x1(d.key) + x1.bandwidth()/2; })
-        .attr("y", function(d) { return height/2 + y(d.value)/2 + labelFontSize/2; })
-        .text(function(d){return format(d.value)})
-        .each(function(d,i) {
-            var bbox = this.getBBox();
-            var barHeight = height - y(d.value);
-            var barWidth = x1.bandwidth();
-            d.unsquished =  (barHeight > bbox.height) && (barWidth > bbox.width);
-            })
-      .attr("y", function(d) { return d.unsquished?height/2 + y(d.value)/2 + labelFontSize/2:y(d.value) - labelFontSize/2; })
-        .style("fill",function(d){return d.unsquished?contrast(c(d.key)):"black"})
-        .style("opacity",function(d){return d.value>0?1:0});
-        
-        labels.exit().remove();
+      groupLabels.enter().append("text")
+      .style("font-size",labelFontSize)
+      .attr("x", function(d) { return x(d.x) + 2 + (d3.max([(width/xCategories.length)-1,1]))/2 })
+      .attr("y", function(d) { return y(d.y) - labelFontSize/2 })
+      .text(function(d){return format(d.y)})
+      .style("opacity",function(d){return (d.y) > 0 ? 1 : 0 })
+      .attr("class","groupLabel")
+      .attr("fill","black")
+      .attr("text-anchor", "middle");
       }else{
-        labels.remove();
+        groupLabels.remove();
       };
+      
+      groupLabels.exit().remove();
+    
+    //var labels = g.selectAll(".group").data(stackData).selectAll(".label").data(function(d){return d;})
+    //  .attr("class","label")
+    //  .style("fill",function(d,i,j){return contrast(d3.select(j[i].parentNode).attr("fill"))})
+    //  .attr("text-anchor", "middle")
+    //  .style("font-size",labelFontSize)
+    //  .attr("x", function(d) { return x(d.data[xIndicator]) + 2 + (d3.max([(width/xCategories.length)-1,1]))/2 })
+    //  .attr("y", function(d) { return y(d[1]) + (y(d[0]) - y(d[1]))/2 + labelFontSize/2; })
+    //  .text(function(d){return format(d[1] - d[0])})
+    //  .each(function(d,i) {
+    //      var bbox = this.getBBox();
+    //      var barHeight = y(d[0]) - y(d[1]);
+    //      d.unsquished =  barHeight > bbox.height;
+    //      })
+    //    .style("opacity",function(d){return (d[1] - d[0]) > 0 && d.unsquished ? 1 : 0 });
+    //  
+    //  if (labelsOnChart) {
+    //    labels.enter().append("text")
+    //    .attr("class","label")
+    //    .style("fill",function(d,i,j){return contrast(d3.select(j[i].parentNode).attr("fill"))})
+    //    .attr("text-anchor", "middle")
+    //    .style("font-size",labelFontSize)
+    //    .attr("x", function(d) { return x(d.data[xIndicator]) + 2 + (d3.max([(width/xCategories.length)-1,1]))/2 })
+    //    .attr("y", function(d) { return y(d[1]) + (y(d[0]) - y(d[1]))/2 + labelFontSize/2; })
+    //    .text(function(d){return format(d[1] - d[0])})
+    //    .each(function(d,i) {
+    //      var bbox = this.getBBox();
+    //      var barHeight = y(d[0]) - y(d[1]);
+    //      d.unsquished =  barHeight > bbox.height;
+    //      })
+    //    .style("opacity",function(d){return (d[1] - d[0]) > 0 && d.unsquished ? 1 : 0 });
+    //    
+    //    labels.exit().remove();
+    //  }else{
+    //    labels.remove();
+    //  };
             
     var legend = svg.append("g").attr("class","legend")
         .attr("font-size", 14)
         .attr("text-anchor", legend_position=="tr"?"end":"start")
         .selectAll(".group")
-        .data(keys.slice().reverse())
+        .data(keys.slice())
         .enter().append("g")
         .attr("transform", function(d, i) {
           if (legend_position=="tr" || legend_position=="tl") {

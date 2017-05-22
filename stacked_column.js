@@ -1,7 +1,9 @@
 function vb_stacked_column(svgSelector,config,csvDat) {
     var svg = d3.select(svgSelector);
     //Append style
-    var cssText = ".axis--y .tick line, .axis--x .tick line {display:none;}.tick text {color:#a9a6aa;}.axis--y .domain {display:none;}.domain {stroke:#443e42;}.rules .tick line {stroke:#a9a6aa;}.rules .domain {display:none;}#yaxislabel {color:#443e42;}#xaxislabel {color:#443e42;}#visTitle {color:#e84439;}.legend text {color:#443e42;}.axis text{font-size:10px;}";
+    var cssText = ".axis--y .tick line, .axis--x .tick line {display:none;}.tick text {color:#a9a6aa;}.axis--y .domain {display:none;}.domain {stroke:#443e42;}.rules .tick line {stroke:#a9a6aa;}.rules .domain {display:none;}#yaxislabel {color:#443e42;}#xaxislabel {color:#443e42;}#visTitle {color:#e84439;}.legend text {color:#443e42;}.axis text{font-size:10px;}",
+    cssInjection = setDefault(config.inject_css,"");
+    cssText = cssText+cssInjection;
     //Parse configuration
     var svg_class = svg.attr("class"),
     svgWidth = parseFloat(setDefault(config.width,svg.attr("width"))),
