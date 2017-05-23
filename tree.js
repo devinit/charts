@@ -64,18 +64,27 @@ function vb_tree(svgSelector,config,csvDat) {
     };
     
     var sum = d3.sum(filteredData,function(d){return d[yIndicator]});
-    var c = d3.scaleOrdinal().range(selectedColours);
+    
     if(cIndicator=="None"){
         var data = filteredData.map(function(d) { return {name: d[xIndicator], value: d[yIndicator]/divisor, colour: d[xIndicator], percent: d[yIndicator]/sum}; });
+        var cType = "string";
     }else{
         var data = filteredData.map(function(d) { return {name: d[xIndicator], value: d[yIndicator]/divisor, colour: d[cIndicator], percent: d[yIndicator]/sum}; });
+        var cType = columnType(data.map(function(d){return d.colour}));  
+    };
+    if(cType=="string"){
+        var c = d3.scaleOrdinal().range(selectedColours);
         var cCategories = d3.map(data,function(d){return d[cIndicator]}).keys();
         c.domain(cCategories);  
+    }else{
+        var c = d3.scaleLinear().range(selectedColours.slice(0,2));
+        var cRange = [d3.min(data,function(d){return d.colour}),d3.max(data,function(d){return d.colour})];
+        c.domain(cRange);
     };
     
     //Now that data is filtered, let's sort it
     var xType = columnType(data.map(function(d){return d.name}));
-    var yType = columnType(data.map(function(d){return d.value}));               
+    var yType = columnType(data.map(function(d){return d.value}));
     if (sort=="xasc") {
       if (xType=="string") {
         data.sort(function(a,b) {return d3.ascending(a.name,b.name);})
@@ -99,6 +108,18 @@ function vb_tree(svgSelector,config,csvDat) {
         data.sort(function(a,b) {return d3.descending(a.value,b.value);})
       }else{
         data.sort(function(a,b){return NaNSafeSort(b.value,a.value);})
+      };
+    }else if (sort=="casc") {
+      if (cType=="string") {
+        data.sort(function(a,b) {return d3.ascending(a.colour,b.colour);})
+      }else{
+        data.sort(function(a,b){return NaNSafeSort(a.colour,b.colour);})
+      };
+    }else if (sort=="cdes") {
+      if (cType=="string") {
+        data.sort(function(a,b) {return d3.descending(a.colour,b.colour);})
+      }else{
+        data.sort(function(a,b){return NaNSafeSort(b.colour,a.colour);})
       };
     };
     
