@@ -1,24 +1,35 @@
 {
   "name": "@devinit/charts",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.0.1",
+  "description": "Charts for DevInit DataHub",
+  "main": "src/index.js",
+  "directories": {
+    "example": "examples",
+    "test": "tests"
+  },
+  "dependencies": {
+    "d3": "^4.9.1",
+    "jquery": "^3.2.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.4.2"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --reporter spec"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/devinit/charts.git"
   },
-  "author": "",
+  "keywords": [
+    "charts",
+    "d3"
+  ],
+  "author": "Alex Miller",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/devinit/charts/issues"
   },
-  "homepage": "https://github.com/devinit/charts#readme",
-  "dependencies": {
-    "d3": "^4.9.1",
-    "d3-save-svg": "^0.0.2",
-    "jquery": "^3.2.1"
-  }
+  "homepage": "https://github.com/devinit/charts#readme"
 }
