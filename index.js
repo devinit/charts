@@ -1,8 +1,8 @@
-var vb_column = require('./column.js');
-var vb_bar = require('./bar.js');
-var vb_stacked_column = require('./stacked_column.js');
-var vb_donut = require('./donut.js');
-var vb_pie = require('./pie.js');
+import vb_column from './column';
+import vb_bar from './bar';
+import vb_stacked_column from './stacked_column';
+import vb_donut from './donut';
+import vb_pie from './pie';
 
 module.exports = {
     vb_column,

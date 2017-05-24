@@ -1,4 +1,8 @@
-function vb_grouped_column(svgSelector,config,csvDat) {
+import d3 from "d3";
+import jQuery from 'jquery'
+import {columnType, NaNSafeSort, contrast, setDefault} from './common';
+
+export default function vb_grouped_column(svgSelector,config,csvDat) {
     var svg = d3.select(svgSelector);
     //Append style
     var cssText = ".axis--y .tick line, .axis--x .tick line {display:none;}.tick text {color:#a9a6aa;}.axis--y .domain {display:none;}.domain {stroke:#443e42;}.rules .tick line {stroke:#a9a6aa;}.rules .domain {display:none;}#yaxislabel {color:#443e42;}#xaxislabel {color:#443e42;}#visTitle {color:#e84439;}.legend text {color:#443e42;}",
@@ -38,10 +42,9 @@ function vb_grouped_column(svgSelector,config,csvDat) {
         var format = d3.format(format_entry); 
     }catch(err){
         var format = d3.format(",.2f");
-        $('#id_label_format').value(",.2f");
-    };
-    
-    if (filter_by=="None") {
+        jQuery('#id_label_format').value(",.2f");
+    }
+  if (filter_by=="None") {
         //Nothing to filter by, data is csvDat
         var data = csvDat;
         d3.select("select[name='filter_selection']").selectAll("option").remove();
@@ -69,9 +72,8 @@ function vb_grouped_column(svgSelector,config,csvDat) {
           .property("selected",function(d){return d==selectedFilter?true:null;});
           
         var data = csvDat.filter(function(d){return d[filter_by]==selectedFilter});
-    };
-    
-    //After filter, apply grouping function
+    }
+  //After filter, apply grouping function
     var nestedData = d3.nest()
       .key(function(d)
       {
@@ -92,21 +94,20 @@ function vb_grouped_column(svgSelector,config,csvDat) {
         keyObj[keyValue[groupBy]] = true;
         if (!isNaN(parseFloat(keyValue[yIndicator]))) {
             total+= parseFloat(keyValue[yIndicator])/divisor;
-        };
-      };
+        }
+      }
       obj.total = total;
       groupedData.push(obj);
-    };
-    var keys = Object.keys(keyObj);
+    }
+  var keys = Object.keys(keyObj);
     for(var i = 0; i < groupedData.length; i++){
       for(key in keyObj){
         if (groupedData[i][key] === undefined) {
             groupedData[i][key] = 0;
-        };
-      };
-    };
-    
-    var c = d3.scaleOrdinal().domain(keys).range(selectedColours);
+        }
+      }
+    }
+  var c = d3.scaleOrdinal().domain(keys).range(selectedColours);
     
     //Now that data is filtered, let's sort it
     var xType = columnType(groupedData.map(function(d){return d[xIndicator]}));
@@ -116,28 +117,27 @@ function vb_grouped_column(svgSelector,config,csvDat) {
         groupedData.sort(function(a,b) {return d3.ascending(a[xIndicator],b[xIndicator]);})
       }else{
         groupedData.sort(function(a,b){return NaNSafeSort(a[xIndicator],b[xIndicator]);})
-      };
+      }
     }else if (sort=="xdes") {
       if (xType=="string") {
         groupedData.sort(function(a,b) {return d3.descending(a[xIndicator],b[xIndicator]);})
       }else{
         groupedData.sort(function(a,b){return NaNSafeSort(b[xIndicator],a[xIndicator]);})
-      };
+      }
     }else if (sort=="yasc") {
       if (yType=="string") {
         groupedData.sort(function(a,b) {return d3.ascending(a[yIndicator],b[yIndicator]);})
       }else{
         groupedData.sort(function(a,b){return NaNSafeSort(a[yIndicator],b[yIndicator]);})
-      };
+      }
     }else if (sort=="ydes") {
       if (yType=="string") {
         groupedData.sort(function(a,b) {return d3.descending(a[yIndicator],b[yIndicator]);})
       }else{
         groupedData.sort(function(a,b){return NaNSafeSort(b[yIndicator],a[yIndicator]);})
-      };
-    };
-
-    //Apply transformations not dependent on whether the chart exists or not
+      }
+    }
+  //Apply transformations not dependent on whether the chart exists or not
     svg.attr("width",svgWidth);
     svg.attr("height",svgHeight);
     
@@ -154,8 +154,8 @@ function vb_grouped_column(svgSelector,config,csvDat) {
       var ymax = d3.max(data, function(d) {return Number(d[yIndicator]); })/divisor;
     }else{
       var ymax = parseFloat(y_maximum_value);
-    };
-    y.domain([0, ymax]);
+    }
+  y.domain([0, ymax]);
 
     if (svg_class=="charted") {
         //it's already charted, update it
@@ -168,14 +168,14 @@ function vb_grouped_column(svgSelector,config,csvDat) {
             
         var x_axis_label = d3.select("text#xaxislabel")
             .text(x_label==""?xIndicator:x_label)
-            .attr("x",(svgWidth-$('#xaxislabel').width()+margin.left-margin.right)/2)
-            .attr("y",svgHeight-$('#xaxislabel').height());
+            .attr("x",(svgWidth-jQuery('#xaxislabel').width()+margin.left-margin.right)/2)
+            .attr("y",svgHeight-jQuery('#xaxislabel').height());
             
         var y_axis_label = d3.select("text#yaxislabel")
             .text(y_label==""?yIndicator:y_label)
             .attr("transform","rotate(-90)")
-            .attr("y",$('#yaxislabel').width())
-            .attr("x",-1*((svgHeight+$('#yaxislabel').height()-margin.bottom+margin.top)/2));
+            .attr("y",jQuery('#yaxislabel').width())
+            .attr("x",-1*((svgHeight+jQuery('#yaxislabel').height()-margin.bottom+margin.top)/2));
             
         var xaxis = d3.select(".axis--x"),
         yaxis = d3.select(".axis--y"),
@@ -186,17 +186,17 @@ function vb_grouped_column(svgSelector,config,csvDat) {
             .tickSize(-width)
             .ticks(y_ticks)
             .tickFormat("")
-          )
+          );
           yaxis.transition().duration(0).call(d3.axisLeft(y).ticks(y_ticks).tickFormat(format))
         }else{
           rules.call(d3.axisLeft(y)
             .tickSize(-width)
             .tickFormat("")
-          )
+          );
           yaxis.transition().duration(0).call(d3.axisLeft(y).tickFormat(format))
-        };
-        xaxis.transition().duration(0).call(d3.axisBottom(x0).tickSizeOuter(0))
-        xaxis.attr("transform", "translate(0," + height + ")")
+        }
+      xaxis.transition().duration(0).call(d3.axisBottom(x0).tickSizeOuter(0));
+        xaxis.attr("transform", "translate(0," + height + ")");
         xaxis.selectAll("text")
           .attr("transform", "rotate("+xRotation+")")
           .style("text-anchor", xRotation>0?"start":"middle");
@@ -210,14 +210,14 @@ function vb_grouped_column(svgSelector,config,csvDat) {
             
         var x_axis_label = svg.append("text").attr("id","xaxislabel")
             .text(x_label==""?xIndicator:x_label)
-            .attr("x",(svgWidth-$('#xaxislabel').width()+margin.left-margin.right)/2)
-            .attr("y",svgHeight-$('#xaxislabel').height());
+            .attr("x",(svgWidth-jQuery('#xaxislabel').width()+margin.left-margin.right)/2)
+            .attr("y",svgHeight-jQuery('#xaxislabel').height());
         
         var y_axis_label = svg.append("text").attr("id","yaxislabel")
             .text(y_label==""?yIndicator:y_label)
             .attr("transform","rotate(-90)")
-            .attr("y",$('#yaxislabel').width())
-            .attr("x",-1*((svgHeight+$('#yaxislabel').height()-margin.bottom+margin.top)/2));
+            .attr("y",jQuery('#yaxislabel').width())
+            .attr("x",-1*((svgHeight+jQuery('#yaxislabel').height()-margin.bottom+margin.top)/2));
         
         if (y_axis_ticks!=""  && !isNaN(y_axis_ticks)) {
             var y_ticks = parseInt(y_axis_ticks);
@@ -241,17 +241,16 @@ function vb_grouped_column(svgSelector,config,csvDat) {
             var yaxis = g.append("g")
               .attr("class", "axis axis--y")
               .call(d3.axisLeft(y).tickFormat(format));
-          };
-          
-        var xaxis = g.append("g")
+        }
+      var xaxis = g.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(x0).tickSizeOuter(0));
         xaxis.selectAll("text")
           .attr("transform", "rotate("+xRotation+")")
           .style("text-anchor", xRotation>0?"start":"middle");
-    };
-    //I think the bars and labels can be updated outside of state
+    }
+  //I think the bars and labels can be updated outside of state
     var groups = g.selectAll(".group").data(groupedData)
       .attr("class","group")
       .attr("transform",function(d){return "translate("+ x0(d[xIndicator]) + ",0)"});
@@ -278,7 +277,7 @@ function vb_grouped_column(svgSelector,config,csvDat) {
       .attr("height", function(d) { return height - y(d.value); })
       .attr("fill", function(d) { return c(d.key); });
       
-    bars.exit().remove()
+    bars.exit().remove();
     
     var labels = g.selectAll(".group").data(groupedData).selectAll(".label").data(function(d) { return keys.map(function(key) { return {key: key, value: d[key]}; }); })
       .attr("class","label")
@@ -320,9 +319,8 @@ function vb_grouped_column(svgSelector,config,csvDat) {
         labels.exit().remove();
       }else{
         labels.remove();
-      };
-            
-    var legend = svg.append("g").attr("class","legend")
+      }
+  var legend = svg.append("g").attr("class","legend")
         .attr("font-size", 14)
         .attr("text-anchor", legend_position=="tr"?"end":"start")
         .selectAll(".group")

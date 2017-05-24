@@ -1,33 +1,34 @@
-function columnType(arr) {
+export const columnType = function (arr) {
   var parsedArray = arr.map(function(d){return isNaN(parseFloat(d))});
   var arrAvg = d3.mean(parsedArray);
   if (arrAvg<=.5) {
     return("number");
   }else{
     return("string");
-  };
+  }
 };
 
-function NaNSafeSort(x,y){
+export const NaNSafeSort = function (x,y){
   var a = parseFloat(x),
   b = parseFloat(y);
    if(!isFinite(a-b))
       return !isFinite(a) ? -1 : 1;
    else
       return a-b;
-};  
-function contrast(hex){
+};
+
+export const contrast = function (hex){
   var color = d3.color(hex);
   var lum = 0.2126*color.r + 0.7152*color.g + 0.0722*color.b;
   var contrast =  lum > 128 ? "black" : "white";
   return(contrast);
 };
 
-function setDefault(test_value,default_value) {
+export const setDefault = function (test_value,default_value) {
     return(test_value===undefined?default_value:test_value)
 };
 
-function form2config(formSelector) {
+export const form2config  = function(formSelector) {
     var config = {};
     var inputs = d3.select(formSelector).selectAll("input");
     var selects = d3.select(formSelector).selectAll("select");
@@ -50,13 +51,13 @@ function form2config(formSelector) {
                 config[name] = true;
             }else{
               config[name] = false;
-            };
+            }
         }else if (type=="radio") {
             var checked = input.property("checked");
             if (checked) {
                 config[name] = value;
             }
-        };
+        }
     });
     
     //Iterate through selects
@@ -67,12 +68,13 @@ function form2config(formSelector) {
       if (option.size()>0) {
         value = option.property("value");
         config[name] = value;
-      };
-      });
+      }
+    });
     
     return(config);
 };
-function mergeWithFirstEqualZero(first, second){
+
+export const mergeWithFirstEqualZero = function (first, second){
     var secondSet = d3.set(); second.forEach(function(d) { secondSet.add(d.label); });
 
     var onlyFirst = first
@@ -83,7 +85,8 @@ function mergeWithFirstEqualZero(first, second){
             return d3.ascending(a.label, b.label);
         });
 };
-function wrap(text, width) {
+
+export const wrap = function (text, width) {
   text.each(function() {
     var text = d3.select(this),
         words = text.text().split(/\s+/).reverse(),
@@ -93,7 +96,7 @@ function wrap(text, width) {
         lineHeight = 1, // ems
         y = text.attr("y"),
         dy = parseFloat(text.attr("dy")),
-		fontsize = parseFloat(text.style("font-size"))
+		fontsize = parseFloat(text.style("font-size"));
         tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
     while (word = words.pop()) {
       line.push(word);
@@ -107,7 +110,8 @@ function wrap(text, width) {
     }
   });
 };
-function pointIsInArc(pt, ptData, d3Arc) {
+
+export const pointIsInArc =  function (pt, ptData, d3Arc) {
 	// Center of the arc is assumed to be 0,0
 	// (pt.x, pt.y) are assumed to be relative to the center
 	var r1 = d3Arc.innerRadius()(ptData),

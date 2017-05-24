@@ -1,4 +1,8 @@
-function vb_donut(svgSelector,config,csvDat) {
+import d3 from "d3";
+import jQuery from 'jquery'
+import {columnType, NaNSafeSort, setDefault, mergeWithFirstEqualZero} from './common';
+
+export default function vb_donut(svgSelector,config,csvDat) {
     var svg = d3.select(svgSelector);
     //Append style
     var cssText = "path.slice{stroke-width:2px;}polyline{opacity: 1;stroke: #a9a6aa;stroke-width: 2px;fill: none;}",
@@ -28,10 +32,9 @@ function vb_donut(svgSelector,config,csvDat) {
         var format = d3.format(format_entry); 
     }catch(err){
         var format = d3.format(",.2f");
-        $('#id_label_format').value(",.2f");
-    };
-    
-    if (filter_by=="None") {
+        jQuery('#id_label_format').value(",.2f");
+    }
+  if (filter_by=="None") {
         //Nothing to filter by, filteredData is csvDat
         var filteredData = csvDat;
         d3.select("select[name='filter_selection']").selectAll("option").remove();
@@ -59,9 +62,8 @@ function vb_donut(svgSelector,config,csvDat) {
           .property("selected",function(d){return d==selectedFilter?true:null;});
           
         var filteredData = csvDat.filter(function(d){return d[filter_by]==selectedFilter});
-    };
-    
-    var data = filteredData.map(function(d) { return {label: d[xIndicator], value: d[yIndicator]}; });
+    }
+  var data = filteredData.map(function(d) { return {label: d[xIndicator], value: d[yIndicator]}; });
     
     //Now that data is filtered, let's sort it
     var xType = columnType(data.map(function(d){return d.label}));
@@ -71,35 +73,35 @@ function vb_donut(svgSelector,config,csvDat) {
         data.sort(function(a,b) {return d3.ascending(a.label,b.label);})
       }else{
         data.sort(function(a,b){return NaNSafeSort(a.label,b.label);})
-      };
+      }
     }else if (sort=="xdes") {
       if (xType=="string") {
         data.sort(function(a,b) {return d3.descending(a.label,b.label);})
       }else{
         data.sort(function(a,b){return NaNSafeSort(b.label,a.label);})
-      };
+      }
     }else if (sort=="yasc") {
       if (yType=="string") {
         data.sort(function(a,b) {return d3.ascending(a.value,b.value);})
       }else{
         data.sort(function(a,b){return NaNSafeSort(a.value,b.value);})
-      };
+      }
     }else if (sort=="ydes") {
       if (yType=="string") {
         data.sort(function(a,b) {return d3.descending(a.value,b.value);})
       }else{
         data.sort(function(a,b){return NaNSafeSort(b.value,a.value);})
-      };
+      }
     }else if (sort=="avoid") {
       if (yType=="string") {
-        data.sort(function(a,b) {return d3.descending(a.value,b.value);})
+        data.sort(function(a,b) {return d3.descending(a.value,b.value);});
         var fullIndex = data.length,
         halfIndex = Math.round(fullIndex/2),
         half = data.splice(halfIndex,fullIndex);
         half.reverse();
         for(var i = 0; i < half.length; i++){
             data.splice((2*i)+1, 0, half[i]);
-        };
+        }
       }else{
         data.sort(function(a,b){return NaNSafeSort(b.value,a.value);});
         var fullIndex = data.length,
@@ -108,11 +110,10 @@ function vb_donut(svgSelector,config,csvDat) {
         half.reverse();
         for(var i = 0; i < half.length; i++){
             data.splice((2*i)+1, 0, half[i]);
-        };
-      };
-    };
-
-    //Apply transformations not dependent on whether the chart exists or not
+        }
+      }
+    }
+  //Apply transformations not dependent on whether the chart exists or not
     svg.attr("width",svgWidth);
     svg.attr("height",svgHeight);
     
@@ -155,15 +156,15 @@ function vb_donut(svgSelector,config,csvDat) {
         svg.append("style").text(cssText);
         svg.attr("class","charted");
         var g = svg.append("g").attr("class","padding_wrapper")
-            .attr("transform", "translate(" + (margin.left+(width/2)) + "," + (margin.top+(height/2)) + ")")
+            .attr("transform", "translate(" + (margin.left+(width/2)) + "," + (margin.top+(height/2)) + ")");
         g.append("g")
             .attr("class", "slices");
         g.append("g")
             .attr("class", "labels");
         g.append("g")
             .attr("class", "lines");
-    };
-    //I think the slices and labels can be updated outside of state
+    }
+  //I think the slices and labels can be updated outside of state
     /* ------- SLICE ARCS -------*/
   
       var slice = svg.select(".slices").selectAll("path.slice")
@@ -257,7 +258,7 @@ function vb_donut(svgSelector,config,csvDat) {
 				lineHeight = 1, // ems
 				y = text.attr("y"),
 				dy = parseFloat(text.attr("dy")),
-				fontsize = parseFloat(text.style("font-size"))
+				fontsize = parseFloat(text.style("font-size"));
 				tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
 			while (word = words.pop()) {
 			  line.push(word);

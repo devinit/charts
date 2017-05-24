@@ -1,4 +1,8 @@
-function vb_tree(svgSelector,config,csvDat) {
+import d3 from "d3";
+import jQuery from 'jquery'
+import {columnType, NaNSafeSort, contrast, setDefault} from './common';
+
+export default function vb_tree(svgSelector,config,csvDat) {
     var svg = d3.select(svgSelector);
     //Append style
     var cssText = ".tree-label{font-weight:bold;}",
@@ -30,10 +34,9 @@ function vb_tree(svgSelector,config,csvDat) {
         var format = d3.format(format_entry); 
     }catch(err){
         var format = d3.format(",.2f");
-        $('#id_label_format').value(",.2f");
-    };
-    
-    if (filter_by=="None") {
+        jQuery('#id_label_format').value(",.2f");
+    }
+  if (filter_by=="None") {
         //Nothing to filter by, filteredData is csvDat
         var filteredData = csvDat;
         d3.select("select[name='filter_selection']").selectAll("option").remove();
@@ -61,18 +64,18 @@ function vb_tree(svgSelector,config,csvDat) {
           .property("selected",function(d){return d==selectedFilter?true:null;});
           
         var filteredData = csvDat.filter(function(d){return d[filter_by]==selectedFilter});
-    };
-    
-    var sum = d3.sum(filteredData,function(d){return d[yIndicator]});
+    }
+  var sum = d3.sum(filteredData,function(d){return d[yIndicator]});
     
     if(cIndicator=="None"){
         var data = filteredData.map(function(d) { return {name: d[xIndicator], value: d[yIndicator]/divisor, colour: d[xIndicator], percent: d[yIndicator]/sum}; });
         var cType = "string";
     }else{
         var data = filteredData.map(function(d) { return {name: d[xIndicator], value: d[yIndicator]/divisor, colour: d[cIndicator], percent: d[yIndicator]/sum}; });
-        var cType = columnType(data.map(function(d){return d.colour}));  
-    };
-    if(cType=="string"){
+        var cType = columnType(data.map(function(d){return d.colour}));
+
+    }
+  if(cType=="string"){
         var c = d3.scaleOrdinal().range(selectedColours);
         var cCategories = d3.map(data,function(d){return d[cIndicator]}).keys();
         c.domain(cCategories);  
@@ -80,9 +83,8 @@ function vb_tree(svgSelector,config,csvDat) {
         var c = d3.scaleLinear().range(selectedColours.slice(0,2));
         var cRange = [d3.min(data,function(d){return d.colour}),d3.max(data,function(d){return d.colour})];
         c.domain(cRange);
-    };
-    
-    //Now that data is filtered, let's sort it
+    }
+  //Now that data is filtered, let's sort it
     var xType = columnType(data.map(function(d){return d.name}));
     var yType = columnType(data.map(function(d){return d.value}));
     if (sort=="xasc") {
@@ -90,46 +92,45 @@ function vb_tree(svgSelector,config,csvDat) {
         data.sort(function(a,b) {return d3.ascending(a.name,b.name);})
       }else{
         data.sort(function(a,b){return NaNSafeSort(a.name,b.name);})
-      };
+      }
     }else if (sort=="xdes") {
       if (xType=="string") {
         data.sort(function(a,b) {return d3.descending(a.name,b.name);})
       }else{
         data.sort(function(a,b){return NaNSafeSort(b.name,a.name);})
-      };
+      }
     }else if (sort=="yasc") {
       if (yType=="string") {
         data.sort(function(a,b) {return d3.ascending(a.value,b.value);})
       }else{
         data.sort(function(a,b){return NaNSafeSort(a.value,b.value);})
-      };
+      }
     }else if (sort=="ydes") {
       if (yType=="string") {
         data.sort(function(a,b) {return d3.descending(a.value,b.value);})
       }else{
         data.sort(function(a,b){return NaNSafeSort(b.value,a.value);})
-      };
+      }
     }else if (sort=="casc") {
       if (cType=="string") {
         data.sort(function(a,b) {return d3.ascending(a.colour,b.colour);})
       }else{
         data.sort(function(a,b){return NaNSafeSort(a.colour,b.colour);})
-      };
+      }
     }else if (sort=="cdes") {
       if (cType=="string") {
         data.sort(function(a,b) {return d3.descending(a.colour,b.colour);})
       }else{
         data.sort(function(a,b){return NaNSafeSort(b.colour,a.colour);})
-      };
-    };
-    
-    var rootData = {};
-    rootData.name = "root"
+      }
+    }
+  var rootData = {};
+    rootData.name = "root";
     rootData.children = data; 
     
     var root = d3.hierarchy(rootData)
         .eachBefore(function(d){d.data.id = d.data.name})
-        .sum(function(d){return d.value})
+        .sum(function(d){return d.value});
 
     //Apply transformations not dependent on whether the chart exists or not
     svg.attr("width",svgWidth);
@@ -139,7 +140,7 @@ function vb_tree(svgSelector,config,csvDat) {
         //it's already charted, update it
         svg.select("style").text(cssText);
         var g = d3.select("g.padding_wrapper")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
         d3.selectAll("g.cell").remove();
     }else{
         //it's not charted, chart it
@@ -147,9 +148,8 @@ function vb_tree(svgSelector,config,csvDat) {
         svg.attr("class","charted");
         var g = svg.append("g").attr("class","padding_wrapper")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-    };
-    
-     var treemap = d3.treemap()
+    }
+  var treemap = d3.treemap()
         .tile(d3.treemapResquarify)
         .size([width, height])
         .round(true)
@@ -192,7 +192,7 @@ function vb_tree(svgSelector,config,csvDat) {
             lineHeight = 1, // ems
             x = text.attr("x"),
             y = parseFloat(text.attr("y")),
-            fontsize = parseFloat(text.style("font-size"))
+            fontsize = parseFloat(text.style("font-size"));
             tspan = text.text(null).append("tspan").attr("x", x).attr("y", y);
         var wrapCounter = 0;
         while (word = words.pop()) {

@@ -1,4 +1,8 @@
-function vb_area(svgSelector,config,csvDat) {
+import d3 from 'd3';
+import jQuery from 'jquery';
+import {columnType, NaNSafeSort, setDefault} from './common';
+
+export default function vb_area(svgSelector,config,csvDat) {
     var svg = d3.select(svgSelector);
     //Append style
     var cssText = ".axis--y .tick line, .axis--x .tick line {display:none;}.tick text {color:#a9a6aa;}.axis--y .domain {display:none;}.domain {stroke:#443e42;}.rules .tick line {stroke:#a9a6aa;}.rules .domain {display:none;}#yaxislabel {color:#443e42;}#xaxislabel {color:#443e42;}#visTitle {color:#e84439;}.legend text {color:#443e42;}.axis text{font-size:10px;}",
@@ -38,7 +42,7 @@ function vb_area(svgSelector,config,csvDat) {
         var format = d3.format(format_entry); 
     }catch(err){
         var format = d3.format(",.2f");
-        $('#id_label_format').value(",.2f");
+        jQuery('#id_label_format').value(",.2f");
     };
     
     if (filter_by=="None") {
@@ -165,14 +169,14 @@ function vb_area(svgSelector,config,csvDat) {
             
         var x_axis_label = d3.select("text#xaxislabel")
             .text(x_label==""?xIndicator:x_label)
-            .attr("x",(svgWidth-$('#xaxislabel').width()+margin.left-margin.right)/2)
-            .attr("y",svgHeight-$('#xaxislabel').height());
+            .attr("x",(svgWidth-jQuery('#xaxislabel').width()+margin.left-margin.right)/2)
+            .attr("y",svgHeight-jQuery('#xaxislabel').height());
             
         var y_axis_label = d3.select("text#yaxislabel")
             .text(y_label==""?yIndicator:y_label)
             .attr("transform","rotate(-90)")
-            .attr("y",$('#yaxislabel').width())
-            .attr("x",-1*((svgHeight+$('#yaxislabel').height()-margin.bottom+margin.top)/2));
+            .attr("y",jQuery('#yaxislabel').width())
+            .attr("x",-1*((svgHeight+jQuery('#yaxislabel').height()-margin.bottom+margin.top)/2));
             
         var xaxis = d3.select(".axis--x"),
         yaxis = d3.select(".axis--y"),
@@ -207,14 +211,14 @@ function vb_area(svgSelector,config,csvDat) {
             
         var x_axis_label = svg.append("text").attr("id","xaxislabel")
             .text(x_label==""?xIndicator:x_label)
-            .attr("x",(svgWidth-$('#xaxislabel').width()+margin.left-margin.right)/2)
-            .attr("y",svgHeight-$('#xaxislabel').height());
+            .attr("x",(svgWidth-jQuery('#xaxislabel').width()+margin.left-margin.right)/2)
+            .attr("y",svgHeight-jQuery('#xaxislabel').height());
         
         var y_axis_label = svg.append("text").attr("id","yaxislabel")
             .text(y_label==""?yIndicator:y_label)
             .attr("transform","rotate(-90)")
-            .attr("y",$('#yaxislabel').width())
-            .attr("x",-1*((svgHeight+$('#yaxislabel').height()-margin.bottom+margin.top)/2));
+            .attr("y",jQuery('#yaxislabel').width())
+            .attr("x",-1*((svgHeight+jQuery('#yaxislabel').height()-margin.bottom+margin.top)/2));
         
         if (y_axis_ticks!=""  && !isNaN(y_axis_ticks)) {
             var y_ticks = parseInt(y_axis_ticks);

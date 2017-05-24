@@ -1,4 +1,8 @@
-function vb_line(svgSelector,config,csvDat) {
+import d3 from "d3";
+import jQuery from 'jquery'
+import {columnType, NaNSafeSort, setDefault} from './common';
+
+export default function vb_line(svgSelector,config,csvDat) {
     var svg = d3.select(svgSelector);
     //Append style
     var cssText = ".axis--y .tick line, .axis--x .tick line {display:none;}.tick text {color:#a9a6aa;}.axis--y .domain {display:none;}.domain {stroke:#443e42;}.rules .tick line {stroke:#a9a6aa;}.rules .domain {display:none;}#yaxislabel {color:#443e42;}#xaxislabel {color:#443e42;}#visTitle {color:#e84439;}.legend text {color:#443e42;}",
@@ -35,10 +39,9 @@ function vb_line(svgSelector,config,csvDat) {
         var format = d3.format(format_entry); 
     }catch(err){
         var format = d3.format(",.2f");
-        $('#id_label_format').value(",.2f");
-    };
-    
-    if (filter_by=="None") {
+        jQuery('#id_label_format').value(",.2f");
+    }
+  if (filter_by=="None") {
         //Nothing to filter by, data is csvDat
         var data = csvDat;
         d3.select("select[name='filter_selection']").selectAll("option").remove();
@@ -66,9 +69,8 @@ function vb_line(svgSelector,config,csvDat) {
           .property("selected",function(d){return d==selectedFilter?true:null;});
           
         var data = csvDat.filter(function(d){return d[filter_by]==selectedFilter});
-    };
-    
-    //Now that data is filtered, let's sort it
+    }
+  //Now that data is filtered, let's sort it
     var xType = columnType(data.map(function(d){return d[xIndicator]}));
     var yType = columnType(data.map(function(d){return d[yIndicator]}));               
     if (sort=="xasc") {
@@ -76,28 +78,27 @@ function vb_line(svgSelector,config,csvDat) {
         data.sort(function(a,b) {return d3.ascending(a[xIndicator],b[xIndicator]);})
       }else{
         data.sort(function(a,b){return NaNSafeSort(a[xIndicator],b[xIndicator]);})
-      };
+      }
     }else if (sort=="xdes") {
       if (xType=="string") {
         data.sort(function(a,b) {return d3.descending(a[xIndicator],b[xIndicator]);})
       }else{
         data.sort(function(a,b){return NaNSafeSort(b[xIndicator],a[xIndicator]);})
-      };
+      }
     }else if (sort=="yasc") {
       if (yType=="string") {
         data.sort(function(a,b) {return d3.ascending(a[yIndicator],b[yIndicator]);})
       }else{
         data.sort(function(a,b){return NaNSafeSort(a[yIndicator],b[yIndicator]);})
-      };
+      }
     }else if (sort=="ydes") {
       if (yType=="string") {
         data.sort(function(a,b) {return d3.descending(a[yIndicator],b[yIndicator]);})
       }else{
         data.sort(function(a,b){return NaNSafeSort(b[yIndicator],a[yIndicator]);})
-      };
-    };
-
-    //Apply transformations not dependent on whether the chart exists or not
+      }
+    }
+  //Apply transformations not dependent on whether the chart exists or not
     svg.attr("width",svgWidth);
     svg.attr("height",svgHeight);
     
@@ -111,8 +112,8 @@ function vb_line(svgSelector,config,csvDat) {
       var ymax = d3.max(data, function(d) {return Number(d[yIndicator]); });
     }else{
       var ymax = parseFloat(y_maximum_value);
-    };
-    y.domain([0, ymax]);
+    }
+  y.domain([0, ymax]);
 
     if (svg_class=="charted") {
         //it's already charted, update it
@@ -122,14 +123,14 @@ function vb_line(svgSelector,config,csvDat) {
             
         var x_axis_label = d3.select("text#xaxislabel")
             .text(x_label==""?xIndicator:x_label)
-            .attr("x",(svgWidth-$('#xaxislabel').width()+margin.left-margin.right)/2)
-            .attr("y",svgHeight-$('#xaxislabel').height());
+            .attr("x",(svgWidth-jQuery('#xaxislabel').width()+margin.left-margin.right)/2)
+            .attr("y",svgHeight-jQuery('#xaxislabel').height());
             
         var y_axis_label = d3.select("text#yaxislabel")
             .text(y_label==""?yIndicator:y_label)
             .attr("transform","rotate(-90)")
-            .attr("y",$('#yaxislabel').width())
-            .attr("x",-1*((svgHeight+$('#yaxislabel').height()-margin.bottom+margin.top)/2));
+            .attr("y",jQuery('#yaxislabel').width())
+            .attr("x",-1*((svgHeight+jQuery('#yaxislabel').height()-margin.bottom+margin.top)/2));
             
         var xaxis = d3.select(".axis--x"),
         yaxis = d3.select(".axis--y"),
@@ -141,17 +142,17 @@ function vb_line(svgSelector,config,csvDat) {
             .tickSize(-width)
             .ticks(y_ticks)
             .tickFormat("")
-          )
+          );
           yaxis.transition().duration(0).call(d3.axisLeft(y).ticks(y_ticks).tickFormat(format))
         }else{
           rules.call(d3.axisLeft(y)
             .tickSize(-width)
             .tickFormat("")
-          )
+          );
           yaxis.transition().duration(0).call(d3.axisLeft(y).tickFormat(format))
-        };
-        xaxis.transition().duration(0).call(d3.axisBottom(x).tickSizeOuter(0))
-        xaxis.attr("transform", "translate(0," + height + ")")
+        }
+      xaxis.transition().duration(0).call(d3.axisBottom(x).tickSizeOuter(0));
+        xaxis.attr("transform", "translate(0," + height + ")");
         xaxis.selectAll("text")
           .attr("transform", "rotate("+xRotation+")")
           .style("text-anchor", xRotation>0?"start":"middle");
@@ -165,14 +166,14 @@ function vb_line(svgSelector,config,csvDat) {
             
         var x_axis_label = svg.append("text").attr("id","xaxislabel")
             .text(x_label==""?xIndicator:x_label)
-            .attr("x",(svgWidth-$('#xaxislabel').width()+margin.left-margin.right)/2)
-            .attr("y",svgHeight-$('#xaxislabel').height());
+            .attr("x",(svgWidth-jQuery('#xaxislabel').width()+margin.left-margin.right)/2)
+            .attr("y",svgHeight-jQuery('#xaxislabel').height());
         
         var y_axis_label = svg.append("text").attr("id","yaxislabel")
             .text(y_label==""?yIndicator:y_label)
             .attr("transform","rotate(-90)")
-            .attr("y",$('#yaxislabel').width())
-            .attr("x",-1*((svgHeight+$('#yaxislabel').height()-margin.bottom+margin.top)/2));
+            .attr("y",jQuery('#yaxislabel').width())
+            .attr("x",-1*((svgHeight+jQuery('#yaxislabel').height()-margin.bottom+margin.top)/2));
         
         if (y_axis_ticks!=""  && !isNaN(y_axis_ticks)) {
             var y_ticks = parseInt(y_axis_ticks);
@@ -196,17 +197,16 @@ function vb_line(svgSelector,config,csvDat) {
             var yaxis = g.append("g")
               .attr("class", "axis axis--y")
               .call(d3.axisLeft(y).tickFormat(format));
-          };
-          
-        var xaxis = g.append("g")
+        }
+      var xaxis = g.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(x).tickSizeOuter(0));
         xaxis.selectAll("text")
           .attr("transform", "rotate("+xRotation+")")
           .style("text-anchor", xRotation>0?"start":"middle");
-    };
-    //I think the lines and labels can be updated outside of state
+    }
+  //I think the lines and labels can be updated outside of state
      var lineMaker = d3.line()
         .x(function(d) { return  x(d[xIndicator]) + 2 + (d3.max([(width/xCategories.length)-1, 1]))/2; })
         .y(function(d) { return y(d[yIndicator]); });
@@ -229,7 +229,7 @@ function vb_line(svgSelector,config,csvDat) {
         .attr("stroke-width", 3)
         .attr("d", lineMaker);
         
-    line.exit().remove()
+    line.exit().remove();
       
       var labels = g.selectAll(".label").data(data)
         .attr("class","label")
@@ -240,7 +240,7 @@ function vb_line(svgSelector,config,csvDat) {
         .text(function(d){return format(d[yIndicator])})
         .each(function(d,i) {
               var bbox = this.getBBox();
-              console.log(svgHeight-bbox.y)
+              console.log(svgHeight-bbox.y);
               d.unsquished =  svgHeight-bbox.y<svgHeight;
               })
           .attr("y", function(d) { return d.unsquished?y(d[yIndicator]) - labelFontSize*2:y(d[yIndicator]) + labelFontSize*2; })
@@ -256,7 +256,7 @@ function vb_line(svgSelector,config,csvDat) {
         .text(function(d){return format(d[yIndicator])})
         .each(function(d,i) {
               var bbox = this.getBBox();
-              console.log(svgHeight-bbox.y)
+              console.log(svgHeight-bbox.y);
               d.unsquished =  svgHeight-bbox.y<svgHeight;
               })
           .attr("y", function(d) { return d.unsquished?y(d[yIndicator]) - labelFontSize*2:y(d[yIndicator]) + labelFontSize*2; })
@@ -265,5 +265,5 @@ function vb_line(svgSelector,config,csvDat) {
           labels.exit().remove();
         }else{
           labels.remove();
-        };
+        }
 };
