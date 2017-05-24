@@ -1,6 +1,6 @@
 # DataHub Charts
 
-Charting library for Datahub
+Modular D3 charts for DevInit DataHub
 
 ## Installation
 
@@ -60,3 +60,7 @@ TODO
 ### Tree
 
 TODO
+
+## Contributing
+
+## Releasing
