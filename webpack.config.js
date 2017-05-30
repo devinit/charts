@@ -2,30 +2,52 @@ var path = require('path');
 var webpack = require('webpack');
 
 var isProductionBuild = process.env.WEBPACK_ENV == 'production';
-var outputFilename = isProductionBuild ? 'charts.min.js' : 'charts.js';
+var outputFilename = isProductionBuild ? 'di-charts.min.js' : 'di-charts.js';
 
-var plugins = isProductionBuild ? [
-  new webpack.optimize.UglifyJsPlugin({
-    compress: {
-      warnings: false,
-    },
-    output: {
-      comments: false,
-    },
+var plugins = [
+  new webpack.optimize.LimitChunkCountPlugin({
+    maxChunks: 0
   })
-] : [];
+];
+
+if (isProductionBuild) {
+  plugins = [
+    ...plugins,
+
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false,
+      },
+      output: {
+        comments: false,
+      },
+    }),
+
+  ]
+}
 
 module.exports = {
   entry: __dirname + '/src/index.js',
   output: {
     path: __dirname + '/dist/',
-    filename: outputFilename
+    filename: outputFilename,
+    chunkFilename: `[id]-${outputFilename}`,
+    library: "DiCharts",
+    libraryTarget: "window"
   },
   module: {
     loaders: [{
       test: /\.js$/,
       exclude: /node_modules/,
-      loader: 'babel-loader'
+      loader: 'babel-loader',
+      options: {
+        presets: [['es2015', {modules: false}]],
+        plugins: [
+          'syntax-dynamic-import',
+          'transform-object-rest-spread',
+          'remove-webpack'
+        ]
+      }
     }]
   },
   plugins: plugins,

@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>DiCharts</title>
+    <!-- TODO: Add plottable css to webpack build-->
+    <link rel="stylesheet" href="/plottable.css">
+    <script src="/di-charts.js"></script>
+    <style>
+        body {
+            width: 600px;
+            margin: 0 auto;
+        }
+
+        body script {
+            display: block;
+            background-color: #ccc;
+            padding: 10px;
+            white-space: pre-wrap;
+        }
+
+        section {
+            padding: 1em 1em;
+            background-color: #eee;
+            margin: 0.5em 0;
+        }
+
+        .chart {
+            margin: 1em auto;
+        }
+    </style>
+</head>
+<body>
+
+<section>
+    <header>Area Chart</header>
+    <div class="chart" id="area_chart" style="width: 100%; height: 400px"></div>
+    <script>
+        DiCharts.draw({
+            element: document.getElementById('area_chart'),
+            config: {
+                type: 'area',
+                showCategoryAxis: true,
+                categoryAxisLabel: 'Months',
+                showLinearAxis: true,
+                linearAxisLabel: 'Rainfall (mm)',
+            },
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                series: [
+                    {
+                        fill: '#abc',
+                        values: [100, 200, 170, 270, 230, 210]
+                    }
+                ]
+            }
+        })
+    </script>
+</section>
+
+<section>
+    <header>Stacked Area Chart</header>
+    <div class="chart" id="stacked-area" style="width: 100%; height: 400px"></div>
+    <script>
+        DiCharts.draw({
+            element: document.getElementById('stacked-area'),
+            config: {
+                type: 'stacked-area',
+                showCategoryAxis: true,
+                categoryAxisLabel: 'Months',
+                showLinearAxis: true,
+                linearAxisLabel: 'Rainfall (mm)',
+            },
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                series: [
+                    {
+                        fill: '#aba',
+                        values: [100, 200, 120, 270, 230, 210]
+                    },
+                    {
+                        fill: '#abc',
+                        values: [100, 200, 120, 270, 230, 210]
+                    },
+                ]
+            }
+        })
+    </script>
+</section>
+
+<section>
+    <header>100% Stacked Area Chart</header>
+    <div class="chart" id="full-stacked-area" style="width: 100%; height: 400px"></div>
+    <script>
+        DiCharts.draw({
+            element: document.getElementById('full-stacked-area'),
+            config: {
+                type: 'full-stacked-area',
+                showCategoryAxis: true,
+                categoryAxisLabel: 'Months',
+                showLinearAxis: true,
+                linearAxisLabel: 'Rainfall (mm)',
+            },
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                series: [
+                    {
+                        fill: '#aba',
+                        values: [100, 150, 160, 180, 200, 300]
+                    },
+                    {
+                        fill: '#abc',
+                        values: [100, 200, 120, 270, 230, 210]
+                    },
+                ]
+            }
+        })
+    </script>
+</section>
+
+<section>
+    <header>Bar Chart</header>
+    <div class="chart" id="bar" style="width: 100%; height: 400px"></div>
+    <script>
+        DiCharts.draw({
+            element: document.getElementById('bar'),
+            config: {
+                type: 'bar',
+                showCategoryAxis: true,
+                categoryAxisLabel: 'Months',
+                showLinearAxis: true,
+                linearAxisLabel: 'Rainfall (mm)',
+                innerPadding: 0.2,
+            },
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                series: [
+                    {
+                        fill: '#abc',
+                        values: [100, 200, 170, 270, 230, 210]
+                    }
+                ]
+            }
+        })
+    </script>
+</section>
+
+<section>
+    <header>Column Chart</header>
+    <div class="chart" id="column" style="width: 100%; height: 400px"></div>
+    <script>
+        DiCharts.draw({
+            element: document.getElementById('column'),
+            config: {
+                type: 'bar',
+                orientation: 'horizontal',
+                showCategoryAxis: true,
+                categoryAxisLabel: 'Months',
+                showLinearAxis: true,
+                linearAxisLabel: 'Rainfall (mm)',
+                innerPadding: 0.2,
+            },
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                series: [
+                    {
+                        values: [100, 200, 120, 270, 230, 210]
+                    }
+                ]
+            }
+        })
+    </script>
+</section>
+
+<section>
+    <header>Stacked Bar Chart</header>
+    <div class="chart" id="stacked-bar" style="width: 100%; height: 400px"></div>
+    <script>
+        DiCharts.draw({
+            element: document.getElementById('stacked-bar'),
+            config: {
+                type: 'stacked-bar',
+                showCategoryAxis: true,
+                categoryAxisLabel: 'Months',
+                showLinearAxis: true,
+                linearAxisLabel: 'Rainfall (mm)',
+                innerPadding: 0.2
+            },
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                series: [
+                    {
+                        fill: '#abc',
+                        values: [100, 200, 120, 270, 230, 210]
+                    },
+                    {
+                        fill: '#aba',
+                        values: [110, 130, 260, 250, 210, 180]
+                    },
+                ]
+            }
+        })
+    </script>
+</section>
+
+<section>
+    <header>100% Stacked Bar Chart</header>
+    <div class="chart" id="full-stacked-bar" style="width: 100%; height: 400px"></div>
+    <script>
+        DiCharts.draw({
+            element: document.getElementById('full-stacked-bar'),
+            config: {
+                type: 'full-stacked-bar',
+                showCategoryAxis: true,
+                categoryAxisLabel: 'Months',
+                showLinearAxis: true,
+                linearAxisLabel: 'Rainfall (mm)',
+                innerPadding: 0.2
+            },
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                series: [
+                    {
+                        fill: '#abc',
+                        values: [100, 200, 120, 270, 230, 210]
+                    },
+                    {
+                        fill: '#aba',
+                        values: [110, 130, 260, 250, 210, 180]
+                    },
+                ]
+            }
+        })
+    </script>
+</section>
+
+<section>
+    <header>Clustered Bar Chart</header>
+    <div class="chart" id="clustered-bar" style="width: 100%; height: 400px"></div>
+    <script>
+        DiCharts.draw({
+            element: document.getElementById('clustered-bar'),
+            config: {
+                type: 'clustered-bar',
+                showCategoryAxis: true,
+                categoryAxisLabel: 'Months',
+                showLinearAxis: true,
+                linearAxisLabel: 'Rainfall (mm)',
+                innerPadding: 0.2
+            },
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                series: [
+                    {
+                        fill: '#abc',
+                        values: [100, 200, 120, 270, 230, 210]
+                    },
+                    {
+                        fill: '#aba',
+                        values: [110, 130, 260, 250, 210, 180]
+                    },
+                ]
+            }
+        })
+    </script>
+</section>
+
+<section>
+    <header>Line Chart</header>
+    <div class="chart" id="line_chart" style="width: 100%; height: 400px"></div>
+    <script>
+        DiCharts.draw({
+            element: document.getElementById('line_chart'),
+            config: {
+                type: 'line',
+                showCategoryAxis: true,
+                categoryAxisLabel: 'Months',
+                showLinearAxis: true,
+                linearAxisLabel: 'Rainfall (mm)',
+            },
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                series: [
+                    {
+                        stoke: '#abc',
+                        values: [100, 200, 120, 270, 230, 210]
+                    },
+                    {
+                        stroke: '#aba',
+                        values: [110, 130, 260, 250, 210, 180]
+                    },
+                ]
+            }
+        })
+    </script>
+</section>
+
+<section>
+    <header>Pie Chart</header>
+    <div class="chart" id="pie_chart" style="width: 100%; height: 400px"></div>
+    <script>
+        DiCharts.draw({
+            element: document.getElementById('pie_chart'),
+            config: {
+                type: 'pie',
+                showCategoryAxis: true,
+                categoryAxisLabel: 'Months',
+                showLinearAxis: true,
+                linearAxisLabel: 'Rainfall (mm)',
+            },
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                series: [
+                    {
+                        values: [100, 200, 120, 270, 230, 210]
+                    }
+                ]
+            }
+        })
+    </script>
+</section>
+
+</body>
+</html>
