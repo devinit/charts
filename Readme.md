@@ -16,6 +16,8 @@ Chart authors may use any existing JavaScript libraries to implement charts. Sin
 
 Since this library is only an interface, we have come up with some general rules for how datasets should look like. This format should be compatible with any chart type
 
+### Linear Charts
+
 ```js
 const data = {
   "labels": ["Label 1", ...moreLabels], 
@@ -31,13 +33,17 @@ const data = {
 }
 ```
 
-### Rules
+#### Rules
 1. Each value in a `series` should correspond to a `label`. This implies that;
     1. the number of values in a `series` should equal the number of `labels`
     2. all `series` should contain an equal number of `values`, use zero when no value is available
 2. All color configuration associated with a series should be provided in the series
 3. Simple chart types (e.g. bar, column, line, area, pie) should require only one series
 4. Compound chart types (e.g bar-stack, column-cluster, area-stack, pie-stack) should render each series 
+
+### Hierachy Charts
+
+TODO
 
 ## Install
 Firstly, install `@devinit/charts`
