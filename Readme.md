@@ -44,5 +44,13 @@ Firstly, install `@devinit/charts`
 
 > `yarn add @devinit/charts`
 
-## Usage
+## Developing
+
+To start contributing and run `npm start`
+
+```
+$ npm start
+```
+
+Browse to localhost:8080, to see some charts
 
