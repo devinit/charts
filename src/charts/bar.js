@@ -1,6 +1,15 @@
 import Plottable from "plottable";
-import { createCategoryLinearChart } from '../factories/chartFactory'
+import { createLinearChart } from '../factories/createLinearChart'
 
-export default (element, data, {orientation, ...config}) => {
-  return createCategoryLinearChart(element, data, {orientation, ...config})(new Plottable.Plots.Bar(orientation))
+export default ({element, data, config: {orientation, ...config}}) => {
+
+  const plot = new Plottable.Plots.Bar(orientation);
+
+  // ... apply bar configuration
+
+  const chart = createLinearChart({element, plot, config: {orientation, ...config}});
+
+  chart.addData(data);
+
+  return chart
 };

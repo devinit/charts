@@ -1,19 +1,13 @@
 import Plottable from "plottable";
-import { createCategoryLinearChart } from '../factories/chartFactory'
+import {createLineChart} from "./line";
 
-export default (element, data, {innerPadding, ...config}) => {
-  var categoryLinearChart = createCategoryLinearChart(
-    element,
-    data,
-    {
-      // TODO: Fix [https://github.com/palantir/plottable/issues/747](#747)
-      // Temporary work around for [https://github.com/palantir/plottable/issues/747](#747)
-      // Issue: AreaPlot / LinePlot should default to no padding on xScale
-      innerPadding: innerPadding || 999,
+export default ({element, data, config}) => {
 
-      ...config
-    }
-  );
+  const plot = new Plottable.Plots.StackedArea();
 
-  return categoryLinearChart(new Plottable.Plots.StackedArea())
+  const chart = createLineChart(element, plot, config);
+
+  chart.addData(data);
+
+  return chart
 };

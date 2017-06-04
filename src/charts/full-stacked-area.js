@@ -1,34 +1,33 @@
 import Plottable from "plottable";
-import {createCategoryLinearChart} from "../factories/chartFactory";
+import {createLineChart} from "./line";
+import {createFullStackedDataset} from "../factories/createDataset";
 
-export default (element, {labels, series}, {innerPadding, ...config}) => {
-  const sums = labels
-    .map((label, index) =>
-      series
-        .map(({values}) => values[index] || 0)
-        .reduce((sum, value) => sum + value)
-    );
+export default ({element, data, config: {linearAxis = {}, ...config}}) => {
 
-  series = series.map(s => {
+  const plot = new Plottable.Plots.StackedArea();
 
-    return {
-      ...s,
-      values: s.values.map((value, index) => value / sums[index]),
-    }
-
-  });
-
-  const categoryLinearChart = createCategoryLinearChart(
+  const linearChart = createLineChart(
     element,
-    {labels, series},
+    plot,
     {
-      // TODO: Fix [https://github.com/palantir/plottable/issues/747](#747)
-      // Temporary work around for [https://github.com/palantir/plottable/issues/747](#747)
-      // Issue: AreaPlot / LinePlot should default to no padding on xScale
-      innerPadding: innerPadding || 999,
-      max: 1,
-      ...config
-    });
+      linearAxis: {
+        axisMaximum: 100,
+        axisMinimum: 0,
 
-  return categoryLinearChart(new Plottable.Plots.StackedArea())
+        ...linearAxis,
+      },
+      ...config
+    }
+  );
+
+  const chart = {
+
+    ...linearChart,
+
+    addData: data => linearChart.addData(createFullStackedDataset(data)),
+  };
+
+  chart.addData(data);
+
+  return chart;
 };

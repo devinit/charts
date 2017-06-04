@@ -1,23 +1,36 @@
 import Plottable from "plottable";
-import {createCategoryLinearChart} from "../factories/chartFactory";
+import {createLinearChart} from "../factories/createLinearChart";
+import {createFullStackedDataset} from "../factories/createDataset";
 
-export default (element, {labels, series}, {orientation, ...config}) => {
-  const sums = labels
-    .map((label, index) =>
-      series
-        .map(({values}) => values[index] || 0)
-        .reduce((sum, value) => sum + value)
-    );
+export default ({element, data, config: {orientation, linearAxis = {}, ...config}}) => {
 
-  series = series.map(s => {
+  const plot = new Plottable.Plots.StackedBar(orientation);
 
-    return {
-      ...s,
-      values: s.values.map((value, index) => value / sums[index]),
+  const linearChart = createLinearChart({
+    element,
+    plot,
+    config: {
+      orientation,
+
+      linearAxis: {
+        axisMaximum: 100,
+        axisMinimum: 0,
+
+        ...linearAxis,
+      },
+
+      ...config
     }
-
   });
 
-  const categoryLinearChart = createCategoryLinearChart(element, {labels, series}, {orientation, max: 1, ...config});
-  return categoryLinearChart(new Plottable.Plots.StackedBar(orientation))
+  const chart = {
+
+    ...linearChart,
+
+    addData: data => linearChart.addData(createFullStackedDataset(data)),
+  };
+
+  chart.addData(data);
+
+  return chart
 };
