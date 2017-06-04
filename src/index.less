@@ -1,0 +1,18 @@
+@import "../node_modules/plottable/plottable.css";
+
+.plottable .title-label text {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.plottable .gridlines line {
+  stroke: #3C3C3C;
+  opacity: 0.25;
+  stroke-width: 1px;
+  stroke-dasharray: 1 5;
+}
+
+.plottable .rectangle-plot rect:before {
+  content: attr(title);
+  display: block;
+}
