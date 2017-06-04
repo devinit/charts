@@ -1,31 +1,110 @@
 # @devinit/charts
 
-> Disclaimer: This is a work in progress
+Modular d3 charts
 
-Hello there,
+## Install
+Firstly, install `@devinit/charts`
 
-We're building another charting library. Why would we do that, you ask? 
+```
+npm install @devinit/charts
+```
 
-> We won't be reinventing anything. Instead this is library interface between DevInit products and any number of charting libraries.
+## Developing
 
-We're putting all the charts in one place, such that no one has to reinvent wheels. The charts are written in pure javascript, thus can be used anywhere.
+To start contributing, clone this repository and run `npm start`
 
-Chart authors may use any existing JavaScript libraries to implement charts. Since each chart component bundle is loaded asynchronously, this should have no effect on your application's initial bundle.
+Browse to localhost:8080, to see some charts
 
-## Concepts
+## Usage
 
-Since this library is only an interface, we have come up with some general rules for how datasets should look like. This format should be compatible with any chart type
+This library exposes a `draw` function that takes the following parameters;
+ - a DOM node
+ - a configuration object
+ - a data object
+
+Example:
+```js
+
+draw({
+    element: document.getElementById('line-chart'),
+    config: {
+      title: 'Line Chart',
+      type: 'line',
+    },
+    data: {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      series: [
+        {
+          color: '#ff9a55', label: '1992',
+          values: [100, 200, 120, 270, 230, 210]
+        },
+        {
+          color: '#ffea6c', label: '1993',
+          values: [110, 130, 260, 250, 210, 180]
+        },
+      ]
+    }
+})
+
+```
+
+With that you get a line chart inside the element with an id of `line-chart`. The configuration fields and data shape depend on the chart type. The following sections outline the accepted configuration files and data shape for each supported chart type
 
 ### Linear Charts
 
+Linear charts consist of a linear axis and a category axis 
+
+#### Chart types
+- area
+- bar
+- line
+- stacked-bar
+- stacked-area
+- full-stacked-bar
+- full-stacked-area
+- clustered-bar
+
+#### Configuration
+
+```js
+const config = {
+  
+    title: 'Line Chart',
+
+    // titleAlignment: 'left|center|right',
+    titleAlignment: 'left',
+    
+    // orientation: 'vertical|horizontal',
+    orientation: 'vertical',
+  
+    linearAxis: {
+      showAxis: false,
+      showGridlines: false,
+      axisLabel: null,
+      axisMinimum: null,
+      axisMaximum: null,
+    },
+
+    categoryAxis: {
+      showAxis: false,
+      axisLabel: null,
+      innerPadding: 0,
+      outerPadding: 0
+    },
+    
+}
+
+```
+
+#### Data Shape
+
 ```js
 const data = {
-  "labels": ["Label 1", ...moreLabels], 
+  "labels": ["Label 1", ...moreLabels],
   "series": [
     {
-      "stroke": "#abc", 
-      "fill": "#abc", 
-      "opacity": 1, 
+      "color": "#abc", 
+      "label": "Series Label",
       "values": [1, 2, ...moreValues]
     },
     ...moreSeries
@@ -33,30 +112,79 @@ const data = {
 }
 ```
 
-#### Rules
-1. Each value in a `series` should correspond to a `label`. This implies that;
-    1. the number of values in a `series` should equal the number of `labels`
-    2. all `series` should contain an equal number of `values`, use zero when no value is available
-2. All color configuration associated with a series should be provided in the series
-3. Simple chart types (e.g. bar, column, line, area, pie) should require only one series
-4. Compound chart types (e.g bar-stack, column-cluster, area-stack, pie-stack) should render each series 
+| Label | Color | Jan | Feb | Mar | Apr | May |
+|-------|-------|-----|-----|-----|-----|-----|
+| 2006  | #abc  | 1   | 2   | 3   | 4   | 5   |
+| 2007  | #aba  | 2   | 3   | 4   | 5   | 6   |
+| 2008  | #abb  | 3   | 4   | 5   | 6   | 7   |
 
-### Hierachy Charts
+### Circular Charts
 
-TODO
+Circular charts include pie and donut charts
 
-## Install
-Firstly, install `@devinit/charts`
-
-> `yarn add @devinit/charts`
-
-## Developing
-
-To start contributing and run `npm start`
-
+```js
+const data = {
+  "series": [
+    {
+      "label": 'Jan',
+      "color": '#ff9a55',
+      "value": 200,
+    },
+    
+    ...moreSeries
+   ]
+}
 ```
-$ npm start
+
+### Hierarchy Charts
+
+Hierachy charts represent tree data e.g `tree-map`, `partition`, `grouped-vertical-stack`. Each series needs a parent identifier.
+
+#### Chart types
+- treemap
+- partition
+
+#### Configuration
+
+```js
+const config = {
+  
+}
 ```
 
-Browse to localhost:8080, to see some charts
+#### Data shape
+```js
+const data = {
+  "series": [
+    {
+      "label": 'Africa',
+    },
+    {
+      "label": 'Uganda',
+      "parent": 'Africa',
+      "color": '#ff9a55',
+      "value": 200,
+    },
+    {
+      "label": 'Kenya',
+      "parent": 'Africa',
+      "color": '#ff9a55',
+      "value": 200,
+    },
+    
+    ...moreSeries
+   ]
+}
+```
+
+| label  | parent | color  | value |
+|--------|--------|--------|-------|
+| Africa |        |        |       |
+| Uganda | Africa | #aba   | 4     |
+| Kenya  | Africa | #abb   | 5     |
+| Rwanda | Africa | #abb   | 5     |
+
+### 3D Charts (TODO)
+
+3D charts represent three dimensional data
 
