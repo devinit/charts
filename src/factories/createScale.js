@@ -1,16 +1,16 @@
 import Plottable from 'plottable'
 
-export const createLinearScale = ({min, max}) => {
+export const createLinearScale = ({axisMinimum = null, axisMaximum = null}) => {
   const scale = new Plottable.Scales.Linear();
-  scale.domainMin(min);
-  scale.domainMax(max);
+  scale.domainMin(axisMinimum);
+  scale.domainMax(axisMaximum);
 
   // ...
 
   return scale;
 };
 
-export const createCategoryScale = ({innerPadding, outerPadding}) => {
+export const createCategoryScale = ({innerPadding = 0, outerPadding = 0}) => {
   const scale = new Plottable.Scales.Category();
   scale.outerPadding(outerPadding);
   scale.innerPadding(innerPadding);
