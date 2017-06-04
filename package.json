@@ -1,0 +1,61 @@
+{
+  "name": "@devinit/charts",
+  "version": "0.0.1",
+  "description": "Modular D3 charts for DevInit DataHub",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "babel --presets es2015 -d lib/ src/ && mocha --reporter spec",
+    "start": "webpack-dev-server",
+    "compile": "babel --presets es2015 -d lib/ src/",
+    "build": "webpack  --env=dev --progress --profile --colors",
+    "build:production": "WEBPACK_ENV=production webpack --env=prod --progress --profile --colors"
+  },
+  "dependencies": {
+    "approximate-number": "^2.0.0",
+    "babel-runtime": "^6.23.0",
+    "d3": "^4.9.1",
+    "plottable": "^3.1.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-plugin-dynamic-import-node": "^1.0.2",
+    "babel-plugin-remove-webpack": "^1.1.0",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "chai": "^3.5.0",
+    "css-loader": "^0.28.4",
+    "extract-text-webpack-plugin": "^2.1.0",
+    "less": "^2.7.2",
+    "less-loader": "^4.0.4",
+    "mocha": "^3.4.2",
+    "progress-bar-webpack-plugin": "^1.9.3",
+    "release-it": "^2.7.3",
+    "webpack": "^2.6.0",
+    "webpack-dev-server": "^2.4.5"
+  },
+  "directories": {
+    "example": "examples",
+    "dist": "dist",
+    "lib": "lib",
+    "src": "src",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devinit/charts.git"
+  },
+  "keywords": [
+    "charts",
+    "d3"
+  ],
+  "author": "Alex Miller",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/devinit/charts/issues"
+  },
+  "homepage": "https://github.com/devinit/charts#readme"
+}
