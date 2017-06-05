@@ -66,10 +66,13 @@ export default ({
     const yMin = orientation === 'vertical' && d.parent ? d[y0] - (yMax - d[y0]) * 0.1 : d[y0];
 
     const ease = (actual, expected, factor) => {
-      if (expected.toFixed(3) !== actual.toFixed(3)) {
+      if (+expected.toFixed(4) !== +actual.toFixed(4)) {
         const diff = expected - actual;
-        const absDiff = Math.abs(diff);
-        const differenceToSmall = parseFloat(absDiff.toFixed(2)) === 0;
+
+        const differenceToSmall = parseFloat(Math.abs(diff).toFixed(2)) === 0;
+
+        console.log(+Math.abs(diff).toFixed(3));
+
         return differenceToSmall ? expected : actual + (diff * factor)
       }
     };
@@ -85,9 +88,7 @@ export default ({
       yScale.domainMin(easedYMin);
       yScale.domainMax(easedYMax);
 
-      if (!easedXMin && !easedXMax && !easedYMin && !easedYMax) {
-        clearInterval(interval)
-      }
+      if (!easedXMin && !easedXMax && !easedYMin && !easedYMax) clearInterval(interval)
 
     }, 50);
   });
