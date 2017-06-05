@@ -4,7 +4,8 @@ import {createTreeHierachy} from "../factories/createDataset";
 import partition from "../partition";
 import color from "d3-color/src/color";
 
-export default ({element, data, config: {
+export default ({
+                  element, data, config: {
 
     orientation = 'horizontal',
 
@@ -24,8 +25,6 @@ export default ({element, data, config: {
 
   const layout = partition().size([1, 1]);
 
-  let root = null;
-
   const colorize = d => {
 
     d.data.color = !d.data.color && d.parent && d.parent.data.color ?
@@ -36,7 +35,7 @@ export default ({element, data, config: {
   };
 
   const transform = data => {
-    root = createTreeHierachy(data);
+    const root = createTreeHierachy(data);
     return layout(root)
       .descendants()
       .map(colorize)
@@ -50,25 +49,47 @@ export default ({element, data, config: {
     addData: data => treeChart.addData(transform(data))
   };
 
-  chart.onClick(entity => {
+  chart.onClick((entities, xScale, yScale) => {
+    const entity = entities.pop();
     const d = entity.datum;
 
-    if (d === root && !d.parent) return;
+    const x = orientation === 'vertical' ? 'x' : 'y';
+    const y = orientation === 'horizontal' ? 'x' : 'y';
+    const x0 = x + '0';
+    const y0 = y + '0';
+    const x1 = x + '1';
+    const y1 = y + '1';
 
-    else if (d === root && d.parent) {
-      root = d.parent;
-    }
+    const xMax = orientation === 'horizontal' ? d.descendants().sort((a, b) => a[x1] - b[x1]).pop()[x1] : d[x1];
+    const xMin = orientation === 'horizontal' && d.parent ? d[x0] - (xMax - d[x0]) * 0.1 : d[x0];
+    const yMax = orientation === 'vertical' ? d.descendants().sort((a, b) => a[y1] - b[y1]).pop()[y1] : d[y1];
+    const yMin = orientation === 'vertical' && d.parent ? d[y0] - (yMax - d[y0]) * 0.1 : d[y0];
 
-    else {
-      root = d;
-    }
+    const ease = (actual, expected, factor) => {
+      if (expected.toFixed(3) !== actual.toFixed(3)) {
+        const diff = expected - actual;
+        const absDiff = Math.abs(diff);
+        const differenceToSmall = parseFloat(absDiff.toFixed(2)) === 0;
+        return differenceToSmall ? expected : actual + (diff * factor)
+      }
+    };
 
-    // TODO: Why does partition layout boxes outside of the given width/height
-    const descendants = layout(root)
-      .descendants()
-      .map(colorize);
+    const interval = setInterval(() => {
+      const easedXMin = ease(xScale.domainMin(), xMin, 0.3);
+      const easedXMax = ease(xScale.domainMax(), xMax, 0.3);
+      const easedYMin = ease(yScale.domainMin(), yMin, 0.3);
+      const easedYMax = ease(yScale.domainMax(), yMax, 0.3);
 
-    treeChart.addData(descendants)
+      xScale.domainMin(easedXMin);
+      xScale.domainMax(easedXMax);
+      yScale.domainMin(easedYMin);
+      yScale.domainMax(easedYMax);
+
+      if (!easedXMin && !easedXMax && !easedYMin && !easedYMax) {
+        clearInterval(interval)
+      }
+
+    }, 50);
   });
 
   chart.addData(data);
