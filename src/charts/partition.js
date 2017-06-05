@@ -49,7 +49,22 @@ export default ({
     addData: data => treeChart.addData(transform(data))
   };
 
+  const ease = (actual, expected, factor) => {
+    if (+expected.toFixed(4) !== +actual.toFixed(4)) {
+      const diff = expected - actual;
+
+      const differenceToSmall = parseFloat(Math.abs(diff).toFixed(3)) === 0;
+
+      return differenceToSmall ? expected : actual + (diff * factor)
+    }
+  };
+
+  let intervals = [];
+
   chart.onClick((entities, xScale, yScale) => {
+    // Stop all intervals
+    while(intervals.length) clearInterval(intervals.pop());
+
     const entity = entities.pop();
     const d = entity.datum;
 
@@ -65,16 +80,6 @@ export default ({
     const yMax = orientation === 'vertical' ? d.descendants().sort((a, b) => a[y1] - b[y1]).pop()[y1] : d[y1];
     const yMin = orientation === 'vertical' && d.parent ? d[y0] - (yMax - d[y0]) * 0.1 : d[y0];
 
-    const ease = (actual, expected, factor) => {
-      if (+expected.toFixed(4) !== +actual.toFixed(4)) {
-        const diff = expected - actual;
-
-        const differenceToSmall = parseFloat(Math.abs(diff).toFixed(2)) === 0;
-
-        return differenceToSmall ? expected : actual + (diff * factor)
-      }
-    };
-
     const interval = setInterval(() => {
       const easedXMin = ease(xScale.domainMin(), xMin, 0.3);
       const easedXMax = ease(xScale.domainMax(), xMax, 0.3);
@@ -89,6 +94,8 @@ export default ({
       if (!easedXMin && !easedXMax && !easedYMin && !easedYMax) clearInterval(interval)
 
     }, 50);
+
+    intervals = [...intervals, interval];
   });
 
   chart.addData(data);
