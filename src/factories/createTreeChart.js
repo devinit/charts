@@ -65,7 +65,7 @@ export default ({
         const entities = plot.entitiesAt(point);
 
         if (entities.length) {
-          callback(entities[0])
+          callback(entities, xScale, yScale)
         }
 
       });
