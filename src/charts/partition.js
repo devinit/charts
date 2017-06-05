@@ -71,8 +71,6 @@ export default ({
 
         const differenceToSmall = parseFloat(Math.abs(diff).toFixed(2)) === 0;
 
-        console.log(+Math.abs(diff).toFixed(3));
-
         return differenceToSmall ? expected : actual + (diff * factor)
       }
     };
