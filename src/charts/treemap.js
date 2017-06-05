@@ -31,8 +31,6 @@ export default ({element, data, config: {
 
   const layout = treemap().tile(tilingMethod.default);
 
-  let root = null;
-
   const colorize = d => {
 
     d.data.color = !d.data.color && d.parent && d.parent.data.color ?
@@ -42,8 +40,7 @@ export default ({element, data, config: {
     return d;
   };
 
-  const transform = data =>  {
-    root = createTreeHierachy(data);
+  const transform = root => {
     return layout(root)
       .descendants()
       .map(colorize)
@@ -54,30 +51,11 @@ export default ({element, data, config: {
 
     ...treeChart,
 
-    addData: data => treeChart.addData(transform(data))
+    addData: data => {
+      const root = createTreeHierachy(data);
+      treeChart.addData(transform(root))
+    }
   };
-
-  chart.onClick(entity => {
-    const d = entity.datum;
-
-    if (d === root && !d.parent) return;
-
-    else if (d === root && d.parent) {
-      root = d.parent;
-    }
-
-    else {
-      root = d;
-    }
-
-    const descendants = layout(root)
-      .descendants()
-      .map(colorize)
-
-    console.log(descendants)
-
-    treeChart.addData(descendants)
-  });
 
   chart.addData(data);
 
