@@ -4,7 +4,7 @@
   "description": "Modular D3 charts for DevInit DataHub",
   "main": "src/index.js",
   "scripts": {
-    "test": "babel -d lib/ src/ && mocha --reporter spec",
+    "test": "babel -d lib/ src/ && mocha --reporter spec -r jsdom-global/register",
     "start": "webpack-dev-server",
     "compile": "babel -d lib/ src/",
     "build": "webpack  --env=dev --progress --profile --colors",
@@ -29,6 +29,8 @@
     "chai": "^3.5.0",
     "css-loader": "^0.28.4",
     "extract-text-webpack-plugin": "^2.1.0",
+    "jsdom": "^11.0.0",
+    "jsdom-global": "^3.0.2",
     "less": "^2.7.2",
     "less-loader": "^4.0.4",
     "mocha": "^3.4.2",
@@ -38,11 +40,10 @@
     "webpack-dev-server": "^2.4.5"
   },
   "directories": {
-    "example": "examples",
-    "dist": "dist",
-    "lib": "lib",
-    "src": "src",
-    "test": "test"
+    "dist": "./dist",
+    "lib": "./lib",
+    "src": "./src",
+    "test": "./test"
   },
   "repository": {
     "type": "git",
