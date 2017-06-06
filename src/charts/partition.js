@@ -1,11 +1,13 @@
 import Plottable from "plottable";
 import createTreeChart from "../factories/createTreeChart";
 import {createTreeHierachy} from "../factories/createDataset";
-import partition from "../partition";
+import partition from "d3-hierarchy/src/partition";
 import color from "d3-color/src/color";
 
 export default ({
-                  element, data, config: {
+  element,
+  data,
+  config: {
 
     orientation = 'horizontal',
 
@@ -17,7 +19,7 @@ export default ({
 
     ...config
   }
-                }) => {
+}) => {
 
   const plot = new Plottable.Plots.Rectangle();
 
@@ -63,7 +65,7 @@ export default ({
 
   chart.onClick((entities, xScale, yScale) => {
     // Stop all intervals
-    while(intervals.length) clearInterval(intervals.pop());
+    while (intervals.length) clearInterval(intervals.pop());
 
     const entity = entities.pop();
     const d = entity.datum;
