@@ -54,23 +54,21 @@ export default ({element,
 
   table.renderTo(element);
 
-  const transform = ({series}) => [new Plottable.Dataset(series.map(({color, label, value}) => ({label, color, value})))];
+  const transform = (series) => [new Plottable.Dataset(series.map(({color, label, value}) => ({label, color, value})))];
 
 
 
-  const addData = (data = null) => {
-    if (data) {
+  const addData = (series = []) => {
 
-      // TODO: Efficiently update legend
-      if (showLegend) {
+    // TODO: Efficiently update legend
+    if (showLegend) {
 
-        const domain = data.series.map(d => d.label);
-        const range = data.series.map(d => d.color);
-        colorScale.domain(domain).range(range);
-      }
-
-      plot.datasets(transform(data));
+      const domain = series.map(d => d.label);
+      const range = series.map(d => d.color);
+      colorScale.domain(domain).range(range);
     }
+
+    plot.datasets(transform(series));
   };
 
   return {

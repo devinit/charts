@@ -4,13 +4,14 @@ import {createCategoryScale, createLinearScale} from "./createScale";
 import {createCategoryAxis, createNumericAxis} from "./createAxis";
 import {createAxisGridLines} from "./createGrid";
 
-export const createLinearChart = ({
-                                    element, plot, data = null, config: {
+export const createLinearChart = ({element, plot, data = null, config: {
     title = null,
 
     titleAlignment = 'left',
 
     orientation = 'vertical',
+
+  colors = [],
 
     linearAxis = {
       // Do you even want an axis?
@@ -53,8 +54,7 @@ export const createLinearChart = ({
 
     // ... more config
 
-  }
-                                  }) => {
+  }}) => {
 
   const categoryScale = createCategoryScale(categoryAxis);
   const linearScale = createLinearScale(linearAxis);
@@ -103,19 +103,33 @@ export const createLinearChart = ({
 
   table.renderTo(element);
 
-  const addData = (data = null) => {
-    if (data) {
+  const addData = (data = []) => {
 
-      // TODO: Efficiently update legend
-      if (showLegend) {
+    const {labels, series} = createLinearDataset(data);
 
-        const domain = data.series.map(d => d.label);
-        const range = data.series.map(d => d.color);
-        colorScale.domain(domain).range(range);
-      }
+    // TODO: Efficiently update legend
+    if (showLegend) {
 
-      plot.datasets(createLinearDataset(data));
+      const domain = series.map(d => d.label);
+      const range = series.map((d, i) => colors[i] || '#abc');
+      colorScale.domain(domain).range(range);
     }
+
+    const datasets = series.map(({opacity = 1, values}, index) => {
+      const color = colors[index] || '#abc';
+      return values.map((value, index) => {
+        return {
+          label: labels[index] || index, // Each value in a `series` should correspond to a `label`
+          value,
+          color,
+          opacity
+        }
+      })
+    });
+
+    console.log(datasets)
+
+    plot.datasets(datasets.map(d => new Plottable.Dataset(d)));
   };
 
   return {
@@ -125,8 +139,6 @@ export const createLinearChart = ({
     addData,
 
   };
-
-  return plottableChart;
 };
 
 export const createLinearTable = ({title, titleAlignment, legend, orientation, plotArea, linearAxis, categoryAxis}) => {
