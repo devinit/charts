@@ -13,6 +13,7 @@
         * {
             box-sizing: border-box;
         }
+
         body {
             width: 700px;
             background-color: #eee;
@@ -46,15 +47,19 @@
 <body>
 
 <section>
-    <div class="chart" ><div id="line_chart"></div></div>
+    <div class="chart">
+        <div id="line_chart"></div>
+    </div>
     <script>
       DiCharts.draw({
         element: document.getElementById('line_chart'),
         config: {
           title: 'Line Chart',
           type: 'line',
+          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
           linearAxis: {
             showAxis: true,
+            showAxisLabel: '',
             showGridlines: true,
             axisLabel: 'Rainfall (mm)',
           },
@@ -66,33 +71,29 @@
             showLegend: true
           }
         },
-        data: {
-          labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-          series: [
-            {
-              color: '#ff9a55',
-              label: '1992',
-              values: [100, 200, 120, 270, 230, 210]
-            },
-            {
-              color: '#ffea6c',
-              label: '1993',
-              values: [110, 130, 260, 250, 210, 180]
-            },
-          ]
-        }
+        data: [
+          {"Rainfall (mm)": 100, "Months": "Jan"},
+          {"Rainfall (mm)": 200, "Months": "Feb"},
+          {"Rainfall (mm)": 120, "Months": "Mar"},
+          {"Rainfall (mm)": 270, "Months": "Apr"},
+          {"Rainfall (mm)": 230, "Months": "May"},
+          {"Rainfall (mm)": 210, "Months": "Jun"},
+        ]
       })
     </script>
 </section>
 
 <section>
-    <div class="chart" ><div id="area_chart"></div></div>
+    <div class="chart">
+        <div id="area_chart"></div>
+    </div>
     <script>
       DiCharts.draw({
         element: document.getElementById('area_chart'),
         config: {
           title: 'Area Chart',
           type: 'area',
+          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
           linearAxis: {
             showAxis: true,
             showGridlines: true,
@@ -103,28 +104,30 @@
             axisLabel: 'Months',
           }
         },
-        data: {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-          series: [
-            {
-              color: '#ff9a55',
-              label: '1992',
-              values: [100, 200, 170, 270, 230, 210]
-            }
-          ]
-        }
+        data: [
+          {"Rainfall (mm)": 100, "Months": "Jan"},
+          {"Rainfall (mm)": 200, "Months": "Feb"},
+          {"Rainfall (mm)": 120, "Months": "Mar"},
+          {"Rainfall (mm)": 270, "Months": "Apr"},
+          {"Rainfall (mm)": 230, "Months": "May"},
+          {"Rainfall (mm)": 210, "Months": "Jun"},
+        ]
       })
     </script>
 </section>
 
 <section>
-    <div class="chart" ><div id="stacked-area"></div></div>
+    <div class="chart">
+        <div id="stacked-area"></div>
+    </div>
     <script>
       DiCharts.draw({
         element: document.getElementById('stacked-area'),
         config: {
           title: 'Stacked Area Chart',
           type: 'stacked-area',
+          groupBy: 'Years',
+          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
           linearAxis: {
             showAxis: true,
             showGridlines: true,
@@ -135,101 +138,81 @@
             axisLabel: 'Months',
           }
         },
-        data: {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-          series: [
-            {
-              color: '#ffea6c',
-              label: '1992',
-              values: [100, 200, 120, 270, 230, 210]
-            },
-            {
-              color: '#ff9a55',
-              label: '1993',
-              values: [100, 200, 120, 270, 230, 210]
-            },
-          ]
-        }
+        data: [
+          {"Rainfall (mm)": 100, "Years": "1992", "Months": "Jan"},
+          {"Rainfall (mm)": 200, "Years": "1992", "Months": "Feb"},
+          {"Rainfall (mm)": 120, "Years": "1992", "Months": "Mar"},
+          {"Rainfall (mm)": 270, "Years": "1992", "Months": "Apr"},
+          {"Rainfall (mm)": 230, "Years": "1992", "Months": "May"},
+          {"Rainfall (mm)": 210, "Years": "1992", "Months": "Jun"},
+          {"Rainfall (mm)": 123, "Years": "1993", "Months": "Jan"},
+          {"Rainfall (mm)": 234, "Years": "1993", "Months": "Feb"},
+          {"Rainfall (mm)": 342, "Years": "1993", "Months": "Mar"},
+          {"Rainfall (mm)": 234, "Years": "1993", "Months": "Apr"},
+          {"Rainfall (mm)": 354, "Years": "1993", "Months": "May"},
+          {"Rainfall (mm)": 123, "Years": "1993", "Months": "Jun"}
+        ]
       })
     </script>
 </section>
 
 <section>
-    <div class="chart" ><div id="full-stacked-area"></div></div>
+    <div class="chart">
+        <div id="full-stacked-area"></div>
+    </div>
     <script>
-      const data = {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-        series: [
-          {
-            color: '#ffea6c',
-            label: '1992',
-            values: [0,0,0,0,0,0]
+      DiCharts.draw({
+        element: document.getElementById('full-stacked-area'),
+        config: {
+          title: '100% Stacked Area Chart',
+          type: 'full-stacked-area',
+          groupBy: 'Years',
+          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
+          linearAxis: {
+            showAxis: true,
+            showGridlines: true,
+            axisLabel: 'Rainfall (mm)',
           },
-          {
-            color: '#ff9a55',
-            label: '1993',
-            values: [0,0,0,0,0,0]
+          categoryAxis: {
+            showAxis: true,
+            axisLabel: 'Months',
           },
-          {
-            color: '#e7b2ff',
-            label: '1994',
-            values: [0,0,0,0,0,0]
-          },
-          {
-            color: '#91ff92',
-            label: '1995',
-            values: [0,0,0,0,0,0]
-          },
+          legend: {
+            showLegend: true,
+            position: 'right',
+            rowSpan: 1,
+          }
+        },
+        data: [
+          {"Rainfall (mm)": 100, "Years": "1992", "Months": "Jan"},
+          {"Rainfall (mm)": 200, "Years": "1992", "Months": "Feb"},
+          {"Rainfall (mm)": 120, "Years": "1992", "Months": "Mar"},
+          {"Rainfall (mm)": 270, "Years": "1992", "Months": "Apr"},
+          {"Rainfall (mm)": 230, "Years": "1992", "Months": "May"},
+          {"Rainfall (mm)": 210, "Years": "1992", "Months": "Jun"},
+          {"Rainfall (mm)": 123, "Years": "1993", "Months": "Jan"},
+          {"Rainfall (mm)": 234, "Years": "1993", "Months": "Feb"},
+          {"Rainfall (mm)": 342, "Years": "1993", "Months": "Mar"},
+          {"Rainfall (mm)": 234, "Years": "1993", "Months": "Apr"},
+          {"Rainfall (mm)": 354, "Years": "1993", "Months": "May"},
+          {"Rainfall (mm)": 123, "Years": "1993", "Months": "Jun"}
         ]
-      };
-
-      DiCharts
-        .draw({
-          element: document.getElementById('full-stacked-area'),
-          config: {
-            title: '100% Stacked Area Chart',
-            type: 'full-stacked-area',
-            /*linearAxis: {
-              showAxis: true,
-              showGridlines: true,
-              axisLabel: 'Rainfall (mm)',
-            },
-            categoryAxis: {
-              showAxis: true,
-              axisLabel: 'Months',
-            },
-            legend: {
-              showLegend: true
-            }*/
-          },
-          data: data
-        })
-        .then(chart => {
-
-          setInterval(() => {
-            chart.addData({
-              labels: data.labels,
-              series: data.series.map(s => {
-                return Object.assign(s, {
-                  values: s.values.slice(1).concat([100 * Math.random()])
-                });
-              })
-            });
-          }, 1000)
-
-        });
+      })
 
     </script>
 </section>
 
 <section>
-    <div class="chart" ><div id="bar"></div></div>
+    <div class="chart">
+        <div id="bar"></div>
+    </div>
     <script>
       DiCharts.draw({
         element: document.getElementById('bar'),
         config: {
           title: 'Bar Chart',
           type: 'bar',
+          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
           linearAxis: {
             showAxis: true,
             showGridlines: true,
@@ -242,28 +225,29 @@
             outerPadding: 0
           }
         },
-        data: {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-          series: [
-            {
-              color: '#ff9a55',
-              label: '1992',
-              values: [100, 200, 170, 270, 230, 210]
-            }
-          ]
-        }
+        data: [
+          {"Rainfall (mm)": 100, "Months": "Jan"},
+          {"Rainfall (mm)": 200, "Months": "Feb"},
+          {"Rainfall (mm)": 120, "Months": "Mar"},
+          {"Rainfall (mm)": 270, "Months": "Apr"},
+          {"Rainfall (mm)": 230, "Months": "May"},
+          {"Rainfall (mm)": 210, "Months": "Jun"},
+        ]
       })
     </script>
 </section>
 
 <section>
-    <div class="chart" ><div id="column"></div></div>
+    <div class="chart">
+        <div id="column"></div>
+    </div>
     <script>
       DiCharts.draw({
         element: document.getElementById('column'),
         config: {
           title: 'Column Chart',
           type: 'bar',
+          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
           orientation: 'horizontal',
           linearAxis: {
             showAxis: true,
@@ -277,28 +261,30 @@
             outerPadding: 0
           }
         },
-        data: {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-          series: [
-            {
-              color: '#ff9a55',
-              label: '1992',
-              values: [100, 200, 120, 270, 230, 210]
-            }
-          ]
-        }
+        data: [
+          {"Rainfall (mm)": 100, "Months": "Jan"},
+          {"Rainfall (mm)": 200, "Months": "Feb"},
+          {"Rainfall (mm)": 120, "Months": "Mar"},
+          {"Rainfall (mm)": 270, "Months": "Apr"},
+          {"Rainfall (mm)": 230, "Months": "May"},
+          {"Rainfall (mm)": 210, "Months": "Jun"},
+        ]
       })
     </script>
 </section>
 
 <section>
-    <div class="chart" ><div id="stacked-bar"></div></div>
+    <div class="chart">
+        <div id="stacked-bar"></div>
+    </div>
     <script>
       DiCharts.draw({
         element: document.getElementById('stacked-bar'),
         config: {
           title: 'Stacked Bar Chart',
           type: 'stacked-bar',
+          groupBy: 'Years',
+          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
           linearAxis: {
             showAxis: true,
             showGridlines: true,
@@ -311,33 +297,36 @@
             outerPadding: 0
           }
         },
-        data: {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-          series: [
-            {
-              color: '#ff9a55',
-              label: '1992',
-              values: [100, 200, 120, 270, 230, 210]
-            },
-            {
-              color: '#ffea6c',
-              label: '1993',
-              values: [110, 130, 260, 250, 210, 180]
-            },
-          ]
-        }
+        data: [
+          {"Rainfall (mm)": 100, "Years": "1992", "Months": "Jan"},
+          {"Rainfall (mm)": 200, "Years": "1992", "Months": "Feb"},
+          {"Rainfall (mm)": 120, "Years": "1992", "Months": "Mar"},
+          {"Rainfall (mm)": 270, "Years": "1992", "Months": "Apr"},
+          {"Rainfall (mm)": 230, "Years": "1992", "Months": "May"},
+          {"Rainfall (mm)": 210, "Years": "1992", "Months": "Jun"},
+          {"Rainfall (mm)": 100, "Years": "1993", "Months": "Jan"},
+          {"Rainfall (mm)": 200, "Years": "1993", "Months": "Feb"},
+          {"Rainfall (mm)": 120, "Years": "1993", "Months": "Mar"},
+          {"Rainfall (mm)": 270, "Years": "1993", "Months": "Apr"},
+          {"Rainfall (mm)": 230, "Years": "1993", "Months": "May"},
+          {"Rainfall (mm)": 210, "Years": "1993", "Months": "Jun"}
+        ]
       })
     </script>
 </section>
 
 <section>
-    <div class="chart" ><div id="full-stacked-bar"></div></div>
+    <div class="chart">
+        <div id="full-stacked-bar"></div>
+    </div>
     <script>
       DiCharts.draw({
         element: document.getElementById('full-stacked-bar'),
         config: {
           title: '100% Stacked Bar Chart',
           type: 'full-stacked-bar',
+          groupBy: 'Years',
+          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
           linearAxis: {
             showAxis: true,
             showGridlines: true,
@@ -350,35 +339,39 @@
             outerPadding: 0
           }
         },
-        data: {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-          series: [
-            {
-              color: '#ff9a55',
-              label: '1992',
-              values: [100, 200, 120, 270, 230, 210]
-            },
-            {
-              color: '#ffea6c',
-              label: '1993',
-              values: [110, 130, 260, 250, 210, 180]
-            },
-          ]
-        }
+        data: [
+          {"Rainfall (mm)": 100, "Years": "1992", "Months": "Jan"},
+          {"Rainfall (mm)": 200, "Years": "1992", "Months": "Feb"},
+          {"Rainfall (mm)": 120, "Years": "1992", "Months": "Mar"},
+          {"Rainfall (mm)": 270, "Years": "1992", "Months": "Apr"},
+          {"Rainfall (mm)": 230, "Years": "1992", "Months": "May"},
+          {"Rainfall (mm)": 210, "Years": "1992", "Months": "Jun"},
+          {"Rainfall (mm)": 123, "Years": "1993", "Months": "Jan"},
+          {"Rainfall (mm)": 234, "Years": "1993", "Months": "Feb"},
+          {"Rainfall (mm)": 342, "Years": "1993", "Months": "Mar"},
+          {"Rainfall (mm)": 234, "Years": "1993", "Months": "Apr"},
+          {"Rainfall (mm)": 354, "Years": "1993", "Months": "May"},
+          {"Rainfall (mm)": 123, "Years": "1993", "Months": "Jun"}
+        ]
       })
     </script>
 </section>
 
 <section>
-    <div class="chart" ><div id="clustered-bar"></div></div>
+    <div class="chart">
+        <div id="clustered-bar"></div>
+    </div>
     <script>
       DiCharts.draw({
         element: document.getElementById('clustered-bar'),
         config: {
           title: 'Clustered Bar Chart',
           type: 'clustered-bar',
+          groupBy: 'Years',
+          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
           linearAxis: {
             showAxis: true,
+            showAxisLabel: true,
             showGridlines: true,
             axisLabel: 'Rainfall (mm)',
           },
@@ -389,222 +382,237 @@
             outerPadding: 0
           }
         },
-        data: {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-          series: [
-            {
-              color: '#ff9a55',
-              label: '1992',
-              values: [100, 200, 120, 270, 230, 210]
-            },
-            {
-              color: '#ffea6c',
-              label: '1993',
-              values: [110, 130, 260, 250, 210, 180]
-            },
-          ]
-        }
+        data: [
+          {"Rainfall (mm)": 100, "Years": "1992", "Months": "Jan"},
+          {"Rainfall (mm)": 200, "Years": "1992", "Months": "Feb"},
+          {"Rainfall (mm)": 120, "Years": "1992", "Months": "Mar"},
+          {"Rainfall (mm)": 270, "Years": "1992", "Months": "Apr"},
+          {"Rainfall (mm)": 230, "Years": "1992", "Months": "May"},
+          {"Rainfall (mm)": 210, "Years": "1992", "Months": "Jun"},
+          {"Rainfall (mm)": 100, "Years": "1993", "Months": "Jan"},
+          {"Rainfall (mm)": 200, "Years": "1993", "Months": "Feb"},
+          {"Rainfall (mm)": 120, "Years": "1993", "Months": "Mar"},
+          {"Rainfall (mm)": 270, "Years": "1993", "Months": "Apr"},
+          {"Rainfall (mm)": 230, "Years": "1993", "Months": "May"},
+          {"Rainfall (mm)": 210, "Years": "1993", "Months": "Jun"}
+        ]
       })
     </script>
 </section>
 
 <section>
-    <div class="chart" ><div id="pie_chart"></div></div>
+    <div class="chart">
+        <div id="pie_chart"></div>
+    </div>
     <script>
       DiCharts.draw({
         element: document.getElementById('pie_chart'),
         config: {
-          title: 'Pie Chart',
           type: 'pie',
+          title: 'Pie Chart',
+          titleAlignment: 'center',
+          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
           circular: {
-            strokeWidth: 4,
+            label: 'Country',
+            value: 'Population',
+            strokeWidth: 0,
             strokeColor: '#fff',
+          },
+          legend: {
+            showLegend: true,
+            position: 'bottom',
+            'alignment': 'center'
           }
         },
-        data: {
-          series: [
-            {
-              label: 'January',
-              color: '#ff9a55',
-              value: 200,
-            },
-            {
-              label: 'February',
-              color: '#ffea6c',
-              value: 100,
-            },
-          ]
-        }
+        data: [
+          {'Country': 'Tanzania', 'Population': 53470000},
+          {'Country': 'Kenya', 'Population': 46050000},
+          {'Country': '‌Uganda', 'Population': 39030000},
+        ]
       })
     </script>
 </section>
 
 <section>
-    <div class="chart" ><div id="donut-chart"></div></div>
+    <div class="chart">
+        <div id="donut-chart"></div>
+    </div>
     <script>
       DiCharts.draw({
         element: document.getElementById('donut-chart'),
         config: {
-          title: 'Donut Chart',
           type: 'pie',
+          title: 'Donut Chart',
+          titleAlignment: 'center',
+          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
           circular: {
+            label: 'Country',
+            value: 'Population',
             innerRadius: 100,
-            strokeWidth: 4,
+            strokeWidth: 5,
             strokeColor: '#fff',
+          },
+          legend: {
+            showLegend: true,
+            position: 'bottom',
+            alignment: 'center'
           }
         },
-        data: {
-          series: [
-            {
-              label: 'January',
-              color: '#ff9a55',
-              value: 200,
-            },
-            {
-              label: 'February',
-              color: '#ffea6c',
-              value: 100,
-            },
-          ]
-        }
+        data: [
+          {'Country': 'Tanzania', 'Population': 53470000},
+          {'Country': 'Kenya', 'Population': 46050000},
+          {'Country': '‌Uganda', 'Population': 39030000},
+        ]
       })
     </script>
 </section>
 
 <section>
-    <div class="chart" ><div id="treemap-chart"></div></div>
+    <div class="chart">
+        <div id="treemap-chart"></div>
+    </div>
     <script>
       DiCharts.draw({
         element: document.getElementById('treemap-chart'),
         config: {
           title: 'Treemap Chart',
           type: 'treemap',
+          tree: {
+            id: 'label',
+            parent: 'parent',
+            value: 'value'
+          }
         },
-        data: {
-          series: [
-            {
-              "label": 'World',
-              "color": '#86c',
-            },
-            {
-              "label": 'South America',
-              "parent": 'World',
-              "color": '#e7b2ff',
-              "value": 320,
-            },
-            {
-              "label": 'Africa',
-              "parent": 'World',
-              "color": '#ff9a55',
-            },
-            {
-              "label": 'Europe',
-              "parent": 'World',
-              "color": '#3dab37',
-            },
-            {
-              "label": 'Portugal',
-              "parent": 'Europe',
-              "value": 30,
-            },
-            {
-              "label": 'Spain',
-              "parent": 'Europe',
-              "value": 120,
-            },
-            {
-              "label": 'Kenya',
-              "parent": 'Africa',
-              "value": 70,
-            },
-            {
-              "label": 'Uganda',
-              "parent": 'Africa',
-            },
-            {
-              "label": 'Kampala',
-              "parent": 'Uganda',
-              "value": 60,
-            },
-            {
-              "label": 'Jinja',
-              "parent": 'Uganda',
-              "value": 60,
-            },
-          ]
-        }
+        data: [
+          {
+            "label": 'World',
+            "color": '#86c',
+          },
+          {
+            "label": 'South America',
+            "parent": 'World',
+            "color": '#e7b2ff',
+            "value": 320,
+          },
+          {
+            "label": 'Africa',
+            "parent": 'World',
+            "color": '#ff9a55',
+          },
+          {
+            "label": 'Europe',
+            "parent": 'World',
+            "color": '#3dab37',
+          },
+          {
+            "label": 'Portugal',
+            "parent": 'Europe',
+            "value": 30,
+          },
+          {
+            "label": 'Spain',
+            "parent": 'Europe',
+            "value": 120,
+          },
+          {
+            "label": 'Kenya',
+            "parent": 'Africa',
+            "value": 70,
+          },
+          {
+            "label": 'Uganda',
+            "parent": 'Africa',
+          },
+          {
+            "label": 'Kampala',
+            "parent": 'Uganda',
+            "value": 60,
+          },
+          {
+            "label": 'Jinja',
+            "parent": 'Uganda',
+            "value": 60,
+          },
+        ]
       })
     </script>
 </section>
 
 <section>
-    <div class="chart" ><div id="compound-treemap-chart"></div></div>
+    <div class="chart">
+        <div id="compound-treemap-chart"></div>
+    </div>
     <script>
       DiCharts.draw({
         element: document.getElementById('compound-treemap-chart'),
         config: {
           title: 'Summarized Treemap Chart',
           type: 'compound-treemap',
+          tree: {
+            id: 'label',
+            parent: 'parent',
+            value: 'value'
+          }
         },
-        data: {
-          series: [
-            {
-              "label": 'World',
-              "color": '#86c',
-            },
-            {
-              "label": 'South America',
-              "parent": 'World',
-              "color": '#e7b2ff',
-              "value": 32000000,
-            },
-            {
-              "label": 'Africa',
-              "parent": 'World',
-              "color": '#ff9a55',
-            },
-            {
-              "label": 'Europe',
-              "parent": 'World',
-              "color": '#3dab37',
-            },
-            {
-              "label": 'Portugal',
-              "parent": 'Europe',
-              "value": 30000000,
-            },
-            {
-              "label": 'Spain',
-              "parent": 'Europe',
-              "value": 12000000,
-            },
-            {
-              "label": 'Kenya',
-              "parent": 'Africa',
-              "value": 7000000,
-            },
-            {
-              "label": 'Uganda',
-              "parent": 'Africa',
-            },
-            {
-              "label": 'Kampala',
-              "parent": 'Uganda',
-              "value": 600000,
-            },
-            {
-              "label": 'Jinja',
-              "parent": 'Uganda',
-              "value": 6000000,
-            },
-          ]
-        }
+        data: [
+          {
+            "label": 'World',
+            "color": '#86c',
+          },
+          {
+            "label": 'South America',
+            "parent": 'World',
+            "color": '#e7b2ff',
+            "value": 32000000,
+          },
+          {
+            "label": 'Africa',
+            "parent": 'World',
+            "color": '#ff9a55',
+          },
+          {
+            "label": 'Europe',
+            "parent": 'World',
+            "color": '#3dab37',
+          },
+          {
+            "label": 'Portugal',
+            "parent": 'Europe',
+            "value": 30000000,
+          },
+          {
+            "label": 'Spain',
+            "parent": 'Europe',
+            "value": 12000000,
+          },
+          {
+            "label": 'Kenya',
+            "parent": 'Africa',
+            "value": 7000000,
+          },
+          {
+            "label": 'Uganda',
+            "parent": 'Africa',
+          },
+          {
+            "label": 'Kampala',
+            "parent": 'Uganda',
+            "value": 600000,
+          },
+          {
+            "label": 'Jinja',
+            "parent": 'Uganda',
+            "value": 6000000,
+          },
+        ]
       })
     </script>
 </section>
 
 <section>
-    <div class="chart" ><div id="partition-chart"></div></div>
+    <div class="chart">
+        <div id="partition-chart"></div>
+    </div>
     <script>
       DiCharts.draw({
         element: document.getElementById('partition-chart'),
@@ -612,56 +620,52 @@
           title: 'Partition Chart',
           type: 'partition',
           orientation: 'horizontal',
+          tree: {
+            id: 'label',
+            parent: 'parent',
+            value: 'value'
+          }
         },
-        data: {
-          series: [
-            {
-              "label": 'World',
-              "color": '#86c',
-            },
-            {
-              "label": 'Europe',
-              "parent": 'World',
-              "color": '#ffea6c',
-            },
-            {
-              "label": 'Portugal',
-              "parent": 'Europe',
-              "color": '#ffea6c',
-              "value": 30,
-            },
-            {
-              "label": 'Spain',
-              "parent": 'Europe',
-              "color": '#ffea6c',
-              "value": 120,
-            },
-            {
-              "label": 'Africa',
-              "parent": 'World',
-              "color": '#ff9a55',
-            },
-            {
-              "label": 'Uganda',
-              "parent": 'Africa',
-            },
-            {
-              "parent": 'Uganda',
-              "label": 'Jinja',
-              "value": 20,
-            },
-            {
-              "parent": 'Uganda',
-              "label": 'Kampala',
-              "value": 40,
-            },
-            {
-              "label": 'Kenya',
-              "parent": 'Africa',
-              "value": 70,
-            },
-          ]
-        }
+        data: [
+          {
+            "label": 'World',
+            "color": '#86c',
+          },
+          {
+            "label": 'Africa',
+            "parent": 'World',
+            "color": '#ff9a55',
+          },
+          {
+            "label": 'Uganda',
+            "parent": 'Africa',
+          },
+          {
+            "parent": 'Uganda',
+            "label": 'Jinja',
+            "value": 10,
+          },
+          {
+            "parent": 'Uganda',
+            "label": 'Kampala',
+            "value": 100,
+          },
+          {
+            "parent": 'Uganda',
+            "label": 'Mbarara',
+            "value": 40,
+          },
+          {
+            "parent": 'Uganda',
+            "label": 'Gulu',
+            "value": 80,
+          },
+          {
+            "label": 'Kenya',
+            "parent": 'Africa',
+            "value": 70,
+          },
+        ]
       })
     </script>
 </section>
