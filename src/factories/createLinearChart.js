@@ -127,8 +127,6 @@ export const createLinearChart = ({element, plot, data = null, config: {
       })
     });
 
-    console.log(datasets)
-
     plot.datasets(datasets.map(d => new Plottable.Dataset(d)));
   };
 
