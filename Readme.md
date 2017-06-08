@@ -1,6 +1,6 @@
 # @devinit/charts
 
-Modular d3 charts
+configurable d3 charts from csv like data
 
 ## Install
 Firstly, install `@devinit/charts`
@@ -17,42 +17,52 @@ Browse to localhost:8080, to see some charts
 
 ## Usage
 
-This library exposes a `draw` function that takes the following parameters;
- - a DOM node
- - a configuration object
- - a data object
-
-Example:
+This library exposes a `draw` function that takes an object with the following properties;
+ - element: a DOM node
+ - config: a configuration object
+ - data: a list of entries
+ 
+The function returns an object with the following methods
+- addData(data: Array): adds data to dataset 
+ 
+ Example:
 ```js
 
 draw({
-    element: document.getElementById('line-chart'),
+    element: document.getElementById('area_chart'),
     config: {
-      title: 'Line Chart',
-      type: 'line',
+        title: 'Area Chart',
+        type: 'area',
+        colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
+        linearAxis: {
+            showAxis: true,
+            showGridlines: true,
+            axisLabel: 'Country',
+        },
+        categoryAxis: {
+            showAxis: true,
+            axisLabel: 'Area',
+        }
     },
-    data: {
-      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-      series: [
-        {
-          color: '#ff9a55', label: '1992',
-          values: [100, 200, 120, 270, 230, 210]
-        },
-        {
-          color: '#ffea6c', label: '1993',
-          values: [110, 130, 260, 250, 210, 180]
-        },
-      ]
-    }
+    data: [
+        {"Area": 100, "Country": "Uganda"},
+        {"Area": 200, "Country": "Kenya"},
+        {"Area": 120, "Country": "Tanzania"},
+        {"Area": 270, "Country": "Rwanda"},
+        {"Area": 230, "Country": "Burundi"},
+    ]
 })
 
 ```
 
-With that you get a line chart inside the element with an id of `line-chart`. The configuration fields and data shape depend on the chart type. The following sections outline the accepted configuration files and data shape for each supported chart type
+With that you get an area chart inside the element with an id of `area-chart`. The configuration fields depend on the chart type. 
 
-### Linear Charts
+# Configuration
+The following sections outline the accepted configuration fields for each supported chart type
 
-Linear charts consist of a linear axis and a category axis 
+### Linear vs Category Charts
+
+These consist of a linear axis and a category axis 
 
 #### Chart types
 - area
@@ -64,59 +74,57 @@ Linear charts consist of a linear axis and a category axis
 - full-stacked-area
 - clustered-bar
 
-#### Configuration
-
 ```js
 const config = {
-  
+    
     title: 'Line Chart',
 
-    // titleAlignment: 'left|center|right',
+    // title alignment: left/center/right,
     titleAlignment: 'left',
     
-    // orientation: 'vertical|horizontal',
+    // orientation: vertical/horizontal,
     orientation: 'vertical',
   
     linearAxis: {
-      showAxis: false,
-      showGridlines: false,
-      axisLabel: null,
-      axisMinimum: null,
-      axisMaximum: null,
+        // Whether or not to show axis component
+        showAxis: false,
+        // Whether or not to show grid lines
+        showGridlines: false,
+        // Data field for this axis
+        axisLabel: 'Area',
+        // Minimum axis value
+        axisMinimum: null,
+        // Maximum axis value
+        axisMaximum: null,
     },
 
     categoryAxis: {
-      showAxis: false,
-      axisLabel: null,
-      innerPadding: 0,
-      outerPadding: 0
+        // Whether or not to show axis component
+        showAxis: false,
+        // Data field for this axis
+        axisLabel: 'Countries',
+        // Padding between categories
+        innerPadding: 0,
+        // Padding between axes and end data categories
+        outerPadding: 0
     },
     
-}
-
-```
-
-#### Data Shape
-
-```js
-const data = {
-  "labels": ["Label 1", ...moreLabels],
-  "series": [
-    {
-      "color": "#abc", 
-      "label": "Series Label",
-      "values": [1, 2, ...moreValues]
-    },
-    ...moreSeries
-  ]
+    legend: {
+        // Whether or not to show legend
+        showLegend: false,
+        // Align of label items; left/center/right
+        alignment: 'left',
+        // Position of legend on chart: bottom/right
+        position: 'bottom',
+        // Shape of legend indicators: 
+        // circle/square/cross/diamond/triangle/star/wye
+        symbol: 'square',
+        // Maximum entries per row
+        rowSpan: 1
+    }
+    
 }
 ```
-
-| Label | Color | Jan | Feb | Mar | Apr | May |
-|-------|-------|-----|-----|-----|-----|-----|
-| 2006  | #abc  | 1   | 2   | 3   | 4   | 5   |
-| 2007  | #aba  | 2   | 3   | 4   | 5   | 6   |
-| 2008  | #abb  | 3   | 4   | 5   | 6   | 7   |
 
 ### Circular Charts
 
@@ -124,15 +132,32 @@ Circular charts include pie and donut charts
 
 ```js
 const data = {
-  "series": [
-    {
-      "label": 'Jan',
-      "color": '#ff9a55',
-      "value": 200,
+    type: 'pie',
+    
+    title: 'Donut Chart',
+    
+    titleAlignment: 'center',
+    
+    colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
+    
+    circular: {
+        // Data field for label sectors
+        label: 'Country',
+        // Data field for sector values
+        value: 'Population',
+        // Inner radius for donut charts
+        innerRadius: 100,
+        // Stroke width and color around each sector
+        strokeWidth: 5,
+        strokeColor: '#fff',
     },
     
-    ...moreSeries
-   ]
+    // See previous section
+    legend: {
+        showLegend: true,
+        position: 'bottom',
+        alignment: 'center'
+    }
 }
 ```
 
@@ -148,41 +173,33 @@ Hierachy charts represent tree data e.g `tree-map`, `partition`, `grouped-vertic
 
 ```js
 const config = {
-  
-}
-```
-
-#### Data shape
-```js
-const data = {
-  "series": [
-    {
-      "label": 'Africa',
-    },
-    {
-      "label": 'Uganda',
-      "parent": 'Africa',
-      "color": '#ff9a55',
-      "value": 200,
-    },
-    {
-      "label": 'Kenya',
-      "parent": 'Africa',
-      "color": '#ff9a55',
-      "value": 200,
+      
+    title: 'Partition Chart',
+    type: 'partition',
+    orientation: 'horizontal',
+    
+    
+    tree: {
+        // unique node reference field
+        id: 'label',
+        // node parent reference field 
+        parent: 'parent',
+        // node value field
+        value: 'value',
+        // Maximum visible node depth
+        depth: Infinity,
     },
     
-    ...moreSeries
-   ]
+    // applies to type = treemap
+    treemap: {
+        // Tiling algorithm: 
+        // binary/dice/slice/sliceDice/squarify/resquarify
+        tile: 'sliceDice',
+    
+    },
+    
 }
 ```
-
-| label  | parent | color  | value |
-|--------|--------|--------|-------|
-| Africa |        |        |       |
-| Uganda | Africa | #aba   | 4     |
-| Kenya  | Africa | #abb   | 5     |
-| Rwanda | Africa | #abb   | 5     |
 
 ### 3D Charts (TODO)
 
