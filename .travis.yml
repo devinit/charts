@@ -40,7 +40,7 @@ deploy:
     github_token:
       secure: "Xb1bMhe8CzqOwy6CxbQqJG7QVkx6Ury7TKUFqE6/V2EF6mwsu/Q2vpJKFMI2Geiqlsf0tVWiqxe1wFFXjZw5zwDoeRFV0R9GJp8PrtcQMP7qiJPpktZTDXDetapoyb+obrSkYls1hTGDanz0UIA51J8S5nIc17tFCtjFkmBOVviMvfTTQz2ubCLSP7xgteeyznZLAfs8E300wcnBCRHOyWMKW8kVHPuOiVjW23WLkWtXI/c1BDa8W2po4lLWQWetOe/z1rUx3adtsGp/N7qMazQoRRaOh48Qo1VUUJbPTCpFsUKXQNd2VfYXm7EgqsspDZqdBqgr/AsWemP0ZS/7ylIp4QSN3CO14uM8VzxFavphOTjgd8++2+qgzSqeR9kJB+nvjAYlbCkyZK4XR9zz215duceEXCZUKdkwcgCtxrHlCFhag3ev2h0FV9exJxgTWhG0pdH5SkODXYGTIJd+IefwZo78D65speF2V4/VZXlsRduZOjjUxcuRdNCh7DaAmehN9DK8Gyy7lXTeZZ0iSWAh9W5HJNzZh6yBY5z1gxJanPcDPyCj+QHRgqmJoJ6DXzkXaQdY19PR3+CGp3Aytqj3UZTxOMV0hCG756ovoVwgwrP4j4TVhgRHKT/xoSIjedLPaXuUH0CdH0xtf0poqXFDShnHnEg2b20g7wxw6r0="
     on:
-      branch: gh-pages
+      branch: master
 
 cache:
   - yarn
