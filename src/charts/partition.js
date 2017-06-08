@@ -42,7 +42,7 @@ export default ({
     return layout(root)
       .descendants()
       .map(colorize)
-      .filter(d => d.depth <= depth);
+      .filter(d => d.depth <= tree.depth || Infinity);
   };
 
   const chart = {

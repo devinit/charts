@@ -1,7 +1,7 @@
 import Plottable from "plottable";
 import treemap from "d3-hierarchy/src/treemap";
 import color from "d3-color/src/color";
-import stratify from "d3-hierarchy/src/stratify";
+import {createTreeHierachy} from '../factories/createDataset'
 import approximate from 'approximate-number'
 
 export default ({
@@ -85,27 +85,13 @@ export default ({
 
   const layout = treemap().tile(tilingMethod.default);
 
-  const createTreeHierachy = (series) => {
-
-    const stratifyFactory = stratify()
-      .id(d => d.label)
-      .parentId(d => d.parent);
-
-    return stratifyFactory(series)
-      .sum(d => d.value)
-      .sort((b, a) => {
-        return a.value - b.value
-      });
-
-  };
-
   const chart = {
+
+    table,
 
     addData: data => {
 
       const root = createTreeHierachy(data, tree);
-
-      const actualDepth = depth === Infinity ? root.height : depth;
 
       const rectangles = layout(root).descendants();
 
@@ -118,7 +104,7 @@ export default ({
 
           return d;
         })
-        .filter(d => d.depth <= actualDepth);
+        .filter(d => d.depth <= 2);
 
       plot.datasets([new Plottable.Dataset(all)]);
 
@@ -129,7 +115,7 @@ export default ({
 
   };
 
-  chart.addData(data);
+  chart.addData(data, tree);
 
   return chart
 };
