@@ -72,7 +72,6 @@ export const createLinearChart = ({element, plot, data = null, config: {
     .attr('stroke', d => d.color)
     .attr('fill', d => d.color)
     .attr('fill-opacity', d => d.opacity)
-    .animated(true)
     .x(
       d => orientation === 'vertical' ? d.label : d.value,
       orientation === 'vertical' ? categoryScale : linearScale

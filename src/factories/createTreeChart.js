@@ -33,7 +33,6 @@ export default ({
     .attr("fill", d => d.data.color)
     .attr("stroke", d => '#fff')
     .attr("stroke-width", () => 1)
-    .animated(true)
     .labelsEnabled(true)
     .label(d => `${d.data.label} (${d.value})`);
 
