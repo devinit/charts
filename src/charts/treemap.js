@@ -8,6 +8,12 @@ export default ({element, data, config: {
 
   orientation = 'vertical',
 
+  tree = {
+    id: 'id',
+    parent: 'parent',
+    value: 'value',
+  },
+
   // Treemap configuration
   treemap: {
     // Tiling algorithm: binary, dice, slice, sliceDice, squarify, resquarify
@@ -15,7 +21,6 @@ export default ({element, data, config: {
 
     depth = Infinity,
 
-    sort = 'ascending',
   } = {},
 
   ...config
@@ -52,7 +57,7 @@ export default ({element, data, config: {
     ...treeChart,
 
     addData: data => {
-      const root = createTreeHierachy(data);
+      const root = createTreeHierachy(data, tree);
       treeChart.addData(transform(root))
     }
   };

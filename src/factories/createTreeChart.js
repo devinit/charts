@@ -1,8 +1,7 @@
 import Plottable from "plottable";
 import {createTreeDataset} from "./createDataset";
 
-export default ({
-                  element, plot, config: {
+export default ({element, plot, config: {
 
     title = null,
 
@@ -11,8 +10,7 @@ export default ({
     titleAlignment = 'left',
 
     // ... config
-  }
-                }) => {
+  }}) => {
 
   const xScale = new Plottable.Scales.Linear();
   xScale.domainMin(0);

@@ -1,17 +1,22 @@
 import Plottable from "plottable";
-import {createLinearDataset} from "./createDataset";
-import {createCategoryScale, createLinearScale} from "./createScale";
-import {createCategoryAxis, createNumericAxis} from "./createAxis";
-import {createAxisGridLines} from "./createGrid";
+import { createChartTable } from "./createTable";
+import { createTitle } from "./createTitle";
+import { createColorLegend } from "./createLegend";
+import { createLinearDataset, createDataMapping } from "./createDataset";
+import { createCategoryScale, createLinearScale} from "./createScale";
+import { createCategoryAxis, createNumericAxis} from "./createAxis";
+import { createAxisGridLines } from "./createGrid";
 
-export const createLinearChart = ({element, plot, data = null, config: {
+export const createLinearChart = ({element, plot, config: {
     title = null,
 
     titleAlignment = 'left',
 
     orientation = 'vertical',
 
-  colors = [],
+    groupBy,
+
+    colors = [],
 
     linearAxis = {
       // Do you even want an axis?
@@ -24,6 +29,7 @@ export const createLinearChart = ({element, plot, data = null, config: {
 
       // Axis Label
       axisLabel: null,
+      showAxisLabel: true,
 
       // Tick Labels
 
@@ -36,128 +42,98 @@ export const createLinearChart = ({element, plot, data = null, config: {
       showAxis: false,
       axisMargin: 0,
 
+      showAxisLabel: true,
       axisLabel: null,
-
-      // axisLabelAngle: 0,
-      axisLabelAngle: 0,
 
       // Padding
       innerPadding: 0,
       outerPadding: 0
     },
 
-    legend: {
-      showLegend = false,
-      legendPosition = 'left',
-      legendSymbol = 'square'
-    } = {},
+    legend = {
+      showLegend: false,
+      alignment: 'left',
+      position: 'bottom',
+      symbol: 'square',
+      rowSpan: Infinity
+    },
 
     // ... more config
 
   }}) => {
 
   const categoryScale = createCategoryScale(categoryAxis);
+
   const linearScale = createLinearScale(linearAxis);
 
-  const mCategoryAxis = createCategoryAxis({
-    axisScale: categoryScale,
-    axisOrientation: orientation, ...categoryAxis
-  });
+  const mCategoryAxis = createCategoryAxis({axisScale: categoryScale, axisOrientation: orientation, ...categoryAxis});
 
   const mLinearAxis = createNumericAxis({axisScale: linearScale, axisOrientation: orientation, ...linearAxis});
 
+  const linearPlot = createLinearPlot({plot, orientation, categoryScale, linearScale});
+
   const gridLines = createAxisGridLines({orientation, scale: linearScale, ...linearAxis});
 
-  plot
-    .attr('stroke', d => d.color)
-    .attr('fill', d => d.color)
-    .attr('fill-opacity', d => d.opacity)
-    .x(
-      d => orientation === 'vertical' ? d.label : d.value,
-      orientation === 'vertical' ? categoryScale : linearScale
-    )
-    .y(
-      d => orientation === 'horizontal' ? d.label : d.value,
-      orientation === 'horizontal' ? categoryScale : linearScale
-    );
-
-  const plotArea = gridLines ? new Plottable.Components.Group([gridLines, plot]) : plot;
+  const plotArea = gridLines ? new Plottable.Components.Group([gridLines, linearPlot]) : linearPlot;
 
   const colorScale = new Plottable.Scales.Color();
 
-  const legend = (showLegend || null) && new Plottable.Components.Legend(colorScale)
-      .xAlignment(legendPosition)
-      .symbol(d => size => Plottable.SymbolFactories[legendSymbol]()(size))
-      .maxEntriesPerRow(Infinity);
-
-  const table = createLinearTable({
-    title,
-    titleAlignment,
-    orientation,
-    legend,
-    plotArea,
-    linearAxis: mLinearAxis,
-    categoryAxis: mCategoryAxis
+  const table = createChartTable({
+    title: createTitle({title, titleAlignment}),
+    chart: createPlotAreaWithAxes({orientation, plotArea, linearAxis: mLinearAxis, categoryAxis: mCategoryAxis}),
+    legend: createColorLegend({colorScale, ...legend}),
+    legendPosition: legend.position
   });
 
   table.renderTo(element);
-
-  const addData = (data = []) => {
-
-    const {labels, series} = createLinearDataset(data);
-
-    // TODO: Efficiently update legend
-    if (showLegend) {
-
-      const domain = series.map(d => d.label);
-      const range = series.map((d, i) => colors[i] || '#abc');
-      colorScale.domain(domain).range(range);
-    }
-
-    const datasets = series.map(({opacity = 1, values}, index) => {
-      const color = colors[index] || '#abc';
-      return values.map((value, index) => {
-        return {
-          label: labels[index] || index, // Each value in a `series` should correspond to a `label`
-          value,
-          color,
-          opacity
-        }
-      })
-    });
-
-    plot.datasets(datasets.map(d => new Plottable.Dataset(d)));
-  };
 
   return {
 
     table,
 
-    addData,
+    addData: (data = [], transform = d => d) => {
+
+      const mapping = createDataMapping(data, linearAxis.axisLabel, categoryAxis.axisLabel, groupBy);
+
+      const {labels, series} = transform(createLinearDataset(mapping));
+
+      if (legend.showLegend) {
+        colorScale
+          .domain(series.map(d => d.label))
+          .range(series.map((d, i) => colors[i] || '#abc'));
+      }
+
+      const datasets = series.map(({opacity = 1, values}, index) => {
+        const color = colors[index] || '#abc';
+        return values.map((value, index) => {
+          return {
+            label: labels[index] || index, // Each value in a `series` should correspond to a `label`
+            value,
+            color,
+            opacity
+          }
+        })
+      });
+
+      plot.datasets(datasets.map(d => new Plottable.Dataset(d)));
+    },
 
   };
 };
 
-export const createLinearTable = ({title, titleAlignment, legend, orientation, plotArea, linearAxis, categoryAxis}) => {
+export const createLinearPlot = ({plot, orientation, categoryScale, linearScale}) => {
+  return plot
+    .attr('stroke', d => d.color)
+    .attr('fill', d => d.color)
+    .attr('fill-opacity', d => d.opacity)
+    .x(d => orientation === 'vertical' ? d.label : d.value, orientation === 'vertical' ? categoryScale : linearScale)
+    .y(d => orientation === 'horizontal' ? d.label : d.value, orientation === 'horizontal' ? categoryScale : linearScale);
+};
 
-
-  const titleLabel = new Plottable.Components.TitleLabel(title, 0)
-    .xAlignment(titleAlignment)
-    .yAlignment('top');
-
-  const plotWithAxes = orientation === 'vertical' ?
+const createPlotAreaWithAxes = ({orientation, linearAxis, plotArea, categoryAxis}) => {
+  const plotAreaWithAxes =  orientation === 'vertical' ?
     [[linearAxis, plotArea], [null, categoryAxis]] :
     [[categoryAxis, plotArea], [null, linearAxis]];
 
-  const plotWithAxesTable = new Plottable.Components.Table(plotWithAxes);
-
-  const plotWithAxesAndLegend = new Plottable.Components.Table([[plotWithAxesTable], [legend]]);
-
-  const chartTable = new Plottable.Components.Table([[titleLabel], [plotWithAxesAndLegend]]);
-
-  chartTable.rowPadding(10);
-
-  return chartTable;
-
-
+  return new Plottable.Components.Table(plotAreaWithAxes);
 };

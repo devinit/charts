@@ -11,6 +11,12 @@ export default ({
 
     orientation = 'horizontal',
 
+    tree = {
+      id: 'id',
+      parent: 'parent',
+      value: 'value',
+    },
+
     partition: {
 
       depth = Infinity,
@@ -37,7 +43,7 @@ export default ({
   };
 
   const transform = data => {
-    const root = createTreeHierachy(data);
+    const root = createTreeHierachy(data, tree);
     return layout(root)
       .descendants()
       .map(colorize)

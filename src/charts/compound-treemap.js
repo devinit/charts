@@ -15,6 +15,12 @@ export default ({
 
     // ... config
 
+    tree = {
+      id: 'id',
+      parent: 'parent',
+      value: 'value',
+    },
+
     // Treemap configuration
     treemap: {
       // Tiling algorithm: binary, dice, slice, sliceDice, squarify, resquarify
@@ -24,7 +30,7 @@ export default ({
 
     } = {},
 
-    ...config
+    // ...
   }
                 }) => {
 
@@ -80,7 +86,7 @@ export default ({
 
   const layout = treemap().tile(tilingMethod.default);
 
-  const createTreeHierachy = ({series}) => {
+  const createTreeHierachy = (series) => {
 
     const stratifyFactory = stratify()
       .id(d => d.label)
@@ -98,7 +104,7 @@ export default ({
 
     addData: data => {
 
-      const root = createTreeHierachy(data);
+      const root = createTreeHierachy(data, tree);
 
       const actualDepth = depth === Infinity ? root.height : depth;
 
@@ -113,7 +119,7 @@ export default ({
 
           return d;
         })
-        .filter(d => d.depth <= actualDepth)
+        .filter(d => d.depth <= actualDepth);
 
       plot.datasets([new Plottable.Dataset(all)]);
 

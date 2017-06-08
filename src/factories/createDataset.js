@@ -3,6 +3,14 @@ import Plottable from "plottable";
 
 const makeUnique = list => Object.keys(list.reduce((a, b) => ({...a, [b]: true}), {}));
 
+export const createDataMapping = (data, linearLabel, categoryLabel, groupLabel) => {
+  return data.map(d => ({
+    label: d[categoryLabel],
+    value: d[linearLabel],
+    group: d[groupLabel]
+  }))
+};
+
 export const createLinearDataset = (data = []) => {
   const labels = makeUnique(data.map(d => d.label));
 
@@ -14,7 +22,7 @@ export const createLinearDataset = (data = []) => {
         all.groups[all.map[item.group]] = {
           color: '#abc',
           opacity: 1,
-          label: item.group,
+          label: item.group || 'Unknown',
           values: []
         };
       }
@@ -26,20 +34,6 @@ export const createLinearDataset = (data = []) => {
     }, {map: {}, groups: []});
 
   return {labels, series}
-
-  return series.map(({color = '#abc', opacity = 1, values}) => {
-      return new Plottable.Dataset(values.map((value, index) => {
-          return {
-            label: labels[index] || index, // Each value in a `series` should correspond to a `label`
-            value,
-            color,
-            opacity
-          }
-        })
-      )
-    });
-
-  // return [new Plottable.Dataset([])];
 
 };
 
@@ -68,7 +62,9 @@ export const createFullStackedDataset = ({labels, series}) => {
 
 };
 
-export const createTreeHierachy = (series) => {
+export const createTreeHierachy = (data, tree) => {
+
+  const series = data.map(d => ({...d, label: d[tree.id], parent: d[tree.parent], value: d[tree.value]}));
 
   const stratifyFactory = stratify()
     .id(d => d.label)

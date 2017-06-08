@@ -1,5 +1,7 @@
 import Plottable from "plottable";
-import createPlottableChart from './createPlottableChart';
+import {createTitle} from './createTitle';
+import {createColorLegend} from './createLegend';
+import {createChartTable} from './createTable';
 
 export default ({element,
   plot,
@@ -8,67 +10,54 @@ export default ({element,
 
     titleAlignment = 'left',
 
-    circular: {
-      innerRadius = 0,
-      strokeWidth = 0,
-      strokeColor = '#fff'
-    } = {},
+    colors = [],
 
-    legend: {
-      showLegend = false,
-      legendPosition =  'center'
-    } = {},
+    circular = {
+      label: 'label',
+      value: 'value',
+      innerRadius: 0,
+      strokeWidth: 0,
+      strokeColor: '#fff'
+    },
+
+    legend = {
+      showLegend: false,
+      position: 'bottom',
+      alignment: 'center',
+    },
 
 
     // ...
   }}) => {
 
-  plot
-    .attr('stroke', strokeColor)
-    .attr('stroke-width', strokeWidth)
-    .attr('fill', d => d.color)
-    .attr('fill-opacity', d => d.opacity)
-    .sectorValue(d => d.value)
-    .innerRadius(innerRadius);
-
-  const titleLabel = new Plottable.Components.TitleLabel(title, 0)
-    .xAlignment(titleAlignment)
-    .yAlignment('top');
-
   const colorScale = new Plottable.Scales.Color();
 
-  const legend = (showLegend || null) && new Plottable.Components.Legend(colorScale)
-    .xAlignment(legendPosition)
-    .symbol(d => size => Plottable.SymbolFactories.square()(size))
-    .maxEntriesPerRow(Infinity);
-
-  const plotWithLegend = new Plottable.Components.Table([[plot], [legend]]);
-
-  const table = new Plottable.Components.Table([
-    [titleLabel],
-    [plotWithLegend],
-  ]);
-
-
-  table.rowPadding(10);
+  const table = createChartTable({
+    title: createTitle({title, titleAlignment}),
+    chart: createCircularPlot({plot, ...circular}),
+    legend: createColorLegend({colorScale, ...legend}),
+    legendPosition: legend.position
+  });
 
   table.renderTo(element);
 
-  const transform = (series) => [new Plottable.Dataset(series.map(({color, label, value}) => ({label, color, value})))];
+  const addData = (data = []) => {
 
-
-
-  const addData = (series = []) => {
+    const series = data.map((d, i) => ({
+      label: d[circular.label],
+      value: d[circular.value],
+      color: colors[i] || '#abc',
+    }));
 
     // TODO: Efficiently update legend
-    if (showLegend) {
+    if (legend.showLegend) {
 
       const domain = series.map(d => d.label);
       const range = series.map(d => d.color);
       colorScale.domain(domain).range(range);
     }
 
-    plot.datasets(transform(series));
+    plot.datasets([new Plottable.Dataset(series)]);
   };
 
   return {
@@ -78,4 +67,13 @@ export default ({element,
     addData
   };
 
+};
+
+export const createCircularPlot = ({plot, innerRadius = 0, strokeColor = '#fff', strokeWidth = 0}) => {
+  return plot
+    .attr('fill', d => d.color)
+    .attr('fill-opacity', d => d.opacity)
+    .attr('style', `stroke: ${strokeColor}; stroke-width: ${strokeWidth}`)
+    .sectorValue(d => d.value)
+    .innerRadius(innerRadius);
 };
