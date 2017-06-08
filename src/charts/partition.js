@@ -64,6 +64,7 @@ export default ({
 
   let intervals = [];
 
+  // TODO: Use request animation frame
   chart.onClick((entities, xScale, yScale) => {
     // Stop all intervals
     while (intervals.length) clearInterval(intervals.pop());
