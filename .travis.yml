@@ -9,7 +9,7 @@ install:
 script:
   - npm run test
   - npm run build:production
-  - cp index.html dist/
+  - sed 's/\/di-charts./\/charts\/di-charts./' index.html | cat > dist/index.html
 
 deploy:
   - provider: npm
