@@ -10,7 +10,7 @@ script:
   - DI_CHARTS_VERSION=$(node --eval "console.log(require('./package.json').version)")
   - npm run test
   - npm run build:production
-  - cat index.html | sed -e 's/\/di-charts.css/\/charts\/di-charts-$DI_CHARTS_VERSION.css/' | sed -e 's/\/di-charts.js/\/charts\/di-charts-$DI_CHARTS_VERSION.js/' | cat > dist/index.html
+  - cat index.html | sed -e 's/\/di-charts.css/\/charts\/di-charts-$DI_CHARTS_VERSION.css/' | sed -e 's/\/di-charts.js/\/charts\/di-charts-$DI_CHARTS_VERSION.min.js/' | cat > dist/index.html
 
 deploy:
   - provider: npm
