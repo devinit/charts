@@ -9,12 +9,14 @@ install:
 script:
   - npm run test
   - npm run build:production
+  - cp index.html dist/
 
 deploy:
   - provider: npm
     email: okot08@gmail.com
     api_key:
       secure: Z/v2aWf2lm1znZSgUWLGFXPj0r67t+/qHGUucVOeJpk7xilbGj/41xTFRM3tCxDx7EN3d4SGQz4G027wTW5HuECRcCtSjOJ9lpJYEWxvJnQCFsCupaTg6ty04RHj3F+K4TDw6F6rY+hKSqcTRenMqBsjA/I/XyBCaoWLzVf7st4PO9DwA4kslGVOgt57EXQ/I7DqzCxedI7ZM1weihIGrYzqYTLJTdh3kKc185t5V9OGDTOPILuwdWEw5sbW8qAGbnuR8rAQOIUTkmixfIP4t4ja35mkqNjQeelz7eZjAEJP+S2VdhKW0KdobNx69xYi4zvbMmloUbLEzjX7Uw6vOaKk+vSDlUJTe7yB/Cf5rgehLIMdokUJicM98j9YjN8xQWD1kS0JQseNna4wzbOog5kcA2GEx6jfhjc0EKI/sQdJlDMIeQk9duVH1iUuLzkUpUBczDnj3hxzbIxxucJZargynYQSgrgJbiBddylnkh8q+MuZya1s+WmoWVn8o/Asl1SBYc2PRYFkHJiFnZ02+ttSE6U0a7VXPAqNUepGXP0bVD2Uav/apqRct1JCHhN+VZQRUquKp7KBkttctPdPw01eXj2wkbmzyrxSnjF9dUelqgnnyBp/LLdDMwQvYmGdo/FTkwJVLah5xIcfT8fd7Cz9G08AD+hkxo1aRBjm/sw=
+    skip_cleanup: true
     on:
       tags: true
       repo: devinit/charts
@@ -31,6 +33,13 @@ deploy:
       tags: true
       repo: devinit/charts
       branch: master
+
+  - provider: pages
+    local_dir: 'dist'
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
+    on:
+      branch: gh-pages
 
 cache:
   - yarn
