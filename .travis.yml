@@ -1,0 +1,25 @@
+language: node_js
+
+node_js:
+  - v7
+
+install:
+  - yarn --ignore-scripts
+
+script:
+  - npm run test
+  - npm run build:production
+
+deploy:
+  provider: npm
+  email: okot08@gmail.com
+  api_key:
+    secure: 'secure: X+2PTvdrG7ISB2dImPzL4m4rXz/QIYF8HYFtJT1piCC3EXJQz8KXRC61IOLCrUOHtfXGi4nuT6L++ikwDmk3FzmJ816iIiPZ9x+0hHndooCAMjYSi3v6Ey3teQm106Gn/KVSG/75y0OPCcQ+0uKQe4+V2IPeSbBK6QWLyEBnXA+pXnk6ZYAV6CQ+G/LWrCaD2kzOh0qrXMohUvT0JPL7MmfFdJvinP8r+C7BKz2mIZ/DzWDMisPcUs65sBf+nw/uRQPI6Gz9oyyca4vsItZhcvpwOpJpA0Y3w4Ur/9Pgus1kLEqCS+jx1vdb+wUF2dRhePihqQSK/8K5JTxvq5855sirpddVlySwWlh1lhHFN3S0PTdFDnaJ26m8ixSytjwqkn0NKa6hgy5Qvpi9jLo9NQt+HNBzCESS38RdItI+Ip1fK4ODKS26PxHSgNhhp7ghhQPyl8ftBjaTZ91LTUZUhHAOpruWaJt0jf+qCk51W70UlM/FFarMreaOWJnBfWVfokVWFyXZSfWhPYqvZLvclZ4TzHhH9DroReULTnf5trdYDjZteOkGozKiHtadXu/F5fN8nIC5vU+mbaNI7rHTibHf1xUv22EOnNAaOE1e2fGQhTUmNFj2wPvR48zW4ZxWRB5xmXyLyjN08s8hDE2CVvy0rVCy368nWdI5a8fDJ4I='
+  skip_cleanup: true
+  on:
+    tags: true
+    branch: master
+
+cache:
+  - yarn
+  - node_modules
