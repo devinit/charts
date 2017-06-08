@@ -6,7 +6,7 @@ import color from "d3-color/src/color";
 
 export default ({
   element,
-  data,
+  data = [],
   config: {
 
     orientation = 'horizontal',
@@ -15,13 +15,8 @@ export default ({
       id: 'id',
       parent: 'parent',
       value: 'value',
+      depth: Infinity,
     },
-
-    partition: {
-
-      depth = Infinity,
-
-    } = {},
 
     ...config
   }

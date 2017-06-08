@@ -19,14 +19,13 @@ export default ({
       id: 'id',
       parent: 'parent',
       value: 'value',
+      depth: Infinity,
     },
 
     // Treemap configuration
     treemap: {
       // Tiling algorithm: binary, dice, slice, sliceDice, squarify, resquarify
       tile = 'sliceDice',
-
-      depth = 2,
 
     } = {},
 

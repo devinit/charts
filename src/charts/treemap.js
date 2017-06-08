@@ -4,7 +4,7 @@ import {createTreeHierachy} from "../factories/createDataset";
 import treemap from "d3-hierarchy/src/treemap";
 import color from "d3-color/src/color";
 
-export default ({element, data, config: {
+export default ({element, data = [], config: {
 
   orientation = 'vertical',
 
@@ -12,14 +12,13 @@ export default ({element, data, config: {
     id: 'id',
     parent: 'parent',
     value: 'value',
+    depth: Infinity,
   },
 
   // Treemap configuration
   treemap: {
     // Tiling algorithm: binary, dice, slice, sliceDice, squarify, resquarify
     tile = 'sliceDice',
-
-    depth = Infinity,
 
   } = {},
 
@@ -49,7 +48,7 @@ export default ({element, data, config: {
     return layout(root)
       .descendants()
       .map(colorize)
-      .filter(d => d.depth <= depth);
+      .filter(d => d.depth <= tree.depth || Infinity);
   };
 
   const chart = {
