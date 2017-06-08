@@ -24,7 +24,7 @@ export default ({element, data, config: {linearAxis = {}, ...config}}) => {
 
     ...linearChart,
 
-    addData: data => linearChart.addData(createFullStackedDataset(data)),
+    addData: data => linearChart.addData(data, createFullStackedDataset),
   };
 
   chart.addData(data);
