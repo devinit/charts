@@ -1,11 +1,11 @@
+const pkg = require('./package.json');
 const path = require('path');
 const webpack = require('webpack');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-
 const isProductionBuild = process.env.WEBPACK_ENV === 'production';
-const outputFilename = isProductionBuild ? 'di-charts.min.js' : 'di-charts.js';
+const outputFilename = isProductionBuild ? `di-charts-${pkg.version}.min.js` : `di-charts-${pkg.version}.js`;
 
 module.exports = {
 
@@ -50,7 +50,7 @@ module.exports = {
 
     new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),
 
-    new ExtractTextPlugin(`di-charts.css`),
+    new ExtractTextPlugin(`di-charts-${pkg.version}.css`),
 
     ...isProductionBuild ? [
 
