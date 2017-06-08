@@ -1,5 +1,7 @@
 # @devinit/charts
 
+[![Build Status](https://travis-ci.org/devinit/charts.svg?branch=master)](https://travis-ci.org/devinit/charts)
+
 configurable d3 charts from csv like data
 
 ## Install
