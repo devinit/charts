@@ -1,7 +1,13 @@
 import Plottable from "plottable";
 import {createLineChart} from "./line";
 
-export default ({element, data, config}) => {
+/**
+ * @typedef {LinearCategoryChart} Area
+ * @public
+ * @property {'area'} type
+ *
+ */
+const area = function (element, data, config) {
 
   const plot = new Plottable.Plots.Area();
 
@@ -13,3 +19,5 @@ export default ({element, data, config}) => {
 
   return chart
 };
+
+export default area;

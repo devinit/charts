@@ -2,7 +2,15 @@ import Plottable from "plottable";
 import {createLinearChart} from "../factories/createLinearChart";
 import {createFullStackedDataset} from "../factories/createDataset";
 
-export default ({element, data, config: {orientation, linearAxis = {}, ...config}}) => {
+/**
+ * @typedef {LinearCategoryChart} FullStackedBar
+ * @public
+ * @property {'full-stacked-bar'} type
+ *
+ */
+export default (element, data, config) => {
+
+  const { orientation, linearAxis = {}, ...more } = config;
 
   const plot = new Plottable.Plots.StackedBar(orientation);
 
@@ -19,7 +27,7 @@ export default ({element, data, config: {orientation, linearAxis = {}, ...config
         ...linearAxis,
       },
 
-      ...config
+      ...more
     }
   });
 

@@ -1,7 +1,13 @@
 import Plottable from "plottable";
 import {createLineChart} from "./line";
 
-export default ({element, data, config}) => {
+/**
+ * @typedef {LinearCategoryChart} StackedArea
+ * @public
+ * @property {'stacked-area'} type
+ *
+ */
+export default (element, data, config) => {
 
   const plot = new Plottable.Plots.StackedArea();
 

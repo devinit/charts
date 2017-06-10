@@ -2,7 +2,15 @@ import Plottable from "plottable";
 import {createLineChart} from "./line";
 import {createFullStackedDataset} from "../factories/createDataset";
 
-export default ({element, data, config: {linearAxis = {}, ...config}}) => {
+/**
+ * @typedef {LinearCategoryChart} FullStackedArea
+ * @public
+ * @property {'full-stacked-area'} type
+ *
+ */
+export default (element, data, config) => {
+
+  const {linearAxis = {}, ...more} = config;
 
   const plot = new Plottable.Plots.StackedArea();
 
@@ -16,7 +24,7 @@ export default ({element, data, config: {linearAxis = {}, ...config}}) => {
 
         ...linearAxis,
       },
-      ...config
+      ...more
     }
   );
 

@@ -1,8 +1,8 @@
 import Plottable from "plottable";
 
-export const createChartTable = ({title, chart, legend, legendPosition = 'bottom'}) => {
+export const createChartTable = ({title, chart, legend = null, legendPosition = 'bottom'}) => {
 
-  const chartWithLegend = legendPosition === 'bottom' ?
+  const chartWithLegend = !legend ? chart : legendPosition === 'bottom' ?
     new Plottable.Components.Table([[chart], [legend]]) :
     new Plottable.Components.Table([[chart, legend]]);
 

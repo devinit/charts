@@ -1,7 +1,13 @@
 import Plottable from "plottable";
 import {createLinearChart} from "../factories/createLinearChart";
 
-export default ({element, data, config}) => {
+/**
+ * @typedef {LinearCategoryChart} Line
+ * @public
+ * @property {'line'} type
+ *
+ */
+export default (element, data, config) => {
 
   const plot = new Plottable.Plots.Line();
 
@@ -12,7 +18,9 @@ export default ({element, data, config}) => {
   return linearChart
 };
 
-export const createLineChart = (element, plot, {categoryAxis = {}, ...config}) => {
+export const createLineChart = (element, plot, config) => {
+
+  const {categoryAxis = {}, ...more} = config;
 
   return createLinearChart({
     element,
@@ -28,7 +36,7 @@ export const createLineChart = (element, plot, {categoryAxis = {}, ...config}) =
         ...categoryAxis
       },
 
-      ...config
+      ...more
     }
   });
 };

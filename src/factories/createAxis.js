@@ -1,6 +1,34 @@
 import Plottable from "plottable";
 
-export const createNumericAxis = ({showAxis = false, axisOrientation, axisScale, axisLabel = null, axisMargin = 10}) => {
+/**
+ * @typedef {Object} NumericAxis - Numeric Axis configuration
+ * @private
+ * @property {boolean} showAxis - Show Axis
+ * @property {boolean} showGridlines - Show Grid lines
+ * @property {boolean} showAxisLabel - Show Label
+ * @property {'vertical'|'horizontal'} axisOrientation - Orientation
+ * @property {string} axisLabel - Label
+ * @property {number} axisMargin - Margin
+ * @property {number} axisMinimum - Minimum
+ * @property {number} axisMaximum - Maximum
+ */
+
+/**
+ *
+ * @typedef {Object} CategoryAxis - Category Axis Configuration
+ * @private
+ * @property {boolean} showAxis - Show Axis
+ * @property {boolean} showAxisLabel - Show Label
+ * @property {string} axisOrientation - Orientation
+ * @property {string} axisLabel - Data label
+ * @property {number} axisMargin - Margin
+ * @property {number} innerPadding - Inner Padding
+ * @property {number} outerPadding - Outer Padding
+ */
+
+export const createNumericAxis = (config) => {
+
+  const {showAxis = false, axisOrientation, axisScale, axisLabel = null, axisMargin = 10} = config;
 
   if (!showAxis) return null;
 
@@ -15,7 +43,9 @@ export const createNumericAxis = ({showAxis = false, axisOrientation, axisScale,
 
 };
 
-export const createCategoryAxis = ({showAxis = false, axisOrientation, axisScale, axisLabel = null, axisMargin = 10}) => {
+export const createCategoryAxis = (config) => {
+  let {showAxis = false, axisOrientation, axisScale, axisLabel = null, axisMargin = 10} = config;
+
   if (!showAxis) return null;
 
   const alignment = axisOrientation === 'vertical' ? 'bottom' : 'left';

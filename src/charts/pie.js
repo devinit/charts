@@ -1,7 +1,13 @@
 import Plottable from "plottable";
 import createCircularChart from '../factories/createCircularChart'
 
-export default ({element, data, config}) => {
+/**
+ * @typedef {CircularChart} Pie
+ * @public
+ * @property {'pie'} type
+ *
+ */
+export default (element, data, config) => {
 
   const plot = new Plottable.Plots.Pie();
 

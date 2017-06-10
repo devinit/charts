@@ -4,32 +4,41 @@ import {createTreeHierachy} from "../factories/createDataset";
 import treemap from "d3-hierarchy/src/treemap";
 import color from "d3-color/src/color";
 
-export default ({element, data = [], config: {
+/**
+ * @typedef {Object} Treemap
+ * @public
+ * @property {'treemap'} type
+ *
+ */
+export default (element, data = [], config) => {
 
-  orientation = 'vertical',
+  const {
 
-  tree = {
-    id: 'id',
-    parent: 'parent',
-    value: 'value',
-    depth: Infinity,
-  },
+    orientation = 'vertical',
 
-  // Treemap configuration
-  treemap: {
-    // Tiling algorithm: binary, dice, slice, sliceDice, squarify, resquarify
-    tile = 'sliceDice',
+    tree = {
+      id: 'id',
+      parent: 'parent',
+      value: 'value',
+      depth: Infinity,
+    },
 
-  } = {},
+    // Treemap configuration
+    treemap: {
+      // Tiling algorithm: binary, dice, slice, sliceDice, squarify, resquarify
+      tile = 'sliceDice',
 
-  ...config
-}}) => {
+    } = {},
+
+    ...more
+
+  } = config;
 
   const plot = new Plottable.Plots.Rectangle();
 
   // ... apply rectangle configuration
 
-  const treeChart = createRectangleChart({element, plot, config: {orientation, ...config}});
+  const treeChart = createRectangleChart({element, plot, config: {orientation, ...more}});
 
   const tilingMethod = require(`d3-hierarchy/src/treemap/${tile}.js`);
 

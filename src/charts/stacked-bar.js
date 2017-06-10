@@ -1,7 +1,13 @@
 import Plottable from "plottable";
 import {createLinearChart} from "../factories/createLinearChart";
 
-export default ({element, data, config: {orientation, ...config}}) => {
+/**
+ * @typedef {LinearCategoryChart} StackedBar
+ * @public
+ * @property {'stacked-bar'} type
+ *
+ */
+export default (element, data, {orientation, ...config}) => {
 
   const plot = new Plottable.Plots.StackedBar(orientation);
 

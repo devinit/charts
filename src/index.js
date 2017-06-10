@@ -8,7 +8,7 @@ export const draw = ({element, data, config}) => {
     import(`./charts/${config.type}.js`)
       .then(function (chart) {
 
-        const selection = chart.default({element, data, config});
+        const selection = chart.default(element, data, config);
 
         resolve(selection);
       })

@@ -3,9 +3,29 @@ import {createTitle} from './createTitle';
 import {createColorLegend} from './createLegend';
 import {createChartTable} from './createTable';
 
-export default ({element,
-  plot,
-  config: {
+
+/**
+ * @typedef {Object} CircularChart - Circular chart configuration
+ * @property {string} type - Type
+ * @property {string} title - Title of chart
+ * @property {string[]} colors - Colors
+ * @property {Circular} circular - Sectors
+ * @property {Circular} legend - Legend
+ */
+
+/**
+ * @typedef {Object} Circular - Sector configuration
+ * @property {string} label - Sector label field
+ * @property {string} value - Sector value field
+ * @property {number} innerRadius - Inner Radius (1-100)
+ * @property {number} strokeWidth - Stroke Width (1-100)
+ * @property {string} strokeColor - Stroke Color (1-100)
+ */
+
+export default ({element, plot, config}) => {
+
+  const {
+
     title = null,
 
     titleAlignment = 'left',
@@ -26,16 +46,14 @@ export default ({element,
       alignment: 'center',
     },
 
-
-    // ...
-  }}) => {
+  } = config;
 
   const colorScale = new Plottable.Scales.Color();
 
   const table = createChartTable({
     title: createTitle({title, titleAlignment}),
     chart: createCircularPlot({plot, ...circular}),
-    legend: createColorLegend({colorScale, ...legend}),
+    legend: createColorLegend(colorScale, legend),
     legendPosition: legend.position
   });
 

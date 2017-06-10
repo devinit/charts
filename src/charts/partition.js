@@ -4,10 +4,15 @@ import {createTreeHierachy} from "../factories/createDataset";
 import partition from "d3-hierarchy/src/partition";
 import color from "d3-color/src/color";
 
-export default ({
-  element,
-  data = [],
-  config: {
+/**
+ * @typedef {Object} Partition
+ * @public
+ * @property {'partition'} type
+ *
+ */
+export default (element, data = [], config) => {
+
+  const {
 
     orientation = 'horizontal',
 
@@ -18,13 +23,13 @@ export default ({
       depth: Infinity,
     },
 
-    ...config
-  }
-}) => {
+    ...moreConfig
+
+  } = config;
 
   const plot = new Plottable.Plots.Rectangle();
 
-  const treeChart = createTreeChart({element, plot, config: {orientation, ...config}});
+  const treeChart = createTreeChart({element, plot, config: {orientation, ...moreConfig}});
 
   const layout = partition().size([1, 1]);
 

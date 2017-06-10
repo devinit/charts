@@ -5,9 +5,24 @@ import { createColorLegend } from "./createLegend";
 import { createLinearDataset, createDataMapping } from "./createDataset";
 import { createCategoryScale, createLinearScale} from "./createScale";
 import { createCategoryAxis, createNumericAxis} from "./createAxis";
-import { createAxisGridLines } from "./createGrid";
+import { createLinearAxisGridLines } from "./createGrid";
 
-export const createLinearChart = ({element, plot, config: {
+/**
+ * @typedef {Object} LinearCategoryChart
+ * @private
+ * @property {string} type - Type
+ * @property {string} title - Title
+ * @property {('vertical'|'horizontal')} orientation - Orientation
+ * @property {string} groupBy - Group field
+ * @property {string[]} colors - Colors
+ * @property {NumericAxis} linearAxis - Linear Axis
+ * @property {CategoryAxis} categoryAxis - Category Axis
+ * @property {ColorLegend} legend - Legend
+ */
+
+export const createLinearChart = ({element, plot, config}) => {
+
+  const {
     title = null,
 
     titleAlignment = 'left',
@@ -60,7 +75,7 @@ export const createLinearChart = ({element, plot, config: {
 
     // ... more config
 
-  }}) => {
+  } = config;
 
   const categoryScale = createCategoryScale(categoryAxis);
 
@@ -72,7 +87,7 @@ export const createLinearChart = ({element, plot, config: {
 
   const linearPlot = createLinearPlot({plot, orientation, categoryScale, linearScale});
 
-  const gridLines = createAxisGridLines({orientation, scale: linearScale, ...linearAxis});
+  const gridLines = createLinearAxisGridLines({orientation, scale: linearScale, ...linearAxis});
 
   const plotArea = gridLines ? new Plottable.Components.Group([gridLines, linearPlot]) : linearPlot;
 
@@ -80,8 +95,13 @@ export const createLinearChart = ({element, plot, config: {
 
   const table = createChartTable({
     title: createTitle({title, titleAlignment}),
-    chart: createPlotAreaWithAxes({orientation, plotArea, linearAxis: mLinearAxis, categoryAxis: mCategoryAxis}),
-    legend: createColorLegend({colorScale, ...legend}),
+    chart: createPlotAreaWithAxes({
+      orientation,
+      plotArea,
+      linearAxis: mLinearAxis,
+      categoryAxis: mCategoryAxis
+    }),
+    legend: createColorLegend(colorScale, legend),
     legendPosition: legend.position
   });
 

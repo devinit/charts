@@ -1,11 +1,18 @@
 import Plottable from "plottable";
 import treemap from "d3-hierarchy/src/treemap";
 import color from "d3-color/src/color";
-import {createTreeHierachy} from '../factories/createDataset'
-import approximate from 'approximate-number'
+import {createTreeHierachy} from "../factories/createDataset";
+import approximate from "approximate-number";
 
-export default ({
-                  element, data, config: {
+/**
+ * @typedef {Object} CompoundTreemap
+ * @public
+ * @property {'compound-treemap'} type
+ *
+ */
+export default (element, data, config) => {
+
+  const {
 
     title = null,
 
@@ -30,8 +37,7 @@ export default ({
     } = {},
 
     // ...
-  }
-                }) => {
+  } = config;
 
   // ... apply rectangle configuration
 

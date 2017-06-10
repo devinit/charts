@@ -11,6 +11,7 @@ script:
   - npm run test
   - npm run build:production
   - cat index.html | sed -e "s/\/di-charts.css/\/charts\/di-charts-$DI_CHARTS_VERSION.css/" | sed -e "s/\/di-charts.js/\/charts\/di-charts-$DI_CHARTS_VERSION.min.js/" | cat > dist/index.html
+  - npm run schema
 
 deploy:
   - provider: npm
@@ -29,6 +30,7 @@ deploy:
     file:
       - "dist/di-charts.css"
       - "dist/di-charts.min.js"
+      - "dist/di-charts.schema.json"
     skip_cleanup: true
     on:
       tags: true
