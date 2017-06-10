@@ -685,6 +685,56 @@
     </script>
 </section>
 
+<section>
+    <div class="chart">
+        <div id="bubble-chart"></div>
+    </div>
+    <script>
+      DiCharts.draw({
+        element: document.getElementById('bubble-chart'),
+        config: {
+          title: 'Bubble Chart',
+
+          type: 'bubble',
+
+          xAxis: {
+            showAxis: true,
+
+            // Axis Label
+            axisLabel: null,
+            showAxisLabel: true,
+
+            // Scale configurations
+            axisMinimum: null,
+            axisMaximum: null,
+          },
+
+          yAxis: {
+            showAxis: true,
+
+            // Axis Label
+            axisLabel: null,
+            showAxisLabel: true,
+
+            // Scale configurations
+            axisMinimum: null,
+            axisMaximum: null,
+          },
+
+          bubble: {
+            radiusLabel: 'Age',
+            radiusMaximum: 0,
+            radiusMinimum: 0,
+          },
+
+        },
+        data: [
+          {"Age": 21, "Weight": 70, "Height": 160}
+        ]
+      })
+    </script>
+</section>
+
 </body>
 
 </html>
