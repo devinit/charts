@@ -27,10 +27,8 @@ deploy:
   - provider: releases
     api_key:
       secure: "DnN70PBXSGfFc8iGanKrLk2GUepoTv3wX711dCiDFEqlU3izC5SyzacQ57v3sYHj8Mp2Hdsa3J9OpZfX5ILG9yAw+rPx8tT0l7N0bBCXFEDsaJwBH93Dr3bkwT8SkHSz9dyTxDcS0OLksPOI09JT5yC3AyC+KGZSeL6fM7J2YZf0oVsYmVljc1ZsYQMQFmWC1+oNamMQ8NskMGkYAKVhM7kjV/n3tzf8sT77XDHJxwRH3H/xBELgTQnPVqGzlgNjy4tdTJTkHvmLDuFJKUGhYEMUug2sRxHoYpxDf2Ym8Sy02Abk6hvyPFMLTIOkaV1wTdS3RKA70K22h0AslP0a13pE9GLC+T2mmeNjb71uuDx5wCjm7iLwTeYYWU1RV5chkwb9m7V7O5iACevQbWUaR5Cp2f9ogJKAck/1xlv91FXjTFXbquYenqBJDAOW5m0VcIhpFQ6b8RktuH/xbiqSzlVlcPvOUbaSYOhmmP79sBygc1TxS9YMT9SKJaAa7Ao5Me2k0p4KUeLDTu7gXK/pkBn9DYwola+fuXToK2sAdvCqAKL3j4T5vUPh8uV7gM8rNakMn6Jwt4MgxSndjlSsTrB5+r3ZVdDyWBtWzf3EPjHkCPvR3pg5REAGTCih8DYcyq7IZ9BUfBgfKKd0jwDd58WE5p+0NZdAWHTC6hUPkuw="
-    file:
-      - "dist/di-charts.css"
-      - "dist/di-charts.min.js"
-      - "dist/di-charts.schema.json"
+    file_glob: true
+    file: 'dist/*'
     skip_cleanup: true
     on:
       tags: true
