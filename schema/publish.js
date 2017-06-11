@@ -1,4 +1,6 @@
 const fs = require('fs');
+const pkg = require('../package.json');
+const destination = `dist/di-charts-${pkg.version}.schema.json`;
 
 exports.publish = function (data, opts) {
 
@@ -67,6 +69,6 @@ exports.publish = function (data, opts) {
       };
     });
 
-  fs.writeFileSync(opts.destination, JSON.stringify(normalised, null, 2));
+  fs.writeFileSync(destination, JSON.stringify(normalised, null, 2));
 
 };
