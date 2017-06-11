@@ -1,11 +1,10 @@
 const pkg = require('./package.json');
 const path = require('path');
 const webpack = require('webpack');
-const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const isProductionBuild = process.env.WEBPACK_ENV === 'production';
-const outputFilename = isProductionBuild ? `di-charts-${pkg.version}.min.js` : `di-charts-${pkg.version}.js`;
+const outputFilename = isProductionBuild ? `di-charts-${pkg.version}.min.js` : `di-charts.js`;
 
 module.exports = {
 
