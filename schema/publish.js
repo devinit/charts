@@ -1,8 +1,7 @@
 const fs = require('fs');
-const pkg = require('../package.json');
-const destination = `dist/di-charts-${pkg.version}.schema.json`;
+const destination = `dist/di-charts.schema.json`;
 
-exports.publish = function (data, opts) {
+exports.publish = function (data) {
 
   const definitions = data()
     .get()
@@ -37,7 +36,7 @@ exports.publish = function (data, opts) {
   const normalised = Object.keys(definitions)
     .filter(k => definitions[k].access === 'public')
     .map(k => Object.assign(definitions[k], {name: k}))
-    .map(({name, description, type, properties, value, options}) => {
+    .map(({name, description, type, properties}) => {
       const parent = definitions[type];
       let allProperties = properties;
 
