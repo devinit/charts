@@ -11,7 +11,7 @@
     "build:production": "WEBPACK_ENV=production webpack --env=prod --progress --profile --colors",
     "patch": "release-it -i patch -n",
     "feature": "release-it -i minor -n",
-    "release": "release-it -i major -n",
+    "breaking": "release-it -i major -n",
     "schema": "mkdir -p dist && jsdoc --template schema --destination dist/di-charts.schema.json src/charts src/factories"
   },
   "dependencies": {
@@ -52,7 +52,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/devinit/charts.git"
+    "url": "https://github.com/devinit/charts.git"
   },
   "keywords": [
     "charts",
