@@ -9,6 +9,7 @@ module.exports = {
 
   entry: [
     __dirname + '/src/index.js',
+    __dirname + '/src/index.less',
   ],
 
   output: {
