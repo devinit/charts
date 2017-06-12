@@ -1,6 +1,11 @@
 import Plottable from 'plottable'
 
-export const createLinearScale = (config) => {
+/**
+ * Creates linear scale
+ * @param {NumericAxis} config
+ * @returns {Linear}
+ */
+export const createLinearScale = (config = {}) => {
   const {axisMinimum = null, axisMaximum = null} = config;
 
   const scale = new Plottable.Scales.Linear();
@@ -12,6 +17,11 @@ export const createLinearScale = (config) => {
   return scale;
 };
 
+/**
+ * Creates category scale
+ * @param {CategoryAxis} config
+ * @returns {Category}
+ */
 export const createCategoryScale = (config) => {
   const {innerPadding = 0, outerPadding = 0} = config;
   const scale = new Plottable.Scales.Category();
