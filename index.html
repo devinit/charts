@@ -697,39 +697,41 @@
 
           type: 'bubble',
 
-          xAxis: {
+          horizontalAxis: {
             showAxis: true,
 
             // Axis Label
-            axisLabel: null,
+            axisLabel: 'Height',
             showAxisLabel: true,
 
-            // Scale configurations
-            axisMinimum: null,
-            axisMaximum: null,
+            showGridlines: true,
           },
 
-          yAxis: {
+          verticalAxis: {
             showAxis: true,
 
             // Axis Label
-            axisLabel: null,
+            axisLabel: 'Weight',
             showAxisLabel: true,
 
-            // Scale configurations
-            axisMinimum: null,
-            axisMaximum: null,
+            showGridlines: true,
           },
 
           bubble: {
             radiusLabel: 'Age',
-            radiusMaximum: 0,
+            radiusMaximum: 100,
             radiusMinimum: 0,
           },
 
         },
         data: [
-          {"Age": 21, "Weight": 70, "Height": 160}
+          {"Age": 63, "Weight": 47, "Height": 151},
+          {"Age": 63, "Weight": 36, "Height": 139},
+          {"Age": 65, "Weight": 31, "Height": 136},
+          {"Age": 41, "Weight": 53, "Height": 156},
+          {"Age": 51, "Weight": 41, "Height": 145},
+          {"Age": 35, "Weight": 62, "Height": 163},
+          {"Age": 32, "Weight": 38, "Height": 149},
         ]
       })
     </script>
