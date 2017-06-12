@@ -3,6 +3,8 @@ import { createLinearScale } from './createScale'
 import { createNumericAxis } from './createAxis'
 import { createScatterGridLines } from './createGrid'
 import { createChartTable } from './createTable'
+import { createTitle } from './createTitle'
+import { createColorLegend } from './createLegend'
 
 /**
  * @typedef {Object} ScatterChart - Scatter chart configuration
@@ -17,12 +19,9 @@ import { createChartTable } from './createTable'
  * @property {ColorLegend} legend - Legend
  */
 
-export default ({
-  element,
+export default ({element, plot, config}) => {
 
-  plot,
-
-  config: {
+  const {
 
     title,
 
@@ -84,45 +83,77 @@ export default ({
       rowSpan: Infinity
     },
 
-  }
-}) => {
+  } = config;
 
-  const xScale = createLinearScale(horizontalAxis);
-  const yScale = createLinearScale(verticalAxis);
+  const horizontalScale = createLinearScale(horizontalAxis);
+  const verticalScale = createLinearScale(verticalAxis);
+  const bubbleScale = createLinearScale({})
+    .domain([bubble.radiusMinimum, bubble.radiusMaximum])
+    .range([bubble.radiusMinimum, bubble.radiusMaximum]);
 
-  const bubbleScale = createLinearScale({});
+  const colorScale = new Plottable.Scales.Color();
 
-  const mxAxis = createNumericAxis({axisScale: xScale, axisOrientation: 'horizontal', ...horizontalAxis});
+  const scatterPlot = createScatterPlot({plot, horizontalScale, verticalScale, bubbleScale});
+  const scatterGridLines = createScatterGridLines({horizontalScale, verticalScale, horizontalAxis, verticalAxis});
 
-  const myAxis = createNumericAxis({axisScale: yScale, axisOrientation: 'vertical', ...verticalAxis});
+  // TODO: Add bubble scale legend
+  const table = createChartTable({
 
-  const scatterPlot = createScatterPlot({plot, xScale, yScale, bubbleScale});
+    title: createTitle({title, titleAlignment}),
 
-  const gridLines = createScatterGridLines({xScale, yScale, horizontalAxis, verticalAxis});
+    chart: createPlotAreaWithAxes({
 
-  const plotArea = new Plottable.Components.Group([gridLines, scatterPlot]);
+      verticalAxis: createNumericAxis({axisScale: verticalScale, axisOrientation: 'vertical', ...verticalAxis}),
 
-  scatterPlot.renderTo(element);
+      horizontalAxis: createNumericAxis({axisScale: horizontalScale, axisOrientation: 'horizontal', ...horizontalAxis}),
+
+      plotArea: new Plottable.Components.Group([
+        scatterGridLines,
+        scatterPlot
+      ]),
+
+    }),
+
+    legend: createColorLegend(colorScale, legend),
+
+    legendPosition: legend.position,
+  });
+
+  table.renderTo(element);
 
   return {
 
-    addData: d => d
+    table,
+
+    addData: (data) => {
+
+      // TODO: Add grouping/coloring
+      const mapping = data.map(datum => {
+        return {
+          x: datum[horizontalAxis.axisLabel],
+          y: datum[verticalAxis.axisLabel],
+          z: datum[bubble.radiusLabel],
+          color: '#abc'
+        }
+      });
+
+      scatterPlot.datasets([new Plottable.Dataset(mapping)]);
+    }
   }
 }
 
-const createScatterPlot = ({plot, xScale, yScale, bubbleScale}) => {
+const createScatterPlot = ({plot, horizontalScale, verticalScale, bubbleScale}) => {
   return plot
+    .attr('name', d => d.z)
     .attr('fill', d => d.color)
-    .x(d => d.x, yScale)
-    .y(d => d.y, xScale)
-    .size(d => d.size, bubbleScale)
+    .x(d => d.x, horizontalScale)
+    .y(d => d.y, verticalScale)
+    .size(d => d.z, bubbleScale)
 };
 
 
-const createPlotAreaWithAxes = ({xAxis, plotArea, yAxis}) => {
-  const plotAreaWithAxes =  orientation === 'vertical' ?
-    [[linearAxis, plotArea], [null, categoryAxis]] :
-    [[categoryAxis, plotArea], [null, linearAxis]];
+const createPlotAreaWithAxes = ({horizontalAxis, plotArea, verticalAxis}) => {
+  const plotAreaWithAxes =  [[verticalAxis, plotArea], [null, horizontalAxis]];
 
   return new Plottable.Components.Table(plotAreaWithAxes);
 };

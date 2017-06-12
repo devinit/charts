@@ -1,6 +1,7 @@
 import Plottable from "plottable";
 
-export const createLinearAxisGridLines = ({orientation, scale, showGridlines}) => {
+export const createLinearAxisGridLines = (config) => {
+  let {orientation, scale, showGridlines = false} = config;
   if (!showGridlines) return null;
 
   const xScale = orientation === 'vertical' ? null : scale;
@@ -13,11 +14,11 @@ export const createLinearAxisGridLines = ({orientation, scale, showGridlines}) =
   return gridlines
 };
 
-export const createScatterGridLines = ({xAxis, yAxis, xScale, yScale}) => {
-  if (!xAxis.showGridlines && !yAxis.showGridlines) return null;
+export const createScatterGridLines = ({horizontalScale, verticalScale, horizontalAxis, verticalAxis}) => {
+  if (!horizontalAxis.showGridlines && !verticalAxis.showGridlines) return null;
 
   return new Plottable.Components.Gridlines(
-    xAxis.showGridlines ? xScale : null,
-    yAxis.showGridlines ? yScale : null
+    horizontalAxis.showGridlines ? horizontalScale : null,
+    verticalAxis.showGridlines ? verticalScale : null
   )
 };
