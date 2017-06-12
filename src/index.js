@@ -1,5 +1,3 @@
-import "./index.less"
-
 export const draw = ({element, data, config}) => {
 
   return new Promise(function (resolve, reject) {
