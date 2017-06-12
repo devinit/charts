@@ -3,71 +3,106 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const isProductionBuild = process.env.WEBPACK_ENV === 'production';
-const outputFilename = isProductionBuild ? `di-charts.min.js` : `di-charts.js`;
+const jsOutputFilename = isProductionBuild ? `di-charts.min.js` : `di-charts.js`;
+const cssOutputFilename = isProductionBuild ? `di-charts.min.css` : `di-charts.css`;
 
-module.exports = {
+const extractLess = new ExtractTextPlugin(cssOutputFilename);
 
-  entry: [
-    __dirname + '/src/index.js',
-    __dirname + '/src/index.less',
-  ],
+const limitChunkCountPlugin = new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1});
 
-  output: {
-    path: `${__dirname}/dist/`,
-    filename: `${outputFilename}`,
-    chunkFilename: `[id]-${outputFilename}`,
-    library: "DiCharts",
-    libraryTarget: "window"
+const uglifyJsPlugin = new webpack.optimize.UglifyJsPlugin({
+  beautify: false,
+  mangle: {
+    screw_ie8: true,
+    keep_fnames: true
+  },
+  compress: {
+    screw_ie8: true
+  },
+  comments: false
+});
+
+module.exports = [
+
+  {
+
+    entry: [
+      __dirname + '/src/index.less',
+    ],
+
+    output: {
+      path: `${__dirname}/dist/`,
+      filename: cssOutputFilename
+    },
+
+    module: {
+      loaders: [
+
+        {
+          test: /\.less$/,
+          use: extractLess.extract(['css-loader', 'less-loader'])
+        },
+
+      ]
+    },
+
+    plugins: [
+      extractLess,
+    ],
+
+    devtool: 'source-map'
   },
 
-  module: {
-    loaders: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader',
-        options: {
-          presets: [['es2015', {modules: false}]],
-          plugins: [
-            'syntax-dynamic-import',
-            'transform-object-rest-spread',
-            'remove-webpack',
-            'dynamic-import-node',
-            'transform-runtime'
-          ]
-        }
-      },
-      {
-        test: /\.less$/,
-        use: ExtractTextPlugin.extract(['css-loader', 'less-loader'])
-      },
+  {
 
-    ]
+    entry: [
+      __dirname + '/src/index.js',
+    ],
+
+    output: {
+      path: `${__dirname}/dist/`,
+      filename: `${jsOutputFilename}`,
+      chunkFilename: `[id]-${jsOutputFilename}`,
+      library: "DiCharts",
+      libraryTarget: "window"
+    },
+
+    module: {
+      loaders: [
+
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          loader: 'babel-loader',
+          options: {
+            presets: [['es2015', {modules: false}]],
+            plugins: [
+              'syntax-dynamic-import',
+              'transform-object-rest-spread',
+              'remove-webpack',
+              'dynamic-import-node',
+              'transform-runtime'
+            ]
+          }
+        },
+
+        {
+          test: /\.less$/,
+          use: extractLess.extract(['css-loader', 'less-loader'])
+        },
+
+      ]
+    },
+
+    plugins: [
+
+      limitChunkCountPlugin,
+
+      ...(isProductionBuild ? [uglifyJsPlugin] : [])
+
+    ],
+
+    devtool: 'source-map'
   },
 
-  plugins: [
-
-    new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),
-
-    new ExtractTextPlugin(`di-charts.css`),
-
-    ...isProductionBuild ? [
-
-      new webpack.optimize.UglifyJsPlugin({
-        beautify: false,
-        mangle: {
-          screw_ie8: true,
-          keep_fnames: true
-        },
-        compress: {
-          screw_ie8: true
-        },
-        comments: false
-      }),
-
-    ] : []
-
-  ],
-
-  devtool: 'source-map'
-};
+];
