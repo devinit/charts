@@ -1,16 +1,35 @@
 import Plottable from "plottable";
 import {createTreeDataset} from "./createDataset";
 
-export default ({element, plot, config: {
+/**
+ * @typedef {Object} TreeChart
+ * @private
+ * @property {string} type - Type
+ * @property {string} title - Title
+ * @property {string} title - Title
+ * @property {('vertical'|'horizontal')} orientation - Orientation
+ * @property {Tree} tree - Hierachy Configuration
+ */
+
+/**
+ * @typedef {Object} Tree
+ * @private
+ * @property {indicator} id - ID Reference
+ * @property {indicator} parent - Parent Indicator
+ * @property {indicator} value - Value Indicator
+ */
+
+export default ({element, plot, config}) => {
+
+  const {
 
     title = null,
 
-    orientation = 'vertical',
-
     titleAlignment = 'left',
 
-    // ... config
-  }}) => {
+    orientation = 'vertical',
+
+  } = config;
 
   const xScale = new Plottable.Scales.Linear();
   xScale.domainMin(0);

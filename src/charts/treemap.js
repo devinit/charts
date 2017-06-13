@@ -5,11 +5,20 @@ import treemap from "d3-hierarchy/src/treemap";
 import color from "d3-color/src/color";
 
 /**
- * @typedef {Object} Treemap
+ * @typedef {Treemap} Treemap
  * @public
  * @property {'treemap'} type
+ * @property {TreemapConfig} treemap
  *
  */
+
+/**
+ * @typedef {Object} TreemapConfig
+ * @public
+ * @property {'binary'|'dice'|'slice'|'sliceDice'|'squarify'|'resquarify'} tile - Tiling Method
+ *
+ */
+
 export default (element, data = [], config) => {
 
   const {

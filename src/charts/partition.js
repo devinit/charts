@@ -5,7 +5,7 @@ import partition from "d3-hierarchy/src/partition";
 import color from "d3-color/src/color";
 
 /**
- * @typedef {Object} Partition
+ * @typedef {TreeChart} Partition
  * @public
  * @property {'partition'} type
  *
