@@ -10,16 +10,16 @@ import {createChartTable} from './createTable';
  * @property {string} title - Title of chart
  * @property {string[]} colors - Colors
  * @property {Circular} circular - Sectors
- * @property {Circular} legend - Legend
+ * @property {ColorLegend} legend - Legend
  */
 
 /**
  * @typedef {Object} Circular - Sector configuration
- * @property {string} label - Sector label field
- * @property {string} value - Sector value field
+ * @property {string} label - Label indicator
+ * @property {string} value - Sector indicator
  * @property {number} innerRadius - Inner Radius (1-100)
- * @property {number} strokeWidth - Stroke Width (1-100)
- * @property {string} strokeColor - Stroke Color (1-100)
+ * @property {number} strokeWidth - Stroke Width
+ * @property {string} strokeColor - Stroke Color
  */
 
 export default ({element, plot, config}) => {
