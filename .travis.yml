@@ -9,7 +9,7 @@ install:
 script:
   - npm run test
   - npm run build:production
-  - cat index.html | sed -e "s/\/di-charts.css/\/charts\/di-charts.css/" | sed -e "s/\/di-charts.js/\/charts\/di-charts-min.js/" | cat > dist/index.html
+  - cat index.html | sed -e "s/\/di-charts.css/\/charts\/di-charts.min.css/" | sed -e "s/\/di-charts.js/\/charts\/di-charts.min.js/" | cat > dist/index.html
   - npm run schema
 
 deploy:
@@ -30,7 +30,7 @@ deploy:
     file: 'dist/di-*'
     skip_cleanup: true
     on:
-      tags: true
+      tags: false
       repo: devinit/charts
       branch: master
 
