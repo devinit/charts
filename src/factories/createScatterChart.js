@@ -1,10 +1,10 @@
-import Plottable from 'plottable';
-import { createLinearScale } from './createScale'
-import { createNumericAxis } from './createAxis'
-import { createScatterGridLines } from './createGrid'
-import { createChartTable } from './createTable'
-import { createTitle } from './createTitle'
-import { createColorLegend } from './createLegend'
+import Plottable from "plottable";
+import {createLinearScale} from "./createScale";
+import {createNumericAxis} from "./createAxis";
+import {createScatterGridLines} from "./createGrid";
+import {createChartTable} from "./createTable";
+import {createTitle} from "./createTitle";
+import {createColorLegend} from "./createLegend";
 
 /**
  * @typedef {Object} ScatterChart - Scatter chart configuration
@@ -15,10 +15,24 @@ import { createColorLegend } from './createLegend'
  * @property {string[]} colors - Colors
  * @property {NumericAxis} horizontalAxis - Horizontal Axis
  * @property {NumericAxis} verticalAxis - Vertical Axis
- * @property {Object} bubble - Bubble
+ * @property {Bubble} bubble - Bubble
  * @property {ColorLegend} legend - Legend
  */
 
+/**
+ * @typedef {Object} Bubble - Bubble configuration
+ * @property {number} indicator - Data Indicator
+ * @property {number} label - Minimum bubble size
+ * @property {number} minimum - Minimum bubble size
+ * @property {number} maximum - Maximum bubble size
+ */
+
+/**
+ *
+ * @param element
+ * @param plot
+ * @param {ScatterChart} config
+ */
 export default ({element, plot, config}) => {
 
   const {
@@ -27,70 +41,24 @@ export default ({element, plot, config}) => {
 
     titleAlignment = 'left',
 
+    groupBy,
+
     colors = [],
 
-    horizontalAxis = {
-      // Do you even want an axis?
-      showAxis: false,
+    horizontalAxis,
 
-      axisMargin: 10,
+    verticalAxis,
 
-      // GridLines
-      showGridlines: false,
+    bubble,
 
-      // Axis Label
-      axisLabel: null,
-      showAxisLabel: true,
-
-      // Tick Labels
-
-      // Scale configurations
-      axisMinimum: null,
-      axisMaximum: null,
-    },
-
-    verticalAxis  = {
-      // Do you even want an axis?
-      showAxis: false,
-
-      axisMargin: 10,
-
-      // GridLines
-      showGridlines: false,
-
-      // Axis Label
-      axisLabel: null,
-      showAxisLabel: true,
-
-      // Tick Labels
-
-      // Scale configurations
-      axisMinimum: null,
-      axisMaximum: null,
-    },
-
-    bubble = {
-      radiusLabel: 'Age',
-      radiusMaximum: 0,
-      radiusMinimum: 0,
-    },
-
-    legend = {
-      showLegend: false,
-      alignment: 'left',
-      position: 'bottom',
-      symbol: 'square',
-      rowSpan: Infinity
-    },
+    legend = {},
 
   } = config;
 
   const horizontalScale = createLinearScale(horizontalAxis);
   const verticalScale = createLinearScale(verticalAxis);
-  const bubbleScale = createLinearScale({})
-    .domain([bubble.radiusMinimum, bubble.radiusMaximum])
-    .range([bubble.radiusMinimum, bubble.radiusMaximum]);
 
+  const bubbleScale = createLinearScale({});
   const colorScale = new Plottable.Scales.Color();
 
   const scatterPlot = createScatterPlot({plot, horizontalScale, verticalScale, bubbleScale});
@@ -125,19 +93,43 @@ export default ({element, plot, config}) => {
 
     table,
 
-    addData: (data) => {
+    addData: data => {
 
-      // TODO: Add grouping/coloring
-      const mapping = data.map(datum => {
-        return {
-          x: datum[horizontalAxis.axisLabel],
-          y: datum[verticalAxis.axisLabel],
-          z: datum[bubble.radiusLabel],
-          color: '#abc'
-        }
-      });
+      const rangeMinimum = Math.pow(10, Math.floor(Math.log10(Math.min.apply(null, data.map(d => d[bubble.indicator])))));
+      const rangeMaximum = Math.pow(10, Math.ceil(Math.log10(Math.max.apply(null, data.map(d => d[bubble.indicator])))));
 
-      scatterPlot.datasets([new Plottable.Dataset(mapping)]);
+      bubbleScale
+        .domain([bubble.minimum || 0, bubble.maximum || 100])
+        .range([rangeMinimum, rangeMaximum]);
+
+      const mapping = data
+        .sort((a, b) => b[groupBy] - a[groupBy])
+        .reduce((groups, datum, i, all) => {
+
+          return {
+
+            ...groups,
+
+            [datum[groupBy]]: [
+
+              ...(groups[datum[groupBy]] || []),
+
+              {x: datum[horizontalAxis.indicator], y: datum[verticalAxis.indicator], z: datum[bubble.indicator]}
+
+            ]
+          };
+
+        }, {});
+
+      const coloring = Object.keys(mapping)
+        .map((k, index) => ({group: k || 'Unknown', color: colors[index] || '#abc'}));
+
+      const datasets = Object.keys(mapping)
+        .map((group, index) => mapping[group].map(d => ({...d, color: coloring[index].color})));
+
+      colorScale.domain(coloring.map(k => k.group)).range(coloring.map(k => k.color));
+
+      scatterPlot.datasets(datasets.map(d => new Plottable.Dataset(d)));
     }
   }
 }
@@ -146,6 +138,9 @@ const createScatterPlot = ({plot, horizontalScale, verticalScale, bubbleScale}) 
   return plot
     .attr('name', d => d.z)
     .attr('fill', d => d.color)
+    .attr('stroke', '#fff')
+    .attr('stroke-width', 1)
+    .attr('opacity', 1)
     .x(d => d.x, horizontalScale)
     .y(d => d.y, verticalScale)
     .size(d => d.z, bubbleScale)
@@ -153,7 +148,7 @@ const createScatterPlot = ({plot, horizontalScale, verticalScale, bubbleScale}) 
 
 
 const createPlotAreaWithAxes = ({horizontalAxis, plotArea, verticalAxis}) => {
-  const plotAreaWithAxes =  [[verticalAxis, plotArea], [null, horizontalAxis]];
+  const plotAreaWithAxes = [[verticalAxis, plotArea], [null, horizontalAxis]];
 
   return new Plottable.Components.Table(plotAreaWithAxes);
 };
