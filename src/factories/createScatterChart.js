@@ -10,8 +10,8 @@ import {createColorLegend} from "./createLegend";
  * @typedef {Object} ScatterChart - Scatter chart configuration
  * @property {string} type - Type
  * @property {string} title - Title of chart
- * @property {string} titleAlignment - Title of chart
- * @property {string[]} groupBy - Group field
+ * @property {'left'|'center'|'right'} titleAlignment=left - Title of chart
+ * @property {indicator} groupBy - Group field
  * @property {string[]} colors - Colors
  * @property {NumericAxis} horizontalAxis - Horizontal Axis
  * @property {NumericAxis} verticalAxis - Vertical Axis
@@ -21,8 +21,8 @@ import {createColorLegend} from "./createLegend";
 
 /**
  * @typedef {Object} Bubble - Bubble configuration
- * @property {number} indicator - Data Indicator
- * @property {number} label - Minimum bubble size
+ * @property {indicator} indicator - Value Indicator
+ * @property {indicator} label - Label Indicator
  * @property {number} minimum - Minimum bubble size
  * @property {number} maximum - Maximum bubble size
  */
@@ -84,7 +84,7 @@ export default ({element, plot, config}) => {
 
     legend: createColorLegend(colorScale, legend),
 
-    legendPosition: legend.position,
+    legendPosition: legend.position || 'bottom',
   });
 
   table.renderTo(element);
