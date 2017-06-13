@@ -7,7 +7,8 @@ import Plottable from 'plottable';
  * @private
  * @property {boolean} showLegend - Show Legend
  * @property {('circle'|'square'|'cross'|'diamond'|'triangle'|'star'|'wye')} symbol=square - Legend symbol
- * @property {('bottom'|'right')} alignment=bottom - Legend alignment
+ * @property {('left'|'center'|'right')} alignment=left - Legend Alignment
+ * @property {('bottom'|'right')} position=bottom - Legend Position
  * @property {number} rowSpan - Maximum entries per row
  */
 
@@ -16,7 +17,7 @@ export const createColorLegend = (colorScale, config = {}) => {
   const {
     showLegend = false,
     symbol = 'square',
-    alignment = 'bottom',
+    alignment = 'left',
     rowSpan = Infinity
   } = config;
 
