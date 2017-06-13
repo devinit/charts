@@ -8,6 +8,7 @@ import color from "d3-color/src/color";
  * @typedef {TreeChart} Partition
  * @public
  * @property {'partition'} type
+ * @property {('vertical'|'horizontal')} orientation=horizontal - Orientation
  *
  */
 export default (element, data = [], config) => {
