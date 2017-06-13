@@ -12,8 +12,9 @@ import { createLinearAxisGridLines } from "./createGrid";
  * @private
  * @property {string} type - Type
  * @property {string} title - Title
+ * @property {string} titleAlignment - Title Alignment
  * @property {('vertical'|'horizontal')} orientation - Orientation
- * @property {string} groupBy - Group field
+ * @property {indicator} groupBy - Groups
  * @property {string[]} colors - Colors
  * @property {NumericAxis} linearAxis - Linear Axis
  * @property {CategoryAxis} categoryAxis - Category Axis
@@ -23,6 +24,7 @@ import { createLinearAxisGridLines } from "./createGrid";
 export const createLinearChart = ({element, plot, config}) => {
 
   const {
+
     title = null,
 
     titleAlignment = 'left',
@@ -44,7 +46,6 @@ export const createLinearChart = ({element, plot, config}) => {
 
       // Axis Label
       axisLabel: null,
-      showAxisLabel: true,
 
       // Tick Labels
 
@@ -81,13 +82,13 @@ export const createLinearChart = ({element, plot, config}) => {
 
   const linearScale = createLinearScale(linearAxis);
 
-  const mCategoryAxis = createCategoryAxis({axisScale: categoryScale, axisOrientation: orientation, ...categoryAxis});
+  const mCategoryAxis = createCategoryAxis({ ...categoryAxis, axisScale: categoryScale, axisOrientation: orientation});
 
-  const mLinearAxis = createNumericAxis({axisScale: linearScale, axisOrientation: orientation, ...linearAxis});
+  const mLinearAxis = createNumericAxis({...linearAxis, axisScale: linearScale, axisOrientation: orientation});
 
   const linearPlot = createLinearPlot({plot, orientation, categoryScale, linearScale});
 
-  const gridLines = createLinearAxisGridLines({orientation, scale: linearScale, ...linearAxis});
+  const gridLines = createLinearAxisGridLines({...linearAxis, orientation, scale: linearScale});
 
   const plotArea = gridLines ? new Plottable.Components.Group([gridLines, linearPlot]) : linearPlot;
 
@@ -113,7 +114,7 @@ export const createLinearChart = ({element, plot, config}) => {
 
     addData: (data = [], transform = d => d) => {
 
-      const mapping = createDataMapping(data, linearAxis.axisLabel, categoryAxis.axisLabel, groupBy);
+      const mapping = createDataMapping(data, linearAxis.indicator, categoryAxis.indicator, groupBy);
 
       const {labels, series} = transform(createLinearDataset(mapping));
 
