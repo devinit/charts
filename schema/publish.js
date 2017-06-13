@@ -20,8 +20,6 @@ exports.publish = function (data) {
 
             const {name, type: {names}, description, defaultvalue} = property;
 
-            console.log(defaultvalue);
-
             const literals = names.filter(n => n.match(/'.+'/)).map(n => n.match(/'(.+)'/)[1]);
             const nonLiterals = names.filter(n => !n.match(/'.+'/));
 
