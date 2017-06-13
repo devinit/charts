@@ -12,8 +12,8 @@ import { createLinearAxisGridLines } from "./createGrid";
  * @private
  * @property {string} type - Type
  * @property {string} title - Title
- * @property {string} titleAlignment - Title Alignment
- * @property {('vertical'|'horizontal')} orientation - Orientation
+ * @property {'left'|'center'|'right'} titleAlignment=left - Title Alignment
+ * @property {('vertical'|'horizontal')} orientation=vertical - Orientation
  * @property {indicator} groupBy - Groups
  * @property {string[]} colors - Colors
  * @property {NumericAxis} linearAxis - Linear Axis
@@ -35,44 +35,11 @@ export const createLinearChart = ({element, plot, config}) => {
 
     colors = [],
 
-    linearAxis = {
-      // Do you even want an axis?
-      showAxis: false,
+    linearAxis,
 
-      axisMargin: 10,
+    categoryAxis,
 
-      // GridLines
-      showGridlines: false,
-
-      // Axis Label
-      axisLabel: null,
-
-      // Tick Labels
-
-      // Scale configurations
-      axisMinimum: null,
-      axisMaximum: null,
-    },
-
-    categoryAxis = {
-      showAxis: false,
-      axisMargin: 0,
-
-      showAxisLabel: true,
-      axisLabel: null,
-
-      // Padding
-      innerPadding: 0,
-      outerPadding: 0
-    },
-
-    legend = {
-      showLegend: false,
-      alignment: 'left',
-      position: 'bottom',
-      symbol: 'square',
-      rowSpan: Infinity
-    },
+    legend = {},
 
     // ... more config
 
@@ -103,7 +70,7 @@ export const createLinearChart = ({element, plot, config}) => {
       categoryAxis: mCategoryAxis
     }),
     legend: createColorLegend(colorScale, legend),
-    legendPosition: legend.position
+    legendPosition: legend.position || 'bottom'
   });
 
   table.renderTo(element);
