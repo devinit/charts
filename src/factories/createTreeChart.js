@@ -6,8 +6,8 @@ import {createTreeDataset} from "./createDataset";
  * @private
  * @property {string} type - Type
  * @property {string} title - Title
- * @property {string} title - Title
- * @property {('vertical'|'horizontal')} orientation - Orientation
+ * @property {'left'|'center'|'right'} titleAlignment=left - Title Alignment
+ * @property {('vertical'|'horizontal')} orientation=vertical - Orientation
  * @property {Tree} tree - Hierachy Configuration
  */
 
