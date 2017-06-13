@@ -3,10 +3,9 @@ import Plottable from "plottable";
 /**
  * @typedef {Object} NumericAxis - Numeric Axis configuration
  * @private
+ * @property {indicator} indicator - Data Indicator
  * @property {boolean} showAxis - Show Axis
  * @property {boolean} showGridlines - Show Grid lines
- * @property {boolean} showAxisLabel - Show Label
- * @property {'vertical'|'horizontal'} axisOrientation - Orientation
  * @property {string} axisLabel - Label
  * @property {number} axisMargin - Margin
  * @property {number} axisMinimum - Minimum
@@ -17,10 +16,9 @@ import Plottable from "plottable";
  *
  * @typedef {Object} CategoryAxis - Category Axis Configuration
  * @private
+ * @property {indicator} indicator - Data Indicator
  * @property {boolean} showAxis - Show Axis
- * @property {boolean} showAxisLabel - Show Label
- * @property {string} axisOrientation - Orientation
- * @property {string} axisLabel - Data label
+ * @property {string} axisLabel - Axis Label
  * @property {number} axisMargin - Margin
  * @property {number} innerPadding - Inner Padding
  * @property {number} outerPadding - Outer Padding
