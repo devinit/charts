@@ -6,17 +6,17 @@ import Plottable from 'plottable';
  * @typedef {Object} ColorLegend
  * @private
  * @property {boolean} showLegend - Show Legend
- * @property {('circle'|'square'|'cross'|'diamond'|'triangle'|'star'|'wye')} symbol - Legend symbol
- * @property {('bottom'|'right')} alignment - Legend alignment
+ * @property {('circle'|'square'|'cross'|'diamond'|'triangle'|'star'|'wye')} symbol=square - Legend symbol
+ * @property {('bottom'|'right')} alignment=bottom - Legend alignment
  * @property {number} rowSpan - Maximum entries per row
  */
 
-export const createColorLegend = (colorScale, config) => {
+export const createColorLegend = (colorScale, config = {}) => {
 
   const {
     showLegend = false,
     symbol = 'square',
-    alignment = 'left',
+    alignment = 'bottom',
     rowSpan = Infinity
   } = config;
 
@@ -29,8 +29,9 @@ export const createColorLegend = (colorScale, config) => {
 
 };
 
-export const createBubbleLegend = (colorScale, {showLegend = false, symbol = 'circle', alignment = 'left', rowSpan = Infinity}) => {
+export const createBubbleLegend = (colorScale, config) => {
 
+  const {showLegend = false, symbol = 'circle', alignment = 'left', rowSpan = Infinity} = config;
   if (!showLegend || !colorScale) return null;
 
   return new Plottable.Components.Legend(colorScale)
