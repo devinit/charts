@@ -8,7 +8,9 @@ export const createChartTable = ({title, chart, legend = null, legendPosition = 
 
   const chartTable = new Plottable.Components.Table([[title], [chartWithLegend]]);
 
-  chartTable.rowPadding(20);
+  if (title) {
+    chartTable.rowPadding(20);
+  }
 
   return chartTable;
 };
