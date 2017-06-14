@@ -70,9 +70,23 @@ export const createTreeHierachy = (data, tree) => {
     .id(d => d.label)
     .parentId(d => d.parent);
 
-  return stratifyFactory(series)
-    .sum(d => d.value)
-    .sort((b, a) => a.value - b.value);
+  const root = stratifyFactory(series);
+
+  root.sum = function(value) {
+    return this.eachAfter(function(node) {
+      let sum = +value(node) || 0,
+        children = node.children,
+        i = children && children.length;
+      while (--i >= 0) sum += children[i].value;
+      node.value = sum;
+    });
+  };
+
+  return root
+    .sum(node => {
+      return node.children ? 0 : node.data.value;
+    })
+    .sort((a, b) => a.value - b.value);
 
 };
 
