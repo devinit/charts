@@ -1,5 +1,8 @@
 import Plottable from "plottable";
+import {createTitle} from "./createTitle";
+import {createChartTable} from "./createTable";
 import {createTreeDataset} from "./createDataset";
+import drawLabels from './drawLabels';
 
 /**
  * @typedef {Object} TreeChart
@@ -29,6 +32,8 @@ export default ({element, plot, config}) => {
 
     orientation = 'vertical',
 
+    colors = [],
+
   } = config;
 
   const xScale = new Plottable.Scales.Linear();
@@ -42,27 +47,23 @@ export default ({element, plot, config}) => {
   const x = orientation === 'vertical' ? 'x' : 'y';
   const y = orientation === 'horizontal' ? 'x' : 'y';
 
+  plot._drawLabels = drawLabels;
+
   plot
     .x(d => d[`${x}0`], xScale)
     .y(d => d[`${y}0`], yScale)
     .x2(d => d[`${x}1`], xScale)
     .y2(d => d[`${y}1`], yScale)
-    .attr("fill", d => d.data.color)
+    .attr("fill", d => colors[0] || '#abc')
     .attr("stroke", d => '#fff')
-    .attr("stroke-width", () => 1)
+    .attr("stroke-width", () => 2)
     .labelsEnabled(true)
-    .label(d => `${d.data.label} (${d.value})`);
+    .label(d => d.data.label);
 
-  const titleLabel = new Plottable.Components.TitleLabel(title, 0)
-    .xAlignment(titleAlignment)
-    .yAlignment('top');
-
-  const table = new Plottable.Components.Table([
-    [titleLabel],
-    [plot],
-  ]);
-
-  table.rowPadding(20);
+  const table = createChartTable({
+    title: createTitle({title, titleAlignment}),
+    chart: plot
+  });
 
   table.renderTo(element);
 
