@@ -51,7 +51,7 @@ export const createNumericAxis = (config) => {
 };
 
 export const createCategoryAxis = (config) => {
-  let {showAxis = false, axisOrientation, axisScale, axisLabel = null, axisMargin = 10} = config;
+  let {showAxis = false, axisOrientation, axisScale, axisLabel = null, axisMargin = 10, ticking = 'all'} = config;
 
   if (!showAxis) return null;
 
@@ -60,6 +60,9 @@ export const createCategoryAxis = (config) => {
   const axis = new Plottable.Axes.Category(axisScale, alignment);
 
   axis.margin(axisMargin);
+
+  // Add ticking classes
+  configureAxisTicking(axis, ticking);
 
   const label = axisLabel && new Plottable.Components.AxisLabel(axisLabel, getAxisLabelRotation(alignment));
 
