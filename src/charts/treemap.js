@@ -64,7 +64,7 @@ export default (element, data = [], config) => {
 
   const transform = root => {
     return layout(root)
-      .descendants()
+      .leaves()
       .map(colorize)
       .filter(d => d.depth <= tree.depth || Infinity);
   };
