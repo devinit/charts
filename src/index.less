@@ -9,10 +9,67 @@
   stroke: #3C3C3C;
   opacity: 0.25;
   stroke-width: 1px;
-  stroke-dasharray: 1 5;
 }
 
 .plottable .rectangle-plot rect:before {
   content: attr(title);
   display: block;
+}
+
+.plottable .plot-label {
+  padding: 0.5em;
+  font-size: 1.1em;
+}
+
+.light-label {
+  color: #fff;
+}
+
+.dark-label {
+  color: #000;
+}
+
+.plottable .axis line.baseline {
+  stroke: #000;
+}
+
+.plottable .axis line.tick-mark {
+  stroke: #000;
+  stroke-width: 1px;
+}
+
+.axis.axis-tick-even .tick-label,
+.axis.axis-tick-odd .tick-label,
+.axis.axis-tick-sparse .tick-label,
+
+.axis.axis-tick-even .tick-mark,
+.axis.axis-tick-odd .tick-mark,
+.axis.axis-tick-sparse .tick-mark,
+
+.gridlines.gridlines-tick-even line,
+.gridlines.gridlines-tick-odd line,
+.gridlines.gridlines-tick-sparse line {
+  visibility: hidden !important;
+}
+
+.axis.axis-tick-all .tick-label,
+.axis.axis-tick-even .tick-label:nth-child(2n),
+.axis.axis-tick-odd .tick-label:nth-child(2n+1),
+.axis.axis-tick-sparse .tick-label:first-child,
+.axis.axis-tick-sparse .tick-label:last-child,
+
+.axis.axis-tick-all .tick-mark,
+.axis.axis-tick-even .tick-mark:nth-child(2n),
+.axis.axis-tick-odd .tick-mark:nth-child(2n+1),
+.axis.axis-tick-sparse .tick-mark:first-child,
+.axis.axis-tick-sparse .tick-mark:last-child {
+  visibility: visible !important;
+}
+
+.gridlines.gridlines-tick-all line,
+.gridlines.gridlines-tick-even line:nth-child(2n),
+.gridlines.gridlines-tick-odd line:nth-child(2n+1),
+.gridlines.gridlines-tick-sparse line:first-child,
+.gridlines.gridlines-tick-sparse line:last-child {
+  visibility: visible !important;
 }
