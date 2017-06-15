@@ -15,8 +15,8 @@ import {createChartTable} from './createTable';
 
 /**
  * @typedef {Object} Circular - Sector configuration
- * @property {string} label - Label indicator
- * @property {string} value - Sector indicator
+ * @property {indicator} label - Label indicator
+ * @property {indicator} value - Sector indicator
  * @property {number} innerRadius - Inner Radius (1-100)
  * @property {number} strokeWidth - Stroke Width
  * @property {string} strokeColor - Stroke Color
