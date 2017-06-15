@@ -1,7 +1,8 @@
 import Plottable from "plottable";
+import { configureGridTicking } from './configureTicking';
 
 export const createLinearAxisGridLines = (config) => {
-  let {orientation, scale, showGridlines = false} = config;
+  let {orientation, scale, showGridlines = false, ticking = 'odd'} = config;
   if (!showGridlines) return null;
 
   const xScale = orientation === 'vertical' ? null : scale;
@@ -9,7 +10,8 @@ export const createLinearAxisGridLines = (config) => {
 
   const gridlines = new Plottable.Components.Gridlines(xScale, yScale);
 
-  // ... apply configuration options
+  // Add ticking classes
+  configureGridTicking(gridlines, ticking);
 
   return gridlines
 };

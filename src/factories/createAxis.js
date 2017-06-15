@@ -1,4 +1,6 @@
 import Plottable from "plottable";
+import approximate from "approximate-number";
+import { configureAxisTicking } from './configureTicking'
 
 /**
  * @typedef {Object} NumericAxis - Numeric Axis configuration
@@ -6,6 +8,7 @@ import Plottable from "plottable";
  * @property {indicator} indicator - Data Indicator
  * @property {boolean} showAxis - Show Axis
  * @property {boolean} showGridlines - Show Grid lines
+ * @property {'all'|'even'|'odd'|'sparse'} ticking=all - Ticking method
  * @property {string} axisLabel - Label
  * @property {number} axisMargin - Margin
  * @property {number} axisMinimum - Minimum
@@ -18,6 +21,7 @@ import Plottable from "plottable";
  * @private
  * @property {indicator} indicator - Data Indicator
  * @property {boolean} showAxis - Show Axis
+ * @property {'all'|'even'|'odd'|'sparse'} ticking=all - Ticking method
  * @property {string} axisLabel - Axis Label
  * @property {number} axisMargin - Margin
  * @property {number} innerPadding - Inner Padding
@@ -26,14 +30,19 @@ import Plottable from "plottable";
 
 export const createNumericAxis = (config) => {
 
-  const {showAxis = false, axisOrientation, axisScale, axisLabel = null, axisMargin = 10} = config;
+  const {showAxis = false, axisOrientation, axisScale, axisLabel = null, axisMargin = 10, ticking = 'odd'} = config;
 
   if (!showAxis) return null;
 
   const alignment = axisOrientation === 'horizontal' ? 'bottom' : 'left';
 
-  const axis = new Plottable.Axes.Numeric(axisScale, alignment);
-  axis.margin(axisMargin);
+  const axis = new Plottable.Axes.Numeric(axisScale, alignment)
+    .formatter(d => approximate(d))
+    .margin(axisMargin)
+    .showEndTickLabels(true);
+
+  // Add ticking classes
+  configureAxisTicking(axis, ticking);
 
   const label = axisLabel && new Plottable.Components.AxisLabel(axisLabel, getAxisLabelRotation(alignment));
 
