@@ -1,11 +1,11 @@
 import Plottable from "plottable";
-import { createChartTable } from "./createTable";
-import { createTitle } from "./createTitle";
-import { createColorLegend } from "./createLegend";
-import { createLinearDataset, createDataMapping } from "./createDataset";
-import { createCategoryScale, createLinearScale} from "./createScale";
-import { createCategoryAxis, createNumericAxis} from "./createAxis";
-import { createLinearAxisGridLines } from "./createGrid";
+import {createChartTable} from "./createTable";
+import {createTitle} from "./createTitle";
+import {createColorLegend} from "./createLegend";
+import {createDataMapping, createLinearDataset} from "./createDataset";
+import {createCategoryScale, createLinearScale} from "./createScale";
+import {createCategoryAxis, createNumericAxis} from "./createAxis";
+import {createLinearAxisGridLines} from "./createGrid";
 
 /**
  * @typedef {Object} LinearCategoryChart
@@ -15,6 +15,7 @@ import { createLinearAxisGridLines } from "./createGrid";
  * @property {'left'|'center'|'right'} titleAlignment=left - Title Alignment
  * @property {('vertical'|'horizontal')} orientation=vertical - Orientation
  * @property {indicator} groupBy - Groups
+ * @property {boolean} showLabels - Show Labels
  * @property {string[]} colors - Colors
  * @property {NumericAxis} linearAxis - Linear Axis
  * @property {CategoryAxis} categoryAxis - Category Axis
@@ -35,6 +36,8 @@ export const createLinearChart = ({element, plot, config}) => {
 
     colors = [],
 
+    showLabels = true,
+
     linearAxis,
 
     categoryAxis,
@@ -46,30 +49,27 @@ export const createLinearChart = ({element, plot, config}) => {
   } = config;
 
   const categoryScale = createCategoryScale(categoryAxis);
-
   const linearScale = createLinearScale(linearAxis);
-
-  const mCategoryAxis = createCategoryAxis({ ...categoryAxis, axisScale: categoryScale, axisOrientation: orientation});
-
-  const mLinearAxis = createNumericAxis({...linearAxis, axisScale: linearScale, axisOrientation: orientation});
-
-  const linearPlot = createLinearPlot({plot, orientation, categoryScale, linearScale});
-
-  const gridLines = createLinearAxisGridLines({...linearAxis, orientation, scale: linearScale});
-
-  const plotArea = gridLines ? new Plottable.Components.Group([gridLines, linearPlot]) : linearPlot;
-
   const colorScale = new Plottable.Scales.Color();
 
   const table = createChartTable({
+
     title: createTitle({title, titleAlignment}),
-    chart: createPlotAreaWithAxes({
-      orientation,
-      plotArea,
-      linearAxis: mLinearAxis,
-      categoryAxis: mCategoryAxis
+
+    chart: createPlotAreaWithAxes(orientation, {
+
+      plotArea: createPlotWithGridlines({
+        plot: createLinearPlot({plot, orientation, categoryScale, linearScale, showLabels}),
+        grid: createLinearAxisGridLines({...linearAxis, orientation, scale: linearScale})
+      }),
+
+      linearAxis: createNumericAxis({...linearAxis, axisScale: linearScale, axisOrientation: orientation}),
+
+      categoryAxis: createCategoryAxis({...categoryAxis, axisScale: categoryScale, axisOrientation: orientation})
     }),
+
     legend: createColorLegend(colorScale, legend),
+
     legendPosition: legend.position || 'bottom'
   });
 
@@ -109,7 +109,15 @@ export const createLinearChart = ({element, plot, config}) => {
   };
 };
 
-export const createLinearPlot = ({plot, orientation, categoryScale, linearScale}) => {
+const createPlotWithGridlines = ({plot, grid}) => {
+  return grid ? new Plottable.Components.Group([grid, plot]) : plot
+};
+
+export const createLinearPlot = ({plot, orientation, categoryScale, linearScale, showLabels}) => {
+  if (showLabels && plot.labelsEnabled) {
+    plot.labelsEnabled(showLabels)
+  }
+
   return plot
     .attr('stroke', d => d.color)
     .attr('fill', d => d.color)
@@ -118,8 +126,8 @@ export const createLinearPlot = ({plot, orientation, categoryScale, linearScale}
     .y(d => orientation === 'horizontal' ? d.label : d.value, orientation === 'horizontal' ? categoryScale : linearScale);
 };
 
-const createPlotAreaWithAxes = ({orientation, linearAxis, plotArea, categoryAxis}) => {
-  const plotAreaWithAxes =  orientation === 'vertical' ?
+const createPlotAreaWithAxes = (orientation, {linearAxis, plotArea, categoryAxis}) => {
+  const plotAreaWithAxes = orientation === 'vertical' ?
     [[linearAxis, plotArea], [null, categoryAxis]] :
     [[categoryAxis, plotArea], [null, linearAxis]];
 
