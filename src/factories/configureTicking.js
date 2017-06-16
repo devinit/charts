@@ -1,4 +1,5 @@
 export const configureAxisTicking = (axis, ticking) => {
+
   if (ticking === 'all') {
     axis.addClass('axis-tick-all')
   }
@@ -12,6 +13,7 @@ export const configureAxisTicking = (axis, ticking) => {
   }
 
   if (ticking === 'sparse') {
+    axis.tickLabelMaxLines(1);
     axis.addClass('axis-tick-sparse')
   }
 };
