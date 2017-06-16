@@ -13,7 +13,7 @@ export const configureAxisTicking = (axis, ticking) => {
   }
 
   if (ticking === 'sparse') {
-    axis.tickLabelMaxLines(1);
+    axis.tickLabelMaxLines && axis.tickLabelMaxLines(1);
     axis.addClass('axis-tick-sparse')
   }
 };
