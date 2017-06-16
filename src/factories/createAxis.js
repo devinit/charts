@@ -1,6 +1,6 @@
 import Plottable from "plottable";
 import approximate from "approximate-number";
-import { configureAxisTicking } from './configureTicking'
+import {configureAxisTicking} from "./configureTicking";
 
 /**
  * @typedef {Object} NumericAxis - Numeric Axis configuration
@@ -30,41 +30,50 @@ import { configureAxisTicking } from './configureTicking'
 
 export const createNumericAxis = (config) => {
 
-  const {showAxis = false, axisOrientation, axisScale, axisLabel = null, axisMargin = 10, ticking = 'odd'} = config;
+  const {showAxis = true, axisOrientation, axisScale, axisLabel = null, axisMargin = 10, ticking = 'all'} = config;
 
   if (!showAxis) return null;
 
   const alignment = axisOrientation === 'horizontal' ? 'bottom' : 'left';
 
-  const axis = new Plottable.Axes.Numeric(axisScale, alignment)
-    .formatter(d => approximate(d))
-    .margin(axisMargin)
-    .showEndTickLabels(true);
+  const axis = new Plottable.Axes.Numeric(axisScale, alignment);
+  axis.formatter(d => approximate(d));
+  axis.showEndTickLabels(true);
+  axis.margin(0);
+
+  let label = null;
+
+  if (axisLabel) {
+    axis.margin(axisMargin);
+    label = axisLabel && new Plottable.Components.AxisLabel(axisLabel, getAxisLabelRotation(alignment));
+  }
 
   // Add ticking classes
   configureAxisTicking(axis, ticking);
-
-  const label = axisLabel && new Plottable.Components.AxisLabel(axisLabel, getAxisLabelRotation(alignment));
 
   return createAxisTable(alignment, axis, label)
 
 };
 
 export const createCategoryAxis = (config) => {
-  let {showAxis = false, axisOrientation, axisScale, axisLabel = null, axisMargin = 10, ticking = 'all'} = config;
+  let {showAxis = true, axisOrientation, axisScale, axisLabel = null, axisMargin = 10, ticking = 'all'} = config;
 
   if (!showAxis) return null;
 
   const alignment = axisOrientation === 'vertical' ? 'bottom' : 'left';
 
   const axis = new Plottable.Axes.Category(axisScale, alignment);
+  axis.margin(0);
 
-  axis.margin(axisMargin);
+  let label = null;
+
+  if (axisLabel) {
+    axis.margin(axisMargin);
+    label = axisLabel && new Plottable.Components.AxisLabel(axisLabel, getAxisLabelRotation(alignment));
+  }
 
   // Add ticking classes
   configureAxisTicking(axis, ticking);
-
-  const label = axisLabel && new Plottable.Components.AxisLabel(axisLabel, getAxisLabelRotation(alignment));
 
   return createAxisTable(alignment, axis, label)
 };
