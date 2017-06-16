@@ -70,13 +70,17 @@
             showAxis: true,
             showAxisLabel: '',
             showGridlines: true,
-            axisLabel: 'Rainfall (mm)',
+            ticking: 'all',
             indicator: 'Rainfall',
+            axisMinimum: 0,
+            axisMaximum: 4000000,
+            axisMargin: 0,
           },
           categoryAxis: {
             showAxis: true,
             axisLabel: 'Months',
             indicator: 'Months',
+            ticking: 'sparse',
           },
           legend: {
             showLegend: true
@@ -480,7 +484,7 @@
           circular: {
             label: 'Country',
             value: 'Population',
-            innerRadius: 100,
+            innerRadius: 80,
             strokeWidth: 5,
             strokeColor: '#fff',
           },
