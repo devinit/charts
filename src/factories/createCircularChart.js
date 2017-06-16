@@ -17,7 +17,7 @@ import {createChartTable} from './createTable';
  * @typedef {Object} Circular - Sector configuration
  * @property {indicator} label - Label indicator
  * @property {indicator} value - Sector indicator
- * @property {number} innerRadius - Inner Radius (1-100)
+ * @property {number} innerRadius - Inner Radius (0 - 100%)
  * @property {number} strokeWidth - Stroke Width
  * @property {string} strokeColor - Stroke Color
  */
@@ -88,10 +88,14 @@ export default ({element, plot, config}) => {
 };
 
 export const createCircularPlot = ({plot, innerRadius = 0, strokeColor = '#fff', strokeWidth = 0}) => {
+  const innerRadiusScale = new Plottable.Scales.Linear();
+
+  innerRadiusScale.domain([0, 100]);
+
   return plot
     .attr('fill', d => d.color)
     .attr('fill-opacity', d => d.opacity)
     .attr('style', `stroke: ${strokeColor}; stroke-width: ${strokeWidth}`)
     .sectorValue(d => d.value)
-    .innerRadius(innerRadius);
+    .innerRadius(d => d.innerRadius || innerRadius, innerRadiusScale);
 };
