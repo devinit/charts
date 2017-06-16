@@ -50,10 +50,12 @@
 .gridlines.gridlines-tick-odd line,
 .gridlines.gridlines-tick-sparse line {
   visibility: hidden !important;
+  display:none;
 }
 
 .axis.axis-tick-all .tick-label,
 .axis.axis-tick-even .tick-label:nth-child(2n),
+.axis.axis-tick-sparse-even .tick-label:nth-child(4n),
 .axis.axis-tick-odd .tick-label:nth-child(2n+1),
 .axis.axis-tick-sparse .tick-label:first-child,
 .axis.axis-tick-sparse .tick-label:last-child,
@@ -62,9 +64,7 @@
 .axis.axis-tick-even .tick-mark:nth-child(2n),
 .axis.axis-tick-odd .tick-mark:nth-child(2n+1),
 .axis.axis-tick-sparse .tick-mark:first-child,
-.axis.axis-tick-sparse .tick-mark:last-child {
-  visibility: visible !important;
-}
+.axis.axis-tick-sparse .tick-mark:last-child,
 
 .gridlines.gridlines-tick-all line,
 .gridlines.gridlines-tick-even line:nth-child(2n),
@@ -72,4 +72,5 @@
 .gridlines.gridlines-tick-sparse line:first-child,
 .gridlines.gridlines-tick-sparse line:last-child {
   visibility: visible !important;
+  display:block;
 }
