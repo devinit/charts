@@ -11,6 +11,8 @@ import drawLabels from './drawLabels';
  * @property {string} title - Title
  * @property {'left'|'center'|'right'} titleAlignment=left - Title Alignment
  * @property {('vertical'|'horizontal')} orientation=vertical - Orientation
+ * @property {string[]} colors - Colors
+ * @property {boolean} showLabels - Show Labels
  * @property {Tree} tree - Hierachy Configuration
  */
 
@@ -33,6 +35,8 @@ export default ({element, plot, config}) => {
     orientation = 'vertical',
 
     colors = [],
+
+    showLabels = true,
 
   } = config;
 
@@ -57,7 +61,7 @@ export default ({element, plot, config}) => {
     .attr("fill", d => colors[0] || '#abc')
     .attr("stroke", d => '#fff')
     .attr("stroke-width", () => 2)
-    .labelsEnabled(true)
+    .labelsEnabled(showLabels)
     .label(d => d.data.label);
 
   const table = createChartTable({
