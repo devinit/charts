@@ -17,31 +17,14 @@ export default function () {
     const brightness = (r + g + b) / (256 * 3);
     const { width, height, x, y} = node.getBBox();
 
-    if (height > 20 && width > 40) {
+    if (height > 50 && width > 40) {
       foreground
         .append('foreignObject')
         .attr('width', width)
         .attr('height', height)
         .attr('x', x)
         .attr('y', y)
-        .html(`<div class="plottable ${brightness > 0.5 ? 'dark' : 'light'}-label plot-label"><div class="plot-label-header">${label}</div><div class="plot-label-value">${value}</div></div>`);
+        .html(`<div class="${brightness > 0.5 ? 'dark' : 'light'}-label plot-label"><div class="plot-label-header">${label}</div><div class="plot-label-value">${value}</div></div>`);
     }
-
-    /*const rect = entity.selection[0][0];
-    const baseline = rect.parentNode.parentNode.lastChild;
-    const width = baseline.x2.baseVal.value;
-    const height = rect.height.baseVal.value;
-
-    if (height > 20 && width > 40) {
-      foreground
-        .append('foreignObject')
-        .attr('width', width)
-        .attr('height', height)
-        .attr('x', rect.x.baseVal.value)
-        .attr('y', rect.y.baseVal.value)
-        .append('xhtml:body')
-        .html(`<div class="plottable html-label"><div class="html-label-header">${text}</div><div class="html-label-value">${text}</div></div>`);
-
-    }*/
   })
 };
