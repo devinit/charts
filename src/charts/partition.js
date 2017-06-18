@@ -1,8 +1,7 @@
 import Plottable from "plottable";
 import createTreeChart from "../factories/createTreeChart";
 import {createTreeHierachy} from "../factories/createDataset";
-import partition from "d3-hierarchy/src/partition";
-import color from "d3-color/src/color";
+import roundNode from "d3-hierarchy/src/treemap/round";
 
 /**
  * @typedef {TreeChart} Partition
@@ -34,20 +33,10 @@ export default (element, data = [], config) => {
 
   const layout = partition().size([1, 1]);
 
-  const colorize = d => {
-
-    d.data.color = !d.data.color && d.parent && d.parent.data.color ?
-      color(d.parent.data.color).brighter(d.parent.children.indexOf(d) * 0.4).toString() :
-      d.data.color;
-
-    return d;
-  };
-
   const transform = data => {
     const root = createTreeHierachy(data, tree);
     return layout(root)
       .descendants()
-      .map(colorize)
       .filter(d => d.depth <= tree.depth || Infinity);
   };
 
@@ -111,4 +100,70 @@ export default (element, data = [], config) => {
   chart.addData(data);
 
   return treeChart
+};
+
+const partition = function () {
+  let dx = 1,
+    dy = 1,
+    padding = 0,
+    round = false;
+
+  function partition(root) {
+    const n = root.height + 1;
+    root.x0 = root.y0 = padding;
+    root.x1 = dx;
+    root.y1 = dy / n;
+    root.eachBefore(positionNode(dy, n));
+    if (round) root.eachBefore(roundNode);
+    return root;
+  }
+
+  function positionNode(dy, n) {
+    return function (node) {
+      if (node.children) {
+        treemapDice(node, node.x0, dy * (node.depth + 1) / n, node.x1, dy * (node.depth + 2) / n);
+      }
+      let x0 = node.x0,
+        y0 = node.y0,
+        x1 = node.x1 - padding,
+        y1 = node.y1 - padding;
+      if (x1 < x0) x0 = x1 = (x0 + x1) / 2;
+      if (y1 < y0) y0 = y1 = (y0 + y1) / 2;
+      node.x0 = x0;
+      node.y0 = y0;
+      node.x1 = x1;
+      node.y1 = y1;
+    };
+  }
+
+  partition.round = function (x) {
+    return arguments.length ? (round = !!x, partition) : round;
+  };
+
+  partition.size = function (x) {
+    return arguments.length ? (dx = +x[0], dy = +x[1], partition) : [dx, dy];
+  };
+
+  partition.padding = function (x) {
+    return arguments.length ? (padding = +x, partition) : padding;
+  };
+
+  return partition;
+};
+
+const treemapDice = function (parent, x0, y0, x1, y1) {
+  let nodes = parent.children,
+    node,
+    i = -1,
+    n = nodes.length,
+    sum = nodes.reduce((sum, n) => sum + Math.abs(n.value), 0),
+    k = (x1 - x0) / sum;
+
+  while (++i < n) {
+    node = nodes[i];
+    node.y0 = y0;
+    node.y1 = y1;
+    node.x0 = x0;
+    node.x1 = x0 += Math.abs(node.value) * k;
+  }
 };
