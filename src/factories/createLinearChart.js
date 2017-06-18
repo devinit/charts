@@ -1,4 +1,5 @@
 import Plottable from "plottable";
+import approximate from 'approximate-number';
 import {createChartTable} from "./createTable";
 import {createTitle} from "./createTitle";
 import {createColorLegend} from "./createLegend";
@@ -115,7 +116,9 @@ const createPlotWithGridlines = ({plot, grid}) => {
 
 export const createLinearPlot = ({plot, orientation, categoryScale, linearScale, showLabels}) => {
   if (showLabels && plot.labelsEnabled) {
-    plot.labelsEnabled(showLabels)
+    plot
+      .labelFormatter(d => approximate(d))
+      .labelsEnabled(showLabels)
   }
 
   return plot
