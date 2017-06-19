@@ -63,7 +63,7 @@ export default ({element, plot, config}) => {
 
     const series = data.map((d, i) => ({
       label: d[circular.label],
-      value: d[circular.value],
+      value: parseFloat(d[circular.value]),
       color: colors[i] || '#abc',
     }));
 
