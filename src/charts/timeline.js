@@ -74,7 +74,7 @@ export default (element, data, config) => {
   table.renderTo(element);
 
   table.onAnchor(function (table) {
-    setTimeout(() => createTimeAnchor(table, timeScale, anchor, onAnchorMoved), 2000);
+    setTimeout(() => createTimeAnchor(table, timeScale, anchor, legend, onAnchorMoved), 2000);
   });
 
   let onAnchorMoved = d => d;
@@ -126,7 +126,7 @@ export default (element, data, config) => {
 };
 
 
-const createTimeAnchor = (table, timeScale, anchor, onAnchorMoved) => {
+const createTimeAnchor = (table, timeScale, anchor, legend = {}, onAnchorMoved) => {
 
   const originDate = new Date(timeScale.domainMin());
   const startDate = anchor.start ? new Date(anchor.start) : originDate;
@@ -136,7 +136,13 @@ const createTimeAnchor = (table, timeScale, anchor, onAnchorMoved) => {
   const start = timeScale.scaleTransformation(startDate);
 
   const chartArea = table.componentAt(1, 0);
-  const plotArea = chartArea.componentAt(0, 0);
+
+  const plotArea = legend.showLegend ?
+    chartArea.componentAt(0, 0) :
+    chartArea;
+
+  console.log(legend, plotArea);
+
   const timeAxis = plotArea.componentAt(2, 1);
 
   const foreground = plotArea.foreground();
