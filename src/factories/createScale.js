@@ -18,6 +18,23 @@ export const createLinearScale = (config = {}) => {
 };
 
 /**
+ * Creates time scale
+ * @param {TimeAxis} config
+ * @returns {Time}
+ */
+export const createTimeScale = (config = {}) => {
+  const {axisMinimum = null, axisMaximum = null} = config;
+
+  const scale = new Plottable.Scales.Time();
+  scale.domainMin(new Date(axisMinimum));
+  scale.domainMax(new Date(axisMaximum));
+
+  // ...
+
+  return scale;
+};
+
+/**
  * Creates category scale
  * @param {CategoryAxis} config
  * @returns {Category}
