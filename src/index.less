@@ -1,5 +1,9 @@
 @import "../node_modules/plottable/plottable.css";
 
+.plottable text {
+  font-family: geomanist, 'sans-serif';
+}
+
 .plottable .title-label text {
   font-size: 16px;
   font-weight: 400;
@@ -29,7 +33,8 @@
   color: #000;
 }
 
-.plottable .axis line.baseline {
+.plottable .axis line.baseline,
+.plottable .plot line.baseline {
   stroke: #000;
 }
 
@@ -38,14 +43,17 @@
   stroke-width: 1px;
 }
 
+.axis.axis-tick-none .tick-label,
 .axis.axis-tick-even .tick-label,
 .axis.axis-tick-odd .tick-label,
 .axis.axis-tick-sparse .tick-label,
 
+.axis.axis-tick-none .tick-mark,
 .axis.axis-tick-even .tick-mark,
 .axis.axis-tick-odd .tick-mark,
 .axis.axis-tick-sparse .tick-mark,
 
+.gridlines.gridlines-tick-none line,
 .gridlines.gridlines-tick-even line,
 .gridlines.gridlines-tick-odd line,
 .gridlines.gridlines-tick-sparse line {
@@ -73,4 +81,33 @@
 .gridlines.gridlines-tick-sparse line:last-child {
   visibility: visible !important;
   display:block;
+}
+
+
+.timeline .symbol,
+.timeline .symbol-line,
+.timeline .symbol-label {
+  cursor: ew-resize;
+  user-select: none;
+}
+
+.timeline .symbol-label {
+  fill: #fff;
+}
+
+.group-label {
+  font-size: 0.7em;
+  font-weight: 700;
+  text-transform: uppercase;
+  fill: #453f43
+}
+
+.subGroup-label {
+  font-size: 0.6em;
+  font-weight: 100;
+  text-transform: uppercase
+}
+
+.data-label {
+  fill: #555;
 }
