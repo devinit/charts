@@ -141,8 +141,6 @@ const createTimeAnchor = (table, timeScale, anchor, legend = {}, onAnchorMoved) 
     chartArea.componentAt(0, 0) :
     chartArea;
 
-  console.log(legend, plotArea);
-
   const timeAxis = plotArea.componentAt(2, 1);
 
   const foreground = plotArea.foreground();
