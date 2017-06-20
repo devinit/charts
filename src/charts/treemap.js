@@ -14,7 +14,6 @@ import color from "d3-color/src/color";
 
 /**
  * @typedef {Object} TreemapConfig
- * @public
  * @property {'binary'|'dice'|'slice'|'sliceDice'|'squarify'|'resquarify'} tile - Tiling Method
  *
  */
