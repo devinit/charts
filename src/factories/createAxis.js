@@ -1,6 +1,6 @@
 import Plottable from "plottable";
 import approximate from "approximate-number";
-import {configureAxisTicking} from "./configureTicking";
+import {configureAxisTicking, configureTimeAxisTicking} from "./configureTicking";
 
 /**
  * @typedef {Object} NumericAxis - Numeric Axis configuration
@@ -30,14 +30,14 @@ import {configureAxisTicking} from "./configureTicking";
 
 export const createNumericAxis = (config) => {
 
-  const {showAxis = true, axisOrientation, axisScale, axisLabel = null, axisMargin = 10, ticking = 'all'} = config;
+  const {showAxis = true, axisOrientation, axisScale, axisLabel = null, axisMargin = 10, absolute = false, ticking = 'all'} = config;
 
   if (!showAxis) return null;
 
   const alignment = axisOrientation === 'horizontal' ? 'bottom' : 'left';
 
   const axis = new Plottable.Axes.Numeric(axisScale, alignment);
-  axis.formatter(d => approximate(d));
+  axis.formatter(d => absolute ? approximate(Math.abs(d)) : approximate(d));
   axis.showEndTickLabels(true);
   axis.margin(0);
 
@@ -55,12 +55,37 @@ export const createNumericAxis = (config) => {
 
 };
 
-export const createCategoryAxis = (config) => {
-  let {showAxis = true, axisOrientation, axisScale, axisLabel = null, axisMargin = 10, ticking = 'all'} = config;
+export const createTimeAxis = (config) => {
+
+  const {showAxis = false, axisOrientation = 'horizontal', axisScale, axisLabel = null, axisMargin = 10, ticking, tickingStep = 1} = config;
 
   if (!showAxis) return null;
 
-  const alignment = axisOrientation === 'vertical' ? 'bottom' : 'left';
+  const axis = new Plottable.Axes.Time(axisScale, 'bottom');
+  axis.formatter(d => approximate(d));
+  axis.showEndTickLabels(true);
+  axis.margin(0);
+
+  let label = null;
+
+  if (axisLabel) {
+    axis.margin(axisMargin);
+    label = axisLabel && new Plottable.Components.AxisLabel(axisLabel, getAxisLabelRotation('bottom'));
+  }
+
+  // Add ticking classes
+  configureTimeAxisTicking(axis, ticking, tickingStep);
+
+  return createAxisTable('bottom', axis, label)
+
+};
+
+export const createCategoryAxis = (config = {}) => {
+  let {showAxis = false, axisOrientation, axisDirection, axisScale, axisLabel = null, axisMargin = 10, ticking = 'all'} = config;
+
+  if (!showAxis) return null;
+
+  const alignment = axisDirection || (axisOrientation === 'vertical' ? 'bottom' : 'left');
 
   const axis = new Plottable.Axes.Category(axisScale, alignment);
   axis.margin(0);
@@ -100,7 +125,7 @@ export const createAxisTable = (alignment, axis, label) => {
 
 export const getAxisLabelRotation = (alignment) => {
   return labelRotationAngles[alignment]
-}
+};
 
 export const labelRotationAngles = {
   top: 0,
