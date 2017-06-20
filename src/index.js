@@ -5,10 +5,7 @@ export const draw = ({element, data, config}) => {
 
     import(`./charts/${config.type}.js`)
       .then(function (chart) {
-
-        const selection = chart.default(element, data, config);
-
-        resolve(selection);
+        resolve(chart.default(element, data, config));
       })
       .catch(error => {
         reject(error)
