@@ -1,7 +1,7 @@
 import stratify from "d3-hierarchy/src/stratify";
 import Plottable from "plottable";
 
-const makeUnique = list => Object.keys(list.reduce((a, b) => ({...a, [b]: true}), {}));
+export const makeUnique = list => Object.keys(list.reduce((a, b) => ({...a, [b]: true}), {}));
 
 export const createDataMapping = (data, linearLabel, categoryLabel, groupLabel) => {
   return data.map(d => ({
@@ -12,7 +12,7 @@ export const createDataMapping = (data, linearLabel, categoryLabel, groupLabel) 
 };
 
 export const createLinearDataset = (data = []) => {
-  const labels = makeUnique(data.map(d => d.label));
+  const labels = makeUnique(data.map(d => d.label)).sort((a, b) => a - b);
 
   const series = data
     .reduce((all, item, index, list) => {
@@ -27,7 +27,7 @@ export const createLinearDataset = (data = []) => {
         };
       }
 
-      all.groups[all.map[item.group]].values.push(item.value);
+      all.groups[all.map[item.group]].values[labels.indexOf(item.label)] = item.value;
 
       return index + 1 === list.length ? all.groups : all;
 

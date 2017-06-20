@@ -96,7 +96,7 @@ export const createLinearChart = ({element, plot, config}) => {
         const color = colors[index] || '#abc';
         return values.map((value, index) => {
           return {
-            label: labels[index] || index, // Each value in a `series` should correspond to a `label`
+            label: labels[index] || index,
             value,
             color,
             opacity
@@ -110,7 +110,7 @@ export const createLinearChart = ({element, plot, config}) => {
   };
 };
 
-const createPlotWithGridlines = ({plot, grid}) => {
+export const createPlotWithGridlines = ({plot, grid}) => {
   return grid ? new Plottable.Components.Group([grid, plot]) : plot
 };
 
