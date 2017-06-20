@@ -104,7 +104,7 @@ export default ({element, plot, config}) => {
 
       const mapping = data
         .sort((a, b) => b[groupBy] - a[groupBy])
-        .reduce((groups, datum, i, all) => {
+        .reduce((groups, datum) => {
 
           return {
 
