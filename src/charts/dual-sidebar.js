@@ -230,13 +230,6 @@ export default (element, data, config) => {
           plots[index].datasets([dataset].map(d => new Plottable.Dataset(d)))
 
         });
-
-      // Match scale max and min
-      if (Math.abs(leftLinearScale.domainMin()) > rightLinearScale.domainMax()) {
-        rightLinearScale.domainMin(-1 * leftLinearScale.domainMax())
-      } else {
-        leftLinearScale.domainMin(-1 * rightLinearScale.domainMax())
-      }
     },
 
   };
