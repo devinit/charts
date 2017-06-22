@@ -1,5 +1,5 @@
 import Plottable from "plottable";
-import * as d3 from 'd3';
+import {drag, event} from 'd3';
 import {createTitle} from "../factories/createTitle";
 import {createChartTable} from "../factories/createTable";
 import {createColorLegend} from "../factories/createLegend";
@@ -69,15 +69,25 @@ export default (element, data, config) => {
     legendPosition: legend.position || 'bottom'
   });
 
+  const listeners = [];
+
+  let moveAnchor = null;
+
+  let onTableAnchored = (table) => {
+    // waiting till table is setup, hopefully 500ms will
+    // always be sufficient
+    // TODO: Use onRender event instead
+    // see https://github.com/palantir/plottable/issues/1755
+    setTimeout(() => {
+      moveAnchor = createTimeAnchor(table, timeScale, anchor, legend, listeners)
+    }, 500);
+  };
+
   table.addClass('timeline');
 
   table.renderTo(element);
 
-  table.onAnchor(function (table) {
-    setTimeout(() => createTimeAnchor(table, timeScale, anchor, legend, onAnchorMoved), 2000);
-  });
-
-  let onAnchorMoved = d => d;
+  table.onAnchor(onTableAnchored);
 
   const chart = {
 
@@ -113,8 +123,17 @@ export default (element, data, config) => {
     },
 
     onAnchorMoved(callback = null) {
-      if (callback) {
-        onAnchorMoved = callback
+      if (callback && callback.call) {
+        listeners.push(callback)
+      }
+    },
+
+    moveAnchor: year => {
+      if (!moveAnchor) {
+        // Retry if anchor is not ready
+        setTimeout(() => chart.moveAnchor(year), 200);
+      } else {
+        moveAnchor(year);
       }
     }
 
@@ -126,11 +145,14 @@ export default (element, data, config) => {
 };
 
 
-const createTimeAnchor = (table, timeScale, anchor, legend = {}, onAnchorMoved) => {
+const createTimeAnchor = (table, timeScale, anchor, legend = {}, listeners) => {
 
   const originDate = new Date(timeScale.domainMin());
   const startDate = anchor.start ? new Date(anchor.start) : originDate;
   let currentYear = startDate.getFullYear().toString();
+
+  const minYear = new Date(timeScale.domainMin()).getFullYear();
+  const maxYear = new Date(timeScale.domainMax()).getFullYear();
 
   const origin = timeScale.scaleTransformation(originDate);
   const start = timeScale.scaleTransformation(startDate);
@@ -145,14 +167,14 @@ const createTimeAnchor = (table, timeScale, anchor, legend = {}, onAnchorMoved) 
 
   const foreground = plotArea.foreground();
 
-  foreground.attr('style', 'pointer-events: all');
-
   const foregroundBounds = foreground.node().getBoundingClientRect();
   const timeAxisBounds = timeAxis.content().node().getBoundingClientRect();
 
   const leftOffset = timeAxisBounds.left - foregroundBounds.left;
 
   const xPosition = leftOffset + start;
+
+  // Circle radius
   const topPosition = 20;
 
   const circle = foreground.append('circle')
@@ -169,53 +191,64 @@ const createTimeAnchor = (table, timeScale, anchor, legend = {}, onAnchorMoved) 
     .attr('x', xPosition)
     .attr('y', topPosition + 5)
     .attr('fill', '#fff')
+    .attr('font-size', 13)
     .attr('text-anchor', 'middle');
 
   const line = foreground.append('line')
     .attr('class', 'symbol-line')
     .attr('x1', xPosition)
-    .attr('x2', xPosition)
-    .attr('y1', topPosition + 20)
+    .attr('x2', xPosition + 1)
+    .attr('y1', topPosition + 22)
     .attr('y2', timeAxisBounds.top - foregroundBounds.top)
-    .attr('stroke', '#666')
-    .attr('stroke-width', '2');
+    .attr('stroke', 'rgb(232, 68, 58)')
+    .attr('stroke-width', 2);
 
-  const changeAnchorPosition = (xPosition, year) => {
+  const changeAnchorPosition = (year) => {
 
-    circle.attr('cx', leftOffset + xPosition);
+    // Prevent duplicate movements,
+    // oh and they'll be duplicate movements
+    // -- remove this condition at your own risk.
+    // just kidding, i think
+    if (year !== currentYear && year >= minYear && year <= maxYear) {
+      const xPosition = timeScale.scaleTransformation(year);
 
-    text.attr('x', leftOffset + xPosition).text(year);
+      circle.attr('cx', leftOffset + xPosition);
 
-    line.attr('x1', leftOffset + xPosition).attr('x2', leftOffset + xPosition);
+      text.attr('x', leftOffset + xPosition).text(year);
 
-    // ... call listener function
-    onAnchorMoved(year);
+      line
+        .attr('x1', leftOffset + xPosition)
+        .attr('x2', leftOffset + xPosition);
 
-    // ... update global current year
-    currentYear = year;
+      // ... notify movement listeners
+      listeners.forEach(callback => {
+        if (callback && callback.call) {
+          callback(year)
+        }
+      });
+
+      // ... update global current year
+      currentYear = year;
+    }
 
   };
 
   function started() {
-    const minYear = new Date(timeScale.domainMin()).getFullYear();
-    const maxYear = new Date(timeScale.domainMax()).getFullYear();
-
-    d3.event.on("drag", dragged).on("end", ended);
-
     // Change cursor style
     document.body.style.cursor = 'ew-resize';
 
+    event
+      .on("drag", dragged)
+      .on("end", ended);
+
     function dragged() {
-      const x = d3.event.x;
+      const x = event.x;
 
       const xDate = timeScale.invertedTransformation(origin + x - leftOffset);
 
       const draggedYear = new Date(xDate).getFullYear().toString();
 
-      if (draggedYear !== currentYear && draggedYear >= minYear && draggedYear <= maxYear) {
-
-        changeAnchorPosition(timeScale.scaleTransformation(draggedYear), draggedYear);
-      }
+      changeAnchorPosition(draggedYear);
     }
 
     function ended() {
@@ -224,12 +257,11 @@ const createTimeAnchor = (table, timeScale, anchor, legend = {}, onAnchorMoved) 
     }
   }
 
-  circle.call(d3.drag().on("start", started));
-  text.call(d3.drag().on("start", started));
-  line.call(d3.drag().on("start", started));
+  circle.call(drag().on("start", started));
+  text.call(drag().on("start", started));
+  line.call(drag().on("start", started));
 
-
-
+  return changeAnchorPosition
 };
 
 export const createTimePlot = ({plot, timeScale, linearScale}) => {
