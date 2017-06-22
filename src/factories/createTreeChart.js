@@ -10,7 +10,6 @@ import drawLabels from './drawLabels';
  * @property {string} type - Type
  * @property {string} title - Title
  * @property {'left'|'center'|'right'} titleAlignment=left - Title Alignment
- * @property {('vertical'|'horizontal')} orientation=vertical - Orientation
  * @property {string[]} colors - Colors
  * @property {boolean} showLabels - Show Labels
  * @property {Tree} tree - Hierachy Configuration
@@ -59,8 +58,8 @@ export default ({element, plot, config}) => {
     .x2(d => d[`${x}1`], xScale)
     .y2(d => d[`${y}1`], yScale)
     .attr("fill", d => colors[0] || '#abc')
-    .attr("stroke", d => '#fff')
-    .attr("stroke-width", () => 2)
+    .attr("stroke", '#fff')
+    .attr("stroke-width", 1)
     .labelsEnabled(showLabels)
     .label(d => d.data.label);
 
