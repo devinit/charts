@@ -40,7 +40,10 @@ module.exports = [
 
         {
           test: /\.less$/,
-          use: extractLess.extract(['css-loader', 'less-loader'])
+          use: extractLess.extract([
+            {loader: 'css-loader', options: {minimize: isProductionBuild}},
+            {loader: 'less-loader'}
+          ])
         },
 
       ]
