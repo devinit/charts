@@ -41,8 +41,6 @@ export default (element, data, config) => {
 
     categoryAxis,
 
-    anchor,
-
     // ... more config
 
   } = config;
@@ -51,8 +49,6 @@ export default (element, data, config) => {
   const rightCategoryScale = createCategoryScale(categoryAxis);
   const leftLinearScale = createLinearScale(linearAxis);
   const rightLinearScale = createLinearScale(linearAxis);
-  const timeScale = new Plottable.Scales.Time();
-  const colorScale = new Plottable.Scales.Color();
 
   const table = createChartTable({
 
@@ -274,9 +270,6 @@ const drawLabels = function () {
         const bBoxes = nodes.map(selection => selection.getBBox());
 
         const top = Math.min.apply(null, bBoxes.map(box => box.y));
-        const bottom = Math.max.apply(null, bBoxes.map(box => {
-          return box.y + box.height
-        }));
 
         foreground
           .append('text')
@@ -319,15 +312,19 @@ const drawLabels = function () {
   entities
     .forEach(entity => {
       const datum = entity.datum;
-      const bBox = entity.selection.node().getBBox();
 
-      foreground
-        .append('text')
-        .text(datum.name.split('-').filter(d => d).map(word => word[0].toUpperCase() + word.slice(1)).join(' '))
-        .attr('class', 'data-label')
-        .attr('x', (datum.direction > 0 ? bBox.x + bBox.width : bBox.x) + (datum.direction * 10))
-        .attr('y', bBox.y + 3 + bBox.height / 2)
-        .attr('text-anchor', datum.direction > 0 ? 'start' : 'end');
+      // Don't draw labels if datum has no name
+      if (datum.name) {
+        const bBox = entity.selection.node().getBBox();
+
+        foreground
+          .append('text')
+          .text(datum.name)
+          .attr('class', 'data-label')
+          .attr('x', (datum.direction > 0 ? bBox.x + bBox.width : bBox.x) + (datum.direction * 10))
+          .attr('y', bBox.y + 3 + bBox.height / 2)
+          .attr('text-anchor', datum.direction > 0 ? 'start' : 'end');
+      }
     });
 };
 
