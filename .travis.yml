@@ -30,7 +30,7 @@ deploy:
     file: 'dist/di-*'
     skip_cleanup: true
     on:
-      tags: false
+      tags: true
       repo: devinit/charts
       branch: master
 
