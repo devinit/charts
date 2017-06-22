@@ -14,8 +14,6 @@ export default (element, data = [], config) => {
 
   const {
 
-    orientation = 'horizontal',
-
     tree = {
       id: 'id',
       parent: 'parent',
@@ -26,6 +24,8 @@ export default (element, data = [], config) => {
     ...moreConfig
 
   } = config;
+
+  const orientation = 'horizontal';
 
   const plot = new Plottable.Plots.Rectangle();
 
@@ -51,9 +51,9 @@ export default (element, data = [], config) => {
     if (+expected.toFixed(4) !== +actual.toFixed(4)) {
       const diff = expected - actual;
 
-      const differenceToSmall = parseFloat(Math.abs(diff).toFixed(3)) === 0;
+      const differenceTooSmall = parseFloat(Math.abs(diff).toFixed(3)) === 0;
 
-      return differenceToSmall ? expected : actual + (diff * factor)
+      return differenceTooSmall ? expected : actual + (diff * factor)
     }
   };
 
@@ -67,6 +67,7 @@ export default (element, data = [], config) => {
     const entity = entities.pop();
     const d = entity.datum;
 
+    // TODO: Clean up this
     const x = orientation === 'vertical' ? 'x' : 'y';
     const y = orientation === 'horizontal' ? 'x' : 'y';
     const x0 = x + '0';
@@ -92,14 +93,14 @@ export default (element, data = [], config) => {
 
       if (!easedXMin && !easedXMax && !easedYMin && !easedYMax) clearInterval(interval)
 
-    }, 50);
+    }, 17);
 
     intervals = [...intervals, interval];
   });
 
   chart.addData(data);
 
-  return treeChart
+  return chart
 };
 
 const partition = function () {
