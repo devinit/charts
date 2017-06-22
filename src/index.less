@@ -43,19 +43,27 @@
   stroke-width: 1px;
 }
 
+.plottable .timeline .foreground-container {
+  pointer-events: all;
+  overflow: visible
+}
+
 .axis.axis-tick-none .tick-label,
 .axis.axis-tick-even .tick-label,
 .axis.axis-tick-odd .tick-label,
+.axis.axis-tick-end .tick-label,
 .axis.axis-tick-sparse .tick-label,
 
 .axis.axis-tick-none .tick-mark,
 .axis.axis-tick-even .tick-mark,
 .axis.axis-tick-odd .tick-mark,
+.axis.axis-tick-end .tick-mark,
 .axis.axis-tick-sparse .tick-mark,
 
 .gridlines.gridlines-tick-none line,
 .gridlines.gridlines-tick-even line,
 .gridlines.gridlines-tick-odd line,
+.gridlines.gridlines-tick-end line,
 .gridlines.gridlines-tick-sparse line {
   visibility: hidden !important;
   display:none;
@@ -63,22 +71,23 @@
 
 .axis.axis-tick-all .tick-label,
 .axis.axis-tick-even .tick-label:nth-child(2n),
-.axis.axis-tick-sparse-even .tick-label:nth-child(4n),
+.axis.axis-tick-sparse .tick-label:nth-child(4n+1),
 .axis.axis-tick-odd .tick-label:nth-child(2n+1),
-.axis.axis-tick-sparse .tick-label:first-child,
-.axis.axis-tick-sparse .tick-label:last-child,
+.axis.axis-tick-end .tick-label:first-child,
+.axis.axis-tick-end .tick-label:last-child,
 
 .axis.axis-tick-all .tick-mark,
 .axis.axis-tick-even .tick-mark:nth-child(2n),
 .axis.axis-tick-odd .tick-mark:nth-child(2n+1),
-.axis.axis-tick-sparse .tick-mark:first-child,
-.axis.axis-tick-sparse .tick-mark:last-child,
+.axis.axis-tick-end .tick-mark:first-child,
+.axis.axis-tick-end .tick-mark:last-child,
 
 .gridlines.gridlines-tick-all line,
 .gridlines.gridlines-tick-even line:nth-child(2n),
 .gridlines.gridlines-tick-odd line:nth-child(2n+1),
-.gridlines.gridlines-tick-sparse line:first-child,
-.gridlines.gridlines-tick-sparse line:last-child {
+.gridlines.gridlines-tick-sparse line:nth-child(2n+1),
+.gridlines.gridlines-tick-end line:first-child,
+.gridlines.gridlines-tick-end line:last-child {
   visibility: visible !important;
   display:block;
 }
@@ -110,4 +119,5 @@
 
 .data-label {
   fill: #555;
+  font-size: 0.6em;
 }
