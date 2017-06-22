@@ -257,6 +257,7 @@ const drawLabels = function () {
   const direction = data[0] && data[0].direction;
 
   foreground.attr('style', 'overflow: visible');
+  foreground.selectAll('text').remove();
 
   makeUnique(data.map(d => d.group))
     .map(groupId => {
@@ -277,25 +278,12 @@ const drawLabels = function () {
           return box.y + box.height
         }));
 
-        /*foreground
-         .append('rect')
-         .text(groupId)
-         .attr('class', 'group-color-marker')
-         .attr('x', -95)
-         .attr('y', top - 22)
-         .attr('width', 90)
-         .attr('height', bottom - top + 22 + (bBoxes[0] ? bBoxes[0].height / 4 : 0))
-         .attr('fill', 'transparent')
-         .attr('stroke', '#999' || groupEntities[0].datum.color)
-         .attr('opacity', 1)
-         .attr('stroke-width', 1);*/
-
         foreground
           .append('text')
           .text(groupId)
           .attr('class', 'group-label')
           .attr('x', -50)
-          .attr('y', top - 7)
+          .attr('y', top - 5)
           .attr('text-anchor', 'middle');
       }
     });
@@ -315,7 +303,7 @@ const drawLabels = function () {
         const top = Math.min.apply(null, bBoxes.map(box => box.y));
         const bottom = Math.max.apply(null, bBoxes.map(box => box.y + box.height));
 
-        const y = top + (bottom - top) / 2;
+        const y = top + 5 + (bottom - top) / 2;
 
         foreground
           .append('text')
@@ -338,7 +326,7 @@ const drawLabels = function () {
         .text(datum.name.split('-').filter(d => d).map(word => word[0].toUpperCase() + word.slice(1)).join(' '))
         .attr('class', 'data-label')
         .attr('x', (datum.direction > 0 ? bBox.x + bBox.width : bBox.x) + (datum.direction * 10))
-        .attr('y', bBox.y + 15)
+        .attr('y', bBox.y + 3 + bBox.height / 2)
         .attr('text-anchor', datum.direction > 0 ? 'start' : 'end');
     });
 };
@@ -357,7 +345,6 @@ export const createLinearPlot = ({plot, categoryScale, linearScale, showLabels})
   plot._drawLabels = drawLabels;
 
   return plot
-    .animated(true)
     .attr('class', d => `${d.group} ${d.subGroup}`)
     .attr('stroke', d => d.color)
     .attr('fill', d => d.color)
@@ -387,13 +374,9 @@ const createPlotAreaWithAxes = ({leftLinearAxis, rightLinearAxis, leftPlotArea, 
       barTable,
       new Plottable.Components.Table(),
     ],
-    [null, new Plottable.Components.Table(), null],
   ]);
 
   barTable.columnPadding(100);
-
-  table.rowWeight(0, 4);
-  table.rowWeight(1, 1);
 
   table.columnWeight(0, 1);
   table.columnWeight(1, 3);
