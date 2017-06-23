@@ -29,15 +29,3 @@ export const createColorLegend = (colorScale, config = {}) => {
     .maxEntriesPerRow(rowSpan);
 
 };
-
-export const createBubbleLegend = (colorScale, config) => {
-
-  const {showLegend = false, symbol = 'circle', alignment = 'left', rowSpan = Infinity} = config;
-  if (!showLegend || !colorScale) return null;
-
-  return new Plottable.Components.Legend(colorScale)
-    .symbol(d => size => Plottable.SymbolFactories[symbol]()(size))
-    .xAlignment(alignment)
-    .maxEntriesPerRow(rowSpan);
-
-};

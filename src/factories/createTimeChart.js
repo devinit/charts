@@ -33,17 +33,11 @@ export default ({element, plot, config}) => {
 
     legend = {},
 
-    // ... more config
-
   } = config;
-
-  const scatter = new Plottable.Plots.Scatter();
 
   const timeScale = createTimeScale(timeAxis);
   const linearScale = createLinearScale(linearAxis);
   const colorScale = new Plottable.Scales.Color();
-
-  const mTimeAxis = createTimeAxis({...timeAxis, axisScale: timeScale, axisOrientation: 'horizontal'});
 
   const table = createChartTable({
 
@@ -58,7 +52,7 @@ export default ({element, plot, config}) => {
 
       linearAxis: createNumericAxis({...linearAxis, axisScale: linearScale, axisOrientation: 'vertical'}),
 
-      categoryAxis: mTimeAxis
+      categoryAxis: createTimeAxis({...timeAxis, axisScale: timeScale, axisOrientation: 'horizontal'})
     }),
 
     legend: createColorLegend(colorScale, legend),
@@ -115,8 +109,6 @@ export default ({element, plot, config}) => {
       });
 
       plot.datasets(datasets.map(d => new Plottable.Dataset(d)));
-
-      scatter.datasets([new Plottable.Dataset([{x: '2015', y: 0, color: 'rgba(200,0,0,0.5)'}])]);
     },
 
     onAnchorMoved(callback = null) {
@@ -162,7 +154,7 @@ const createTimeAnchor = (table, timeScale, anchor, legend = {}, listeners) => {
 
   const foreground = plotArea.foreground();
 
-  foreground.attr('style', 'z-index: 1000');
+  foreground.attr('style', 'z-index: 1');
 
   const foregroundBounds = foreground.node().getBoundingClientRect();
   const timeAxisBounds = timeAxis.content().node().getBoundingClientRect();
@@ -268,18 +260,8 @@ export const createTimePlot = ({plot, timeScale, linearScale}) => {
     .attr('fill', d => d.color)
     .attr('fill-opacity', d => d.opacity)
     .x(d => new Date(d.label), timeScale)
-    .y(d => d.value, linearScale);
-};
-
-const createScatterPlot = (plot, horizontalScale, verticalScale) => {
-  return plot
-    .attr('fill', d => d.color)
-    .attr('stroke', '#fff')
-    .attr('stroke-width', 1)
-    .attr('opacity', 1)
-    .x(d => new Date(d.x), horizontalScale)
-    .y(d => d.y, verticalScale)
-    .size(d => 50)
+    .y(d => d.value, linearScale)
+    .datasets([new Plottable.Dataset([])]);
 };
 
 const createPlotAreaWithAxes = ({linearAxis, plotArea, categoryAxis}) => {

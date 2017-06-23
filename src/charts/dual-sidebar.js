@@ -47,6 +47,7 @@ export default (element, data, config) => {
 
   const leftCategoryScale = createCategoryScale(categoryAxis);
   const rightCategoryScale = createCategoryScale(categoryAxis);
+
   const leftLinearScale = createLinearScale({
     ...linearAxis,
     axisMinimum: linearAxis.axisMaximum && -linearAxis.axisMaximum,
@@ -112,10 +113,6 @@ export default (element, data, config) => {
 
     }),
   });
-
-  let onAnchorMoved = d => d;
-
-  table.onAnchor(() => setTimeout(() => createTimeAnchor(table, makeUnique(data.map(d => d.year)), onAnchorMoved)));
 
   table.renderTo(element);
 
@@ -377,108 +374,4 @@ const createPlotAreaWithAxes = ({leftLinearAxis, rightLinearAxis, leftPlotArea, 
   table.columnWeight(2, 1);
 
   return table;
-};
-
-const createTimeAnchor = (table, timeScale, anchor, onAnchorMoved) => {
-
-  // TODO:  Add anchor
-
-  /*const originDate = new Date(timeScale.domainMin());
-  const startDate = anchor.start ? new Date(anchor.start) : originDate;
-  let currentYear = startDate.getFullYear().toString();
-
-  const origin = timeScale.scaleTransformation(originDate);
-  const start = timeScale.scaleTransformation(startDate);
-
-  const chartArea = table.componentAt(1, 0);
-  const plotArea = chartArea.componentAt(0, 0);
-  const timeAxis = plotArea.componentAt(2, 1);
-
-  const foreground = plotArea.foreground();
-
-  foreground.attr('style', 'pointer-events: all');
-
-  const foregroundBounds = foreground.node().getBoundingClientRect();
-  const timeAxisBounds = timeAxis.content().node().getBoundingClientRect();
-
-  const leftOffset = timeAxisBounds.left - foregroundBounds.left;
-
-  const xPosition = leftOffset + start;
-  const topPosition = 20;
-
-  const circle = foreground.append('circle')
-    .attr('class', 'symbol')
-    .attr('cx', xPosition)
-    .attr('cy', topPosition)
-    .attr('fill', 'rgb(232, 68, 58)')
-    .attr('stroke', '#aaa')
-    .attr('r', 20);
-
-  const text = foreground.append('text')
-    .text(startDate.getFullYear().toString())
-    .attr('class', 'symbol-label')
-    .attr('x', xPosition)
-    .attr('y', topPosition + 5)
-    .attr('fill', '#fff')
-    .attr('text-anchor', 'middle');
-
-  const line = foreground.append('line')
-    .attr('class', 'symbol-line')
-    .attr('x1', xPosition)
-    .attr('x2', xPosition)
-    .attr('y1', topPosition + 20)
-    .attr('y2', timeAxisBounds.top - foregroundBounds.top)
-    .attr('stroke', '#666')
-    .attr('stroke-width', '2');
-
-  const changeAnchorPosition = (xPosition, year) => {
-
-    circle.attr('cx', leftOffset + xPosition);
-
-    text.attr('x', leftOffset + xPosition).text(year);
-
-    line.attr('x1', leftOffset + xPosition).attr('x2', leftOffset + xPosition);
-
-    // ... call listener function
-    onAnchorMoved(year);
-
-    // ... update global current year
-    currentYear = year;
-
-  };
-
-  function started() {
-    const minYear = new Date(timeScale.domainMin()).getFullYear();
-    const maxYear = new Date(timeScale.domainMax()).getFullYear();
-
-    d3.event.on("drag", dragged).on("end", ended);
-
-    // Change cursor style
-    document.body.style.cursor = 'ew-resize';
-
-    function dragged() {
-      const x = d3.event.x;
-
-      const xDate = timeScale.invertedTransformation(origin + x - leftOffset);
-
-      const draggedYear = new Date(xDate).getFullYear().toString();
-
-      if (draggedYear !== currentYear && draggedYear >= minYear && draggedYear <= maxYear) {
-
-        changeAnchorPosition(timeScale.scaleTransformation(draggedYear), draggedYear);
-      }
-    }
-
-    function ended() {
-      // revert cursor style
-      document.body.style = {};
-    }
-  }
-
-  circle.call(d3.drag().on("start", started));
-  text.call(d3.drag().on("start", started));
-  line.call(d3.drag().on("start", started));*/
-
-
-
 };
