@@ -1,8 +1,7 @@
 import Plottable from "plottable";
-import createRectangleChart from "../factories/createTreeChart";
+import createRectangleChart, {createColorFiller} from "../factories/createTreeChart";
 import {createTreeHierachy} from "../factories/createDataset";
 import treemap from "d3-hierarchy/src/treemap";
-import color from "d3-color/src/color";
 
 /**
  * @typedef {Treemap} Treemap
@@ -23,6 +22,8 @@ export default (element, data = [], config) => {
   const {
 
     orientation = 'vertical',
+
+    colors = [],
 
     tree = {
       id: 'id',
@@ -52,19 +53,11 @@ export default (element, data = [], config) => {
 
   const layout = treemap().tile(tilingMethod.default);
 
-  const colorize = d => {
-
-    d.data.color = !d.data.color && d.parent && d.parent.data.color ?
-      color(d.parent.data.color).brighter(d.parent.children.indexOf(d) * 0.4).toString() :
-      d.data.color;
-
-    return d;
-  };
+  const colorize = createColorFiller(colors, []);
 
   const transform = root => {
     return layout(root)
       .leaves()
-      .map(colorize)
       .filter(d => d.depth <= tree.depth || Infinity);
   };
 
@@ -73,7 +66,7 @@ export default (element, data = [], config) => {
     ...treeChart,
 
     addData: data => {
-      const root = createTreeHierachy(data, tree);
+      const root = colorize(createTreeHierachy(data, tree));
       treeChart.addData(transform(root))
     }
   };

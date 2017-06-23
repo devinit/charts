@@ -1,8 +1,3 @@
-import Plottable from "plottable";
-import createTreeChart from "../factories/createTreeChart";
-import {createTreeHierachy} from "../factories/createDataset";
-import roundNode from "d3-hierarchy/src/treemap/round";
-
 /**
  * @typedef {TreeChart} Partition
  * @public
@@ -10,9 +5,16 @@ import roundNode from "d3-hierarchy/src/treemap/round";
  * @property {('vertical'|'horizontal')} orientation=horizontal - Orientation
  *
  */
+import Plottable from "plottable";
+import createTreeChart, {createColorFiller} from "../factories/createTreeChart";
+import {createTreeHierachy} from "../factories/createDataset";
+import roundNode from "d3-hierarchy/src/treemap/round";
+
 export default (element, data = [], config) => {
 
   const {
+
+    colors = [],
 
     tree = {
       id: 'id',
@@ -33,8 +35,10 @@ export default (element, data = [], config) => {
 
   const layout = partition().size([1, 1]);
 
+  const colorize = createColorFiller(colors, []);
+
   const transform = data => {
-    const root = createTreeHierachy(data, tree);
+    const root = colorize(createTreeHierachy(data, tree));
     return layout(root)
       .descendants()
       .filter(d => d.depth <= tree.depth || Infinity);
