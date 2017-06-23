@@ -80,5 +80,5 @@ export default (element, data = [], config) => {
 
   chart.addData(data);
 
-  return treeChart
+  return chart
 };
