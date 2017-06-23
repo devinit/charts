@@ -47,7 +47,11 @@ export default (element, data, config) => {
 
   const leftCategoryScale = createCategoryScale(categoryAxis);
   const rightCategoryScale = createCategoryScale(categoryAxis);
-  const leftLinearScale = createLinearScale(linearAxis);
+  const leftLinearScale = createLinearScale({
+    ...linearAxis,
+    axisMinimum: linearAxis.axisMaximum && -linearAxis.axisMaximum,
+    axisMaximum: linearAxis.axisMinimum && -linearAxis.axisMinimum
+  });
   const rightLinearScale = createLinearScale(linearAxis);
 
   const table = createChartTable({
