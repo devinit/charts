@@ -44,13 +44,6 @@ export default (element, data = [], config) => {
       .filter(d => d.depth <= tree.depth || Infinity);
   };
 
-  const chart = {
-
-    ...treeChart,
-
-    addData: data => treeChart.addData(transform(data))
-  };
-
   const ease = (actual, expected, factor) => {
     if (+expected.toFixed(4) !== +actual.toFixed(4)) {
       const diff = expected - actual;
@@ -63,15 +56,21 @@ export default (element, data = [], config) => {
 
   let intervals = [];
 
-  // TODO: Use request animation frame
-  chart.onClick((entities, xScale, yScale) => {
+  let listeners = [];
+
+  treeChart.onClick((entities, xScale, yScale) => {
+
+    // TODO: Use request animation frame
+
     // Stop all intervals
     while (intervals.length) clearInterval(intervals.pop());
 
     const entity = entities.pop();
     const d = entity.datum;
 
-    // TODO: Clean up this
+    // TODO: Rethink orientation implementation for tree chats
+    // It might be better to fix orientation for each tree chart
+    //
     const x = orientation === 'vertical' ? 'x' : 'y';
     const y = orientation === 'horizontal' ? 'x' : 'y';
     const x0 = x + '0';
@@ -100,7 +99,19 @@ export default (element, data = [], config) => {
     }, 17);
 
     intervals = [...intervals, interval];
+    listeners.forEach(callback => callback(d.data))
   });
+
+  const chart = {
+
+    ...treeChart,
+
+    onClick: (callback) => {
+      listeners.push(callback)
+    },
+
+    addData: data => treeChart.addData(transform(data))
+  };
 
   chart.addData(data);
 
