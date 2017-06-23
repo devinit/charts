@@ -33,8 +33,6 @@ export default ({element, plot, config}) => {
 
     orientation = 'vertical',
 
-    colors = [],
-
     showLabels = true,
 
   } = config;
@@ -57,7 +55,7 @@ export default ({element, plot, config}) => {
     .y(d => d[`${y}0`], yScale)
     .x2(d => d[`${x}1`], xScale)
     .y2(d => d[`${y}1`], yScale)
-    .attr("fill", d => colors[0] || '#abc')
+    .attr("fill", d => d.color)
     .attr("stroke", '#fff')
     .attr("stroke-width", 1)
     .labelsEnabled(showLabels)
@@ -140,4 +138,23 @@ export default ({element, plot, config}) => {
 
     onPointerExit,
   };
+};
+
+export const createColorFiller = (colors, rules) => d => {
+
+  d.eachBefore((node) => {
+    if (node.depth === 0) {
+      node.color = colors[0] || '#abc'
+    }
+
+    else if (node.depth === 1) {
+      node.color = colors[node.parent.children.indexOf(node) % colors.length]
+    }
+
+    else {
+      node.color = node.parent.color
+    }
+  });
+
+  return d;
 };
