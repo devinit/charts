@@ -1,6 +1,6 @@
 import Plottable from "plottable";
-import treemap from "d3-hierarchy/src/treemap";
-import color from "d3-color/src/color";
+import {treemap} from "d3";
+import {color} from "d3";
 import {createTreeHierachy} from "../factories/createDataset";
 import approximate from "approximate-number";
 

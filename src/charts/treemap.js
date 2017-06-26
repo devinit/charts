@@ -1,7 +1,7 @@
 import Plottable from "plottable";
 import createRectangleChart, {createColorFiller} from "../factories/createTreeChart";
 import {createTreeHierachy} from "../factories/createDataset";
-import treemap from "d3-hierarchy/src/treemap";
+import {treemap, treemapBinary, treemapDice, treemapSlice, treemapSliceDice, treemapSquarify, treemapResquarify} from "d3";
 
 /**
  * @typedef {Treemap} Treemap
@@ -49,7 +49,7 @@ export default (element, data = [], config) => {
 
   const treeChart = createRectangleChart({element, plot, config: {orientation, ...more}});
 
-  const tilingMethod = require(`d3-hierarchy/src/treemap/${tile}.js`);
+  const tilingMethod = getTilingMethod(tile);
 
   const layout = treemap().tile(tilingMethod.default);
 
@@ -74,4 +74,15 @@ export default (element, data = [], config) => {
   chart.addData(data);
 
   return chart
+};
+
+const getTilingMethod = (method) => {
+  return {
+    binary: treemapBinary,
+    dice: treemapDice,
+    slice: treemapSlice,
+    sliceDice: treemapSliceDice,
+    squarify: treemapSquarify,
+    resquarify: treemapResquarify,
+  }[method]
 };

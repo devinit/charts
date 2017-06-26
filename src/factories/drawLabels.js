@@ -1,5 +1,5 @@
 import approximate from "approximate-number";
-import color from "d3-color/src/color"
+import {color} from "d3"
 
 export default function () {
   const foreground = this.foreground();

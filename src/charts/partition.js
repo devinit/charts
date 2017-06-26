@@ -8,7 +8,6 @@
 import Plottable from "plottable";
 import createTreeChart, {createColorFiller} from "../factories/createTreeChart";
 import {createTreeHierachy} from "../factories/createDataset";
-import roundNode from "d3-hierarchy/src/treemap/round";
 
 export default (element, data = [], config) => {
 
@@ -182,4 +181,11 @@ const treemapDice = function (parent, x0, y0, x1, y1) {
     node.x0 = x0;
     node.x1 = x0 += Math.abs(node.value) * k;
   }
+};
+
+const roundNode = node => {
+  node.x0 = Math.round(node.x0);
+  node.y0 = Math.round(node.y0);
+  node.x1 = Math.round(node.x1);
+  node.y1 = Math.round(node.y1);
 };

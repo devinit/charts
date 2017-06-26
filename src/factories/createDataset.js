@@ -1,4 +1,4 @@
-import stratify from "d3-hierarchy/src/stratify";
+import {stratify} from "d3";
 import Plottable from "plottable";
 
 export const makeUnique = list => Object.keys(list.reduce((a, b) => ({...a, [b]: true}), {}));
