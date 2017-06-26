@@ -51,7 +51,7 @@ export default (element, data = [], config) => {
 
   const tilingMethod = getTilingMethod(tile);
 
-  const layout = treemap().tile(tilingMethod.default);
+  const layout = treemap().tile(tilingMethod);
 
   const colorize = createColorFiller(colors, []);
 
@@ -77,12 +77,14 @@ export default (element, data = [], config) => {
 };
 
 const getTilingMethod = (method) => {
-  return {
+  const tilingMethods = {
     binary: treemapBinary,
     dice: treemapDice,
     slice: treemapSlice,
     sliceDice: treemapSliceDice,
     squarify: treemapSquarify,
     resquarify: treemapResquarify,
-  }[method]
+  };
+
+  return tilingMethods[method]
 };
