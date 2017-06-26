@@ -2,6 +2,16 @@
 # yarn lockfile v1
 
 
+"@devinit/charts@^1.2.7":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@devinit/charts/-/charts-1.2.7.tgz#a0bf3a66b5e86c7789e92f8be044ca7541a5be86"
+  dependencies:
+    approximate-number "^2.0.0"
+    babel-runtime "^6.23.0"
+    d3 "^4.9.1"
+    d3-drag "^1.1.0"
+    plottable "^3.1.1"
+
 "@types/d3-array@*":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@types/d3-array/-/d3-array-1.2.0.tgz#9b1fc3202fc1a9f7da0f2873bd38b443137a9d34"
