@@ -1,18 +1,19 @@
 import {stratify} from "d3";
 import Plottable from "plottable";
 
-export const makeUnique = list => Object.keys(list.reduce((a, b) => ({...a, [b]: true}), {}));
+export const makeUnique = list => Array.from(new Set(list));
 
 export const createDataMapping = (data, linearLabel, categoryLabel, groupLabel) => {
   return data.map(d => ({
     label: d[categoryLabel],
     value: d[linearLabel],
-    group: d[groupLabel]
+    group: d[groupLabel],
+    ...d
   }))
 };
 
-export const createLinearDataset = (data = []) => {
-  const labels = makeUnique(data.map(d => d.label)).sort((a, b) => a - b);
+export const createLinearDatasets = (data = []) => {
+  const labels = makeUnique(data.map(d => d.label)).sort((a, b) => a > b ? -1 : 1);
 
   const series = data
     .reduce((all, item, index, list) => {
@@ -23,11 +24,11 @@ export const createLinearDataset = (data = []) => {
           color: '#abc',
           opacity: 1,
           label: item.group || 'Unknown',
-          values: []
+          items: []
         };
       }
 
-      all.groups[all.map[item.group]].values[labels.indexOf(item.label)] = item.value;
+      all.groups[all.map[item.group]].items[labels.indexOf(item.label)] = item;
 
       return index + 1 === list.length ? all.groups : all;
 
@@ -37,29 +38,24 @@ export const createLinearDataset = (data = []) => {
 
 };
 
-export const createFullStackedDataset = ({labels, series}) => {
+export const createFullStackedDataset = (data = [], linearAxisIndicator, categoryAxisIndicator) => {
+
+  const labels = makeUnique(data.map(d => d[categoryAxisIndicator]));
 
   const sums = labels
-    .map((label, index) =>
-      series
-        .map(({values}) => values[index] || 0)
-        .reduce((sum, value) => sum + value)
-    );
+    .map(label => ({
+      [label]: data
+        .filter(d => d[categoryAxisIndicator] === label)
+        .map(d => d[linearAxisIndicator])
+        .reduce((sum, value) => sum + value, 0)
+    }))
+    .reduce((sums, sum) => ({...sums, ...sum}), {});
 
-  return {
-    labels,
-    series: series.map(s => {
+  return data.map(d => ({
+    ...d,
 
-      return {
-        ...s, values: labels.map((label, index) => {
-          const value = s.values[index];
-          return value ? 100 * value / sums[index] : 0;
-        }),
-      }
-
-    })
-  }
-
+    [linearAxisIndicator]: d[linearAxisIndicator] * 100 / sums[d[categoryAxisIndicator]]
+  }))
 };
 
 export const createTreeHierachy = (data, tree) => {
@@ -72,8 +68,8 @@ export const createTreeHierachy = (data, tree) => {
 
   const root = stratifyFactory(series);
 
-  root.sum = function(value) {
-    return this.eachAfter(function(node) {
+  root.sum = function (value) {
+    return this.eachAfter(function (node) {
       let sum = +value(node) || 0,
         children = node.children,
         i = children && children.length;

@@ -7,7 +7,7 @@ import {createLinearAxisGridLines} from "./createGrid";
 import {createPlotWithGridlines} from "./createLinearChart";
 import {createNumericAxis, createTimeAxis} from "./createAxis";
 import {createLinearScale, createTimeScale} from "./createScale";
-import {createDataMapping, createLinearDataset} from "./createDataset";
+import {createDataMapping, createLinearDatasets} from "./createDataset";
 
 export default ({element, plot, config}) => {
 
@@ -88,7 +88,7 @@ export default ({element, plot, config}) => {
 
       const mapping = createDataMapping(data, linearAxis.indicator, timeAxis.indicator, groupBy);
 
-      const {labels, series} = transform(createLinearDataset(mapping));
+      const {labels, series} = transform(createLinearDatasets(mapping));
 
       if (legend.showLegend) {
         colorScale
@@ -96,9 +96,9 @@ export default ({element, plot, config}) => {
           .range(series.map((d, i) => colors[i] || '#abc'));
       }
 
-      const datasets = series.map(({opacity = 1, values}, index) => {
+      const datasets = series.map(({opacity = 1, items}, index) => {
         const color = colors[index] || '#abc';
-        return values.map((value, index) => {
+        return items.map(({value}, index) => {
           return {
             label: labels[index],
             value,

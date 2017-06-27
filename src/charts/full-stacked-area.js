@@ -32,7 +32,11 @@ export default (element, data, config) => {
 
     ...linearChart,
 
-    addData: data => linearChart.addData(data, createFullStackedDataset),
+    addData: data => linearChart.addData(createFullStackedDataset(
+      data,
+      config.linearAxis.indicator,
+      config.categoryAxis.indicator,
+    )),
   };
 
   chart.addData(data);

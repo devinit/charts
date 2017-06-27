@@ -3,7 +3,7 @@ import approximate from 'approximate-number';
 import {createChartTable} from "./createTable";
 import {createTitle} from "./createTitle";
 import {createColorLegend} from "./createLegend";
-import {createDataMapping, createLinearDataset} from "./createDataset";
+import {makeUnique} from "./createDataset";
 import {createCategoryScale, createLinearScale} from "./createScale";
 import {createCategoryAxis, createNumericAxis} from "./createAxis";
 import {createLinearAxisGridLines} from "./createGrid";
@@ -36,6 +36,8 @@ export const createLinearChart = ({element, plot, config}) => {
     groupBy,
 
     colors = [],
+
+    coloring = [],
 
     showLabels = true,
 
@@ -80,31 +82,31 @@ export const createLinearChart = ({element, plot, config}) => {
 
     table,
 
-    addData: (data = [], transform = d => d) => {
+    addData: (data = []) => {
 
-      const mapping = createDataMapping(data, linearAxis.indicator, categoryAxis.indicator, groupBy);
-
-      const {labels, series} = transform(createLinearDataset(mapping));
+      const groupIds = makeUnique(data.map(d => d[groupBy]));
 
       if (legend.showLegend) {
         colorScale
-          .domain(series.map(d => d.label))
-          .range(series.map((d, i) => colors[i] || '#abc'));
+          .domain(groupIds.map(groupId => groupId || 'Unknown'))
+          .range(groupIds.map((d, i) => colors[i] || '#abc'));
       }
 
-      const datasets = series.map(({opacity = 1, values}, index) => {
-        const color = colors[index] || '#abc';
-        return values.map((value, index) => {
-          return {
-            label: labels[index] || index,
-            value,
-            color,
-            opacity
-          }
-        })
-      });
+      const datasets = groupIds.map((groupId, index) =>
+        data
+          .filter(d => d[groupBy] === groupId)
+          .map((item) => {
+            return {
+              label: item[categoryAxis.indicator],
+              value: item[linearAxis.indicator],
+              color: item[coloring] || colors[index] || '#abc',
+              opacity: 1,
+            }
+          })
+      );
 
       plot.datasets(datasets.map(d => new Plottable.Dataset(d)));
+
     },
 
   };
