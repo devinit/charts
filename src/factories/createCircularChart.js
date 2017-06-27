@@ -32,6 +32,8 @@ export default ({element, plot, config}) => {
 
     colors = [],
 
+    coloring = null,
+
     circular = {
       label: 'label',
       value: 'value',
@@ -64,7 +66,7 @@ export default ({element, plot, config}) => {
     const series = data.map((d, i) => ({
       label: d[circular.label],
       value: parseFloat(d[circular.value]),
-      color: colors[i] || '#abc',
+      color: d[coloring] || colors[i] || '#abc',
     }));
 
     // TODO: Efficiently update legend
