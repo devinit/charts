@@ -9,6 +9,7 @@ import {createChartTable} from './createTable';
  * @property {string} type - Type
  * @property {string} title - Title of chart
  * @property {string[]} colors - Colors
+ * @property {indicator} coloring - Color Indicator
  * @property {Circular} circular - Sectors
  * @property {ColorLegend} legend - Legend
  */

@@ -18,6 +18,7 @@ import {createLinearAxisGridLines} from "./createGrid";
  * @property {indicator} groupBy - Groups
  * @property {boolean} showLabels - Show Labels
  * @property {string[]} colors - Colors
+ * @property {indicator} coloring - Color Indicator
  * @property {NumericAxis} linearAxis - Linear Axis
  * @property {CategoryAxis} categoryAxis - Category Axis
  * @property {ColorLegend} legend - Legend
@@ -37,7 +38,7 @@ export const createLinearChart = ({element, plot, config}) => {
 
     colors = [],
 
-    coloring = [],
+    coloring = null,
 
     showLabels = true,
 

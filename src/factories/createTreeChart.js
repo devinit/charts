@@ -9,9 +9,9 @@ import drawLabels from './drawLabels';
  * @private
  * @property {string} type - Type
  * @property {string} title - Title
- * @property {indicator} coloring - Color Indicator
  * @property {'left'|'center'|'right'} titleAlignment=left - Title Alignment
  * @property {string[]} colors - Colors
+ * @property {indicator} coloring - Color Indicator
  * @property {boolean} showLabels - Show Labels
  * @property {Tree} tree - Hierachy Configuration
  */
