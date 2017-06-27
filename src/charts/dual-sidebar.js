@@ -35,6 +35,8 @@ export default (element, data, config) => {
 
     colors = [],
 
+    coloring = null,
+
     showLabels = false,
 
     linearAxis,
@@ -151,12 +153,6 @@ export default (element, data, config) => {
               subGroupIds[groupIndex].map(subGroupId =>
                 group
                   .filter(item => item[subGroupBy] === subGroupId)
-                  .map(item => ({
-                    group: item[groupBy],
-                    subGroup: item[subGroupBy],
-                    value: item[linearAxis.indicator],
-                    name: item[categoryAxis.indicator],
-                  }))
               )
             )
         )
@@ -211,7 +207,7 @@ export default (element, data, config) => {
 
                 direction: direction,
 
-                color: colors[groupIndex] || '#abc',
+                color: item[coloring] || colors[groupIndex] || '#abc',
 
               }))
 
@@ -219,14 +215,17 @@ export default (element, data, config) => {
 
           ], []);
 
-          const dataset = series.map((item, index) => {
-            return {
-              ...item,
-              label: index,
-              value: item.value * direction,
-              opacity: 1,
-            }
-          });
+          const dataset = series.map((item, index) => ({
+
+            ...item,
+
+            label: index,
+            value: item[linearAxis.indicator] * direction,
+            opacity: 1,
+            group: item[groupBy],
+            subGroup: item[subGroupBy],
+            name: item[categoryAxis.indicator],
+          }));
 
           plots[index].datasets([dataset].map(d => new Plottable.Dataset(d)))
 
