@@ -1,15 +1,16 @@
-import Plottable from "plottable";
-import {treemap} from "d3";
-import {color} from "d3";
-import {createTreeHierachy} from "../factories/createDataset";
-import approximate from "approximate-number";
-
 /**
  * @typedef {Object} CompoundTreemap
- * @public
+ * @private
  * @property {'compound-treemap'} type
  *
  */
+import Plottable from "plottable";
+import {treemap} from "d3";
+import {createTreeHierachy} from "../factories/createDataset";
+import approximate from "approximate-number";
+import {getTilingMethod} from "./treemap";
+import {createColorFiller} from "../factories/createTreeChart";
+
 export default (element, data, config) => {
 
   const {
@@ -20,7 +21,9 @@ export default (element, data, config) => {
 
     titleAlignment = 'left',
 
-    // ... config
+    colors = [],
+
+    coloring = null,
 
     tree = {
       id: 'id',
@@ -61,7 +64,7 @@ export default (element, data, config) => {
     .y(d => d[`${y}0`], yScale)
     .x2(d => d[`${x}1`], xScale)
     .y2(d => d[`${y}1`], yScale)
-    .attr("fill", d => d.data.color)
+    .attr("fill", d => d.color)
     .attr("stroke", d => '#fff')
     .attr("stroke-width", () => 1)
     .labelsEnabled(true)
@@ -87,9 +90,11 @@ export default (element, data, config) => {
 
   table.renderTo(element);
 
-  const tilingMethod = require(`d3-hierarchy/src/treemap/${tile}.js`);
+  const tilingMethod = getTilingMethod(tile);
 
-  const layout = treemap().tile(tilingMethod.default);
+  const layout = treemap().tile(tilingMethod);
+
+  const colorize = createColorFiller(colors, [], coloring);
 
   const chart = {
 
@@ -97,19 +102,11 @@ export default (element, data, config) => {
 
     addData: data => {
 
-      const root = createTreeHierachy(data, tree);
+      const root = colorize(createTreeHierachy(data, tree));
 
       const rectangles = layout(root).descendants();
 
       const all = rectangles
-        .map(d => {
-
-          d.data.color = !d.data.color && d.parent && d.parent.data.color ?
-            color(d.parent.data.color).brighter(d.parent.children.indexOf(d) * 0.4).toString() :
-            d.data.color;
-
-          return d;
-        })
         .filter(d => d.depth <= 2);
 
       plot.datasets([new Plottable.Dataset(all)]);

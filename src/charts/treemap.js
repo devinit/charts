@@ -25,6 +25,8 @@ export default (element, data = [], config) => {
 
     colors = [],
 
+    coloring = null,
+
     tree = {
       id: 'id',
       parent: 'parent',
@@ -53,7 +55,7 @@ export default (element, data = [], config) => {
 
   const layout = treemap().tile(tilingMethod);
 
-  const colorize = createColorFiller(colors, []);
+  const colorize = createColorFiller(colors, [], coloring);
 
   const transform = root => {
     return layout(root)
@@ -76,7 +78,7 @@ export default (element, data = [], config) => {
   return chart
 };
 
-const getTilingMethod = (method) => {
+export const getTilingMethod = (method) => {
   const tilingMethods = {
     binary: treemapBinary,
     dice: treemapDice,

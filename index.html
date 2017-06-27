@@ -735,6 +735,7 @@
         config: {
           title: 'Treemap Chart',
           type: 'treemap',
+          coloring: 'color',
           colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
           tree: {
             id: 'label',
@@ -750,6 +751,7 @@
             "label": 'South America',
             "parent": 'World',
             "value": 320,
+            "color": "teal"
           },
           {
             "label": 'Africa',
@@ -803,6 +805,7 @@
         config: {
           title: 'Summarized Treemap Chart',
           type: 'compound-treemap',
+          coloring: 'color',
           tree: {
             id: 'label',
             parent: 'parent',
@@ -874,6 +877,7 @@
         config: {
           title: 'Partition Chart',
           type: 'partition',
+          coloring: 'color',
           colors: ['#0095cb'],
           orientation: 'horizontal',
           tree: {
@@ -885,12 +889,10 @@
         data: [
           {
             "label": 'World',
-            "color": '#86c',
           },
           {
             "label": 'Africa',
             "parent": 'World',
-            "color": '#ff9a55',
           },
           {
             "label": 'Uganda',
@@ -898,6 +900,7 @@
           },
           {
             "parent": 'Uganda',
+            "color": "green",
             "label": 'Jinja',
             "value": 10,
           },

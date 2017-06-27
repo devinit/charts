@@ -9,6 +9,7 @@ import drawLabels from './drawLabels';
  * @private
  * @property {string} type - Type
  * @property {string} title - Title
+ * @property {indicator} coloring - Color Indicator
  * @property {'left'|'center'|'right'} titleAlignment=left - Title Alignment
  * @property {string[]} colors - Colors
  * @property {boolean} showLabels - Show Labels
@@ -70,7 +71,6 @@ export default ({element, plot, config}) => {
 
   const addData = (data = null) => {
     if (data) {
-
       plot.datasets(createTreeDataset(data));
     }
   };
@@ -140,19 +140,19 @@ export default ({element, plot, config}) => {
   };
 };
 
-export const createColorFiller = (colors, rules) => d => {
+export const createColorFiller = (colors, rules, indicator) => d => {
 
   d.eachBefore((node) => {
     if (node.depth === 0) {
-      node.color = colors[0] || '#abc'
+      node.color = node.data[indicator] || colors[0] || '#abc'
     }
 
     else if (node.depth === 1) {
-      node.color = colors[node.parent.children.indexOf(node) % colors.length]
+      node.color = node.data[indicator] || colors[node.parent.children.indexOf(node) % colors.length]
     }
 
     else {
-      node.color = node.parent.color
+      node.color = node.data[indicator] || node.parent.color
     }
   });
 

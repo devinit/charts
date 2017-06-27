@@ -15,6 +15,8 @@ export default (element, data = [], config) => {
 
     colors = [],
 
+    coloring = null,
+
     tree = {
       id: 'id',
       parent: 'parent',
@@ -34,7 +36,7 @@ export default (element, data = [], config) => {
 
   const layout = partition().size([1, 1]);
 
-  const colorize = createColorFiller(colors, []);
+  const colorize = createColorFiller(colors, [], coloring);
 
   const transform = data => {
     const root = colorize(createTreeHierachy(data, tree));
@@ -152,14 +154,17 @@ const partition = function () {
   }
 
   partition.round = function (x) {
+    //noinspection CommaExpressionJS
     return arguments.length ? (round = !!x, partition) : round;
   };
 
   partition.size = function (x) {
+    //noinspection CommaExpressionJS
     return arguments.length ? (dx = +x[0], dy = +x[1], partition) : [dx, dy];
   };
 
   partition.padding = function (x) {
+    //noinspection CommaExpressionJS
     return arguments.length ? (padding = +x, partition) : padding;
   };
 
