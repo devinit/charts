@@ -3,41 +3,6 @@ import Plottable from "plottable";
 
 export const makeUnique = list => Array.from(new Set(list));
 
-export const createDataMapping = (data, linearLabel, categoryLabel, groupLabel) => {
-  return data.map(d => ({
-    label: d[categoryLabel],
-    value: d[linearLabel],
-    group: d[groupLabel],
-    ...d
-  }))
-};
-
-export const createLinearDatasets = (data = []) => {
-  const labels = makeUnique(data.map(d => d.label)).sort((a, b) => a > b ? -1 : 1);
-
-  const series = data
-    .reduce((all, item, index, list) => {
-
-      if (all.map[item.group] === undefined) {
-        all.map[item.group] = all.groups.length;
-        all.groups[all.map[item.group]] = {
-          color: '#abc',
-          opacity: 1,
-          label: item.group || 'Unknown',
-          items: []
-        };
-      }
-
-      all.groups[all.map[item.group]].items[labels.indexOf(item.label)] = item;
-
-      return index + 1 === list.length ? all.groups : all;
-
-    }, {map: {}, groups: []});
-
-  return {labels, series}
-
-};
-
 export const createFullStackedDataset = (data = [], linearAxisIndicator, categoryAxisIndicator) => {
 
   const labels = makeUnique(data.map(d => d[categoryAxisIndicator]));

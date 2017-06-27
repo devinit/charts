@@ -66,6 +66,7 @@
           type: 'line',
           groupBy: 'Months',
           colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
+          coloring: 'color',
           linearAxis: {
             showAxis: true,
             showAxisLabel: '',
@@ -86,7 +87,7 @@
         },
         data: [
           {"Rainfall": 960000, "Years": "2000", "Months": "Jan"},
-          {"Rainfall": 980000, "Years": "2001", "Months": "Jan"},
+          {"Rainfall": 980000, "Years": "2001", "Months": "Jan", color: 'teal'},
           {"Rainfall": 1300000, "Years": "2002", "Months": "Jan"},
           {"Rainfall": 1500000, "Years": "2003", "Months": "Jan"},
           {"Rainfall": 1800000, "Years": "2004", "Months": "Jan"},
@@ -120,6 +121,7 @@
           type: 'stacked-timearea',
           groupBy: 'Months',
           colors: ['rgb(0, 148, 202)', '#93328e', '#b7bf10', '#004862'],
+          coloring: 'color',
           linearAxis: {
             showAxis: true,
             showGridlines: true,
@@ -326,6 +328,7 @@
           title: 'Bar Chart',
           type: 'bar',
           colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
+          coloring: 'color',
           linearAxis: {
             showAxis: true,
             showGridlines: true,
@@ -341,7 +344,7 @@
           }
         },
         data: [
-          {"Rainfall": 100, "Months": "Jan"},
+          {"Rainfall": 100, "Months": "Jan", color: 'teal'},
           {"Rainfall": 200, "Months": "Feb"},
           {"Rainfall": 120, "Months": "Mar"},
           {"Rainfall": 270, "Months": "Apr"},

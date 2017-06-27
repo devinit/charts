@@ -7,7 +7,7 @@ import {createLinearAxisGridLines} from "./createGrid";
 import {createPlotWithGridlines} from "./createLinearChart";
 import {createNumericAxis, createTimeAxis} from "./createAxis";
 import {createLinearScale, createTimeScale} from "./createScale";
-import {createDataMapping, createLinearDatasets} from "./createDataset";
+import {makeUnique} from "./createDataset";
 
 export default ({element, plot, config}) => {
 
@@ -20,6 +20,8 @@ export default ({element, plot, config}) => {
     groupBy,
 
     colors = [],
+
+    coloring = null,
 
     showLabels = true,
 
@@ -84,31 +86,31 @@ export default ({element, plot, config}) => {
 
     table,
 
-    addData: (data = [], transform = d => d) => {
+    addData: (data = []) => {
 
-      const mapping = createDataMapping(data, linearAxis.indicator, timeAxis.indicator, groupBy);
-
-      const {labels, series} = transform(createLinearDatasets(mapping));
+      const groupIds = makeUnique(data.map(d => d[groupBy]));
 
       if (legend.showLegend) {
         colorScale
-          .domain(series.map(d => d.label))
-          .range(series.map((d, i) => colors[i] || '#abc'));
+          .domain(groupIds.map(groupId => groupId || 'Unknown'))
+          .range(groupIds.map((d, i) => colors[i] || '#abc'));
       }
 
-      const datasets = series.map(({opacity = 1, items}, index) => {
-        const color = colors[index] || '#abc';
-        return items.map(({value}, index) => {
-          return {
-            label: labels[index],
-            value,
-            color,
-            opacity
-          }
-        })
-      });
+      const datasets = groupIds.map((groupId, index) =>
+        data
+          .filter(d => d[groupBy] === groupId)
+          .map((item) => {
+            return {
+              label: item[timeAxis.indicator],
+              value: item[linearAxis.indicator],
+              color: item[coloring] || colors[index] || '#abc',
+              opacity: 1,
+            }
+          })
+      );
 
       plot.datasets(datasets.map(d => new Plottable.Dataset(d)));
+
     },
 
     onAnchorMoved(callback = null) {
