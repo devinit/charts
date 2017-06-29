@@ -1,7 +1,16 @@
 import Plottable from "plottable";
 import createRectangleChart, {createColorFiller} from "../factories/createTreeChart";
 import {createTreeHierachy} from "../factories/createDataset";
-import {treemap, treemapBinary, treemapDice, treemapSlice, treemapSliceDice, treemapSquarify, treemapResquarify} from "d3";
+import {createScaleAnimator} from '../factories/createAnimator'
+import {
+  treemap,
+  treemapBinary,
+  treemapDice,
+  treemapResquarify,
+  treemapSlice,
+  treemapSliceDice,
+  treemapSquarify
+} from "d3";
 
 /**
  * @typedef {TreeChart} Treemap
@@ -57,6 +66,39 @@ export default (element, data = [], config) => {
 
   const colorize = createColorFiller(colors, [], coloring);
 
+  let listeners = [];
+
+  const animate = createScaleAnimator(200);
+
+  treeChart.onClick(function (entities, xScale, yScale) {
+
+    const entity = entities.pop();
+
+    const datum = entity.datum;
+
+    const orientationAwareness = [
+      orientation === 'vertical' ? ['x0', 'x1'] : ['y0', 'y1'],
+      orientation === 'horizontal' ? ['x0', 'x1'] : ['y0', 'y1'],
+    ];
+
+    const nextDomain = orientationAwareness
+      .map(([min, max]) => [datum[min], datum[max]]);
+
+    const previousDomain = [xScale.domain(), yScale.domain()];
+
+    const shouldReset = [[nextDomain, previousDomain]]
+      .every(([[[a, b], [c, d]], [[w, x], [y, z]]]) =>
+      a === w && b === x && c === y && d === z);
+
+    const onAnimated = () => listeners.forEach(callback => callback(datum.data));
+
+    if (shouldReset)
+      animate([xScale, yScale], [0, 1], [0, 1]).then(onAnimated);
+    else
+      animate([xScale, yScale], ...nextDomain).then(onAnimated);
+
+  });
+
   const transform = root => {
     return layout(root)
       .leaves()
@@ -66,6 +108,10 @@ export default (element, data = [], config) => {
   const chart = {
 
     ...treeChart,
+
+    onClick: (callback) => {
+      listeners.push(callback)
+    },
 
     addData: data => {
       const root = colorize(createTreeHierachy(data, tree));

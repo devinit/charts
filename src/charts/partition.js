@@ -1,6 +1,7 @@
 import Plottable from "plottable";
 import createTreeChart, {createColorFiller} from "../factories/createTreeChart";
 import {createTreeHierachy} from "../factories/createDataset";
+import {createScaleAnimator} from '../factories/createAnimator'
 
 /**
  * @typedef {TreeChart} Partition
@@ -54,20 +55,14 @@ export default (element, data = [], config) => {
       return differenceTooSmall ? expected : actual + (diff * factor)
     }
   };
-
-  let intervals = [];
-
   let listeners = [];
+
+  const animate = createScaleAnimator(200);
 
   treeChart.onClick((entities, xScale, yScale) => {
 
-    // TODO: Use request animation frame
-
-    // Stop all intervals
-    while (intervals.length) clearInterval(intervals.pop());
-
     const entity = entities.pop();
-    const d = entity.datum;
+    const datum = entity.datum;
 
     // TODO: Rethink orientation implementation for tree chats
     // It might be better to fix orientation for each tree chart
@@ -79,28 +74,12 @@ export default (element, data = [], config) => {
     const x1 = x + '1';
     const y1 = y + '1';
 
-    const xMax = orientation === 'horizontal' ? d.descendants().sort((a, b) => a[x1] - b[x1]).pop()[x1] : d[x1];
-    const xMin = orientation === 'horizontal' && d.parent ? d[x0] - (xMax - d[x0]) * 0.1 : d[x0];
-    const yMax = orientation === 'vertical' ? d.descendants().sort((a, b) => a[y1] - b[y1]).pop()[y1] : d[y1];
-    const yMin = orientation === 'vertical' && d.parent ? d[y0] - (yMax - d[y0]) * 0.1 : d[y0];
+    const xMax = orientation === 'horizontal' ? datum.descendants().sort((a, b) => a[x1] - b[x1]).pop()[x1] : datum[x1];
+    const xMin = orientation === 'horizontal' && datum.parent ? datum[x0] - (xMax - datum[x0]) * 0.1 : datum[x0];
+    const yMax = orientation === 'vertical' ? datum.descendants().sort((a, b) => a[y1] - b[y1]).pop()[y1] : datum[y1];
+    const yMin = orientation === 'vertical' && datum.parent ? datum[y0] - (yMax - datum[y0]) * 0.1 : datum[y0];
 
-    const interval = setInterval(() => {
-      const easedXMin = ease(xScale.domainMin(), xMin, 0.3);
-      const easedXMax = ease(xScale.domainMax(), xMax, 0.3);
-      const easedYMin = ease(yScale.domainMin(), yMin, 0.3);
-      const easedYMax = ease(yScale.domainMax(), yMax, 0.3);
-
-      xScale.domainMin(easedXMin);
-      xScale.domainMax(easedXMax);
-      yScale.domainMin(easedYMin);
-      yScale.domainMax(easedYMax);
-
-      if (!easedXMin && !easedXMax && !easedYMin && !easedYMax) clearInterval(interval)
-
-    }, 17);
-
-    intervals = [...intervals, interval];
-    listeners.forEach(callback => callback(d.data))
+    animate([xScale, yScale], [xMin, xMax], [yMin, yMax])
   });
 
   const chart = {
