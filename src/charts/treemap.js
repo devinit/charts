@@ -4,7 +4,7 @@ import {createTreeHierachy} from "../factories/createDataset";
 import {treemap, treemapBinary, treemapDice, treemapSlice, treemapSliceDice, treemapSquarify, treemapResquarify} from "d3";
 
 /**
- * @typedef {Treemap} Treemap
+ * @typedef {TreeChart} Treemap
  * @public
  * @property {'treemap'} type
  * @property {TreemapConfig} treemap

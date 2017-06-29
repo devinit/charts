@@ -1,9 +1,3 @@
-/**
- * @typedef {Object} CompoundTreemap
- * @private
- * @property {'compound-treemap'} type
- *
- */
 import Plottable from "plottable";
 import {treemap} from "d3";
 import {createTreeHierachy} from "../factories/createDataset";
@@ -11,6 +5,12 @@ import approximate from "approximate-number";
 import {getTilingMethod} from "./treemap";
 import {createColorFiller} from "../factories/createTreeChart";
 
+/**
+ * @typedef {TreeChart} CompoundTreemap
+ * @private
+ * @property {'compound-treemap'} type
+ *
+ */
 export default (element, data, config) => {
 
   const {

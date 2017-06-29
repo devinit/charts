@@ -1,3 +1,7 @@
+import Plottable from "plottable";
+import createTreeChart, {createColorFiller} from "../factories/createTreeChart";
+import {createTreeHierachy} from "../factories/createDataset";
+
 /**
  * @typedef {TreeChart} Partition
  * @public
@@ -5,10 +9,6 @@
  * @property {('vertical'|'horizontal')} orientation=horizontal - Orientation
  *
  */
-import Plottable from "plottable";
-import createTreeChart, {createColorFiller} from "../factories/createTreeChart";
-import {createTreeHierachy} from "../factories/createDataset";
-
 export default (element, data = [], config) => {
 
   const {
