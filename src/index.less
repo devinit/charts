@@ -1,123 +1,169 @@
 @import "../node_modules/plottable/plottable.css";
 
-.plottable text {
+.plottable {
   font-family: geomanist, 'sans-serif';
-}
 
-.plottable .title-label text {
-  font-size: 16px;
-  font-weight: 400;
-}
+  .title-label text {
+    font-size: 16px;
+    font-weight: 700;
+  }
 
-.plottable .gridlines line {
-  stroke: #3C3C3C;
-  opacity: 0.25;
-  stroke-width: 1px;
-}
+  .gridlines line {
+    stroke: #3C3C3C;
+    opacity: 0.25;
+    stroke-width: 1px;
+  }
 
-.plottable .rectangle-plot rect:before {
-  content: attr(title);
-  display: block;
-}
+  .rectangle-plot rect:before {
+    content: attr(title);
+    display: block;
+  }
 
-.plottable .plot-label {
-  padding: 0.5em;
-  font-size: 1.1em;
-}
+  .light-label {
+    color: #fff;
+  }
 
-.light-label {
-  color: #fff;
-}
+  .dark-label {
+    color: #000;
+  }
 
-.dark-label {
-  color: #000;
-}
+  .axis line.baseline,
+  .plot line.baseline {
+    //
+  }
 
-.plottable .axis line.baseline,
-.plottable .plot line.baseline {
-  stroke: #000;
-}
+  .axis line.tick-mark {
+    stroke-width: 1px;
+  }
 
-.plottable .axis line.tick-mark {
-  stroke: #000;
-  stroke-width: 1px;
-}
+  .timeline .foreground-container {
+    pointer-events: all;
+    overflow: visible
+  }
 
-.plottable .timeline .foreground-container {
-  pointer-events: all;
-  overflow: visible
-}
+  .axis.axis-tick-none .tick-label,
+  .axis.axis-tick-even .tick-label,
+  .axis.axis-tick-odd .tick-label,
+  .axis.axis-tick-end .tick-label,
+  .axis.axis-tick-sparse .tick-label,
+  .axis.axis-tick-none .tick-mark,
+  .axis.axis-tick-even .tick-mark,
+  .axis.axis-tick-odd .tick-mark,
+  .axis.axis-tick-end .tick-mark,
+  .axis.axis-tick-sparse .tick-mark,
+  .gridlines.gridlines-tick-none line,
+  .gridlines.gridlines-tick-even line,
+  .gridlines.gridlines-tick-odd line,
+  .gridlines.gridlines-tick-end line,
+  .gridlines.gridlines-tick-sparse line {
+    visibility: hidden !important;
+    display: none;
+  }
 
-.axis.axis-tick-none .tick-label,
-.axis.axis-tick-even .tick-label,
-.axis.axis-tick-odd .tick-label,
-.axis.axis-tick-end .tick-label,
-.axis.axis-tick-sparse .tick-label,
+  .axis.axis-tick-all .tick-label,
+  .axis.axis-tick-even .tick-label:nth-child(2n),
+  .axis.axis-tick-sparse .tick-label:nth-child(4n+1),
+  .axis.axis-tick-odd .tick-label:nth-child(2n+1),
+  .axis.axis-tick-end .tick-label:first-child,
+  .axis.axis-tick-end .tick-label:last-child,
+  .axis.axis-tick-all .tick-mark,
+  .axis.axis-tick-even .tick-mark:nth-child(2n),
+  .axis.axis-tick-odd .tick-mark:nth-child(2n+1),
+  .axis.axis-tick-end .tick-mark:first-child,
+  .axis.axis-tick-end .tick-mark:last-child,
+  .gridlines.gridlines-tick-all line,
+  .gridlines.gridlines-tick-even line:nth-child(2n),
+  .gridlines.gridlines-tick-odd line:nth-child(2n+1),
+  .gridlines.gridlines-tick-sparse line:nth-child(2n+1),
+  .gridlines.gridlines-tick-end line:first-child,
+  .gridlines.gridlines-tick-end line:last-child {
+    visibility: visible !important;
+    display: block;
+  }
 
-.axis.axis-tick-none .tick-mark,
-.axis.axis-tick-even .tick-mark,
-.axis.axis-tick-odd .tick-mark,
-.axis.axis-tick-end .tick-mark,
-.axis.axis-tick-sparse .tick-mark,
+  .timeline .symbol,
+  .timeline .symbol-line,
+  .timeline .symbol-label {
+    cursor: ew-resize;
+    user-select: none;
+  }
 
-.gridlines.gridlines-tick-none line,
-.gridlines.gridlines-tick-even line,
-.gridlines.gridlines-tick-odd line,
-.gridlines.gridlines-tick-end line,
-.gridlines.gridlines-tick-sparse line {
-  visibility: hidden !important;
-  display:none;
-}
+  .timeline .symbol-label {
+    fill: #fff;
+  }
 
-.axis.axis-tick-all .tick-label,
-.axis.axis-tick-even .tick-label:nth-child(2n),
-.axis.axis-tick-sparse .tick-label:nth-child(4n+1),
-.axis.axis-tick-odd .tick-label:nth-child(2n+1),
-.axis.axis-tick-end .tick-label:first-child,
-.axis.axis-tick-end .tick-label:last-child,
+  // Dual Sidebar labels
+  .group-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    fill: #453f43
+  }
 
-.axis.axis-tick-all .tick-mark,
-.axis.axis-tick-even .tick-mark:nth-child(2n),
-.axis.axis-tick-odd .tick-mark:nth-child(2n+1),
-.axis.axis-tick-end .tick-mark:first-child,
-.axis.axis-tick-end .tick-mark:last-child,
+  .subGroup-label {
+    font-size: 12px;
+    font-weight: 100;
+    text-transform: uppercase
+  }
 
-.gridlines.gridlines-tick-all line,
-.gridlines.gridlines-tick-even line:nth-child(2n),
-.gridlines.gridlines-tick-odd line:nth-child(2n+1),
-.gridlines.gridlines-tick-sparse line:nth-child(2n+1),
-.gridlines.gridlines-tick-end line:first-child,
-.gridlines.gridlines-tick-end line:last-child {
-  visibility: visible !important;
-  display:block;
-}
+  .data-label {
+    fill: #555;
+    font-size: 12px;
+  }
 
+  // Tree chart labels
+  .plot-label {
+    padding: 0.4em;
 
-.timeline .symbol,
-.timeline .symbol-line,
-.timeline .symbol-label {
-  cursor: ew-resize;
-  user-select: none;
-}
+    .plot-label-header {
+      font-weight: 500;
+      padding-bottom: 0.2em;
+    }
 
-.timeline .symbol-label {
-  fill: #fff;
-}
+    .plot-label-value {
+      font-weight: 500;
+      font-size: 0.7em;
+    }
 
-.group-label {
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  fill: #453f43
-}
+  }
 
-.subGroup-label {
-  font-size: 12px;
-  font-weight: 100;
-  text-transform: uppercase
-}
+  .tooltip {
+    padding: 5px 10px;
+    background: #ffffff;
+    margin-bottom: 5px;
+    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25);
+    text-align: center;
 
-.data-label {
-  fill: #555;
-  font-size: 12px;
+    .tooltip-inner {
+      padding-bottom: 5px;
+    }
+
+    .tooltip-body {
+      font-weight: 700;
+      font-size: 0.8em;
+    }
+
+    .tooltip-arrow {
+      width: 0;
+      height: 0;
+      border: 5px solid transparent;
+    }
+
+    &[x-placement='bottom'] {
+      .tooltip-arrow {
+        position: absolute;
+        top: -10px;
+        border-bottom-color: #fff;
+      }
+    }
+
+    &[x-placement='top'] {
+      .tooltip-arrow {
+        position: absolute;
+        bottom: -10px;
+        border-top-color: #fff;
+      }
+    }
+
+  }
 }

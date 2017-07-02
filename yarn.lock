@@ -2,16 +2,6 @@
 # yarn lockfile v1
 
 
-"@devinit/charts@^1.2.7":
-  version "1.2.7"
-  resolved "https://registry.yarnpkg.com/@devinit/charts/-/charts-1.2.7.tgz#a0bf3a66b5e86c7789e92f8be044ca7541a5be86"
-  dependencies:
-    approximate-number "^2.0.0"
-    babel-runtime "^6.23.0"
-    d3 "^4.9.1"
-    d3-drag "^1.1.0"
-    plottable "^3.1.1"
-
 "@types/d3-array@*":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@types/d3-array/-/d3-array-1.2.0.tgz#9b1fc3202fc1a9f7da0f2873bd38b443137a9d34"
@@ -3283,6 +3273,10 @@ pn@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/pn/-/pn-1.0.0.tgz#1cf5a30b0d806cd18f88fc41a6b5d4ad615b3ba9"
 
+popper.js@^1.0.2:
+  version "1.10.6"
+  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.10.6.tgz#0d65754f010cd1d4a2fc6c726eca9f117b59d597"
+
 portfinder@^1.0.9:
   version "1.0.13"
   resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.13.tgz#bb32ecd87c27104ae6ee44b5a3ccbf0ebb1aede9"
@@ -4279,6 +4273,12 @@ to-arraybuffer@^1.0.0:
 to-fast-properties@^1.0.1:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/to-fast-properties/-/to-fast-properties-1.0.3.tgz#b83571fa4d8c25b82e231b06e3a3055de4ca1a47"
+
+tooltip.js@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/tooltip.js/-/tooltip.js-1.1.4.tgz#17337f22065fc04d4a456429ce122dbf184bd861"
+  dependencies:
+    popper.js "^1.0.2"
 
 tough-cookie@>=2.3.0, tough-cookie@^2.3.2, tough-cookie@~2.3.0:
   version "2.3.2"

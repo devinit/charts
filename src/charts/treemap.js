@@ -1,5 +1,5 @@
 import Plottable from "plottable";
-import createRectangleChart, {createColorFiller} from "../factories/createTreeChart";
+import createRectangleChart, {createColorFiller, createTipper} from "../factories/createTreeChart";
 import {createTreeHierachy} from "../factories/createDataset";
 import {createScaleAnimator} from '../factories/createAnimator'
 import {
@@ -11,6 +11,7 @@ import {
   treemapSliceDice,
   treemapSquarify
 } from "d3";
+import {createTreeChartLabeler} from "../factories/createLabeler";
 
 /**
  * @typedef {TreeChart} Treemap
@@ -50,15 +51,21 @@ export default (element, data = [], config) => {
 
     } = {},
 
+    labeling = {},
+
     ...more
 
   } = config;
 
   const plot = new Plottable.Plots.Rectangle();
 
+  plot.onAnchor(createTipper(element, labeling, getDatumPercentage));
+
+  plot._drawLabels = createTreeChartLabeler(labeling, getDatumPercentage);
+
   // ... apply rectangle configuration
 
-  const treeChart = createRectangleChart({element, plot, config: {orientation, ...more}});
+  const treeChart = createRectangleChart({element, plot, config: {orientation, labeling, ...more}});
 
   const tilingMethod = getTilingMethod(tile);
 
@@ -66,11 +73,51 @@ export default (element, data = [], config) => {
 
   const colorize = createColorFiller(colors, [], coloring);
 
+  const transform = root => layout(root).leaves().filter(d => d.depth <= tree.depth || Infinity);
+
   let listeners = [];
 
-  const animate = createScaleAnimator(200);
+  treeChart.onClick(createTreemapOnClickListener(orientation, listeners));
 
-  treeChart.onClick(function (entities, xScale, yScale) {
+  const chart = {
+
+    ...treeChart,
+
+    onClick: (callback) => {
+      listeners.push(callback)
+    },
+
+    addData: data => {
+      const root = colorize(createTreeHierachy(data, tree));
+      treeChart.addData(transform(root))
+    }
+  };
+
+  chart.addData(data);
+
+  return chart
+};
+
+const getDatumPercentage = datum => Math.round((datum.x1 - datum.x0) * (datum.y1 - datum.y0) * 100);
+
+export const getTilingMethod = (method) => {
+  const tilingMethods = {
+    binary: treemapBinary,
+    dice: treemapDice,
+    slice: treemapSlice,
+    sliceDice: treemapSliceDice,
+    squarify: treemapSquarify,
+    resquarify: treemapResquarify,
+  };
+
+  return tilingMethods[method]
+};
+
+const createTreemapOnClickListener = (orientation, listeners) => {
+
+  const animate = createScaleAnimator(500);
+
+  return (entities, xScale, yScale) =>{
 
     const entity = entities.pop();
 
@@ -97,42 +144,6 @@ export default (element, data = [], config) => {
     else
       animate([xScale, yScale], ...nextDomain).then(onAnimated);
 
-  });
-
-  const transform = root => {
-    return layout(root)
-      .leaves()
-      .filter(d => d.depth <= tree.depth || Infinity);
   };
 
-  const chart = {
-
-    ...treeChart,
-
-    onClick: (callback) => {
-      listeners.push(callback)
-    },
-
-    addData: data => {
-      const root = colorize(createTreeHierachy(data, tree));
-      treeChart.addData(transform(root))
-    }
-  };
-
-  chart.addData(data);
-
-  return chart
-};
-
-export const getTilingMethod = (method) => {
-  const tilingMethods = {
-    binary: treemapBinary,
-    dice: treemapDice,
-    slice: treemapSlice,
-    sliceDice: treemapSliceDice,
-    squarify: treemapSquarify,
-    resquarify: treemapResquarify,
-  };
-
-  return tilingMethods[method]
 };

@@ -1,7 +1,8 @@
 import Plottable from "plottable";
-import createTreeChart, {createColorFiller} from "../factories/createTreeChart";
+import createTreeChart, {createColorFiller, createTipper} from "../factories/createTreeChart";
 import {createTreeHierachy} from "../factories/createDataset";
-import {createScaleAnimator} from '../factories/createAnimator'
+import {createScaleAnimator} from "../factories/createAnimator";
+import {createTreeChartLabeler} from "../factories/createLabeler";
 
 /**
  * @typedef {TreeChart} Partition
@@ -14,6 +15,8 @@ export default (element, data = [], config) => {
 
   const {
 
+    orientation = 'horizontal',
+
     colors = [],
 
     coloring = null,
@@ -25,15 +28,19 @@ export default (element, data = [], config) => {
       depth: Infinity,
     },
 
+    labeling = {},
+
     ...moreConfig
 
   } = config;
 
-  const orientation = 'horizontal';
-
   const plot = new Plottable.Plots.Rectangle();
 
-  const treeChart = createTreeChart({element, plot, config: {orientation, ...moreConfig}});
+  plot.onAnchor(createTipper(element, labeling, getDatumPercentage(orientation)));
+
+  plot._drawLabels = createTreeChartLabeler(labeling, getDatumPercentage(orientation));
+
+  const treeChart = createTreeChart({element, plot, config: {orientation, labeling, ...moreConfig},});
 
   const layout = partition().size([1, 1]);
 
@@ -46,18 +53,9 @@ export default (element, data = [], config) => {
       .filter(d => d.depth <= tree.depth || Infinity);
   };
 
-  const ease = (actual, expected, factor) => {
-    if (+expected.toFixed(4) !== +actual.toFixed(4)) {
-      const diff = expected - actual;
-
-      const differenceTooSmall = parseFloat(Math.abs(diff).toFixed(3)) === 0;
-
-      return differenceTooSmall ? expected : actual + (diff * factor)
-    }
-  };
   let listeners = [];
 
-  const animate = createScaleAnimator(200);
+  const animate = createScaleAnimator(500);
 
   treeChart.onClick((entities, xScale, yScale) => {
 
@@ -74,10 +72,12 @@ export default (element, data = [], config) => {
     const x1 = x + '1';
     const y1 = y + '1';
 
-    const xMax = orientation === 'horizontal' ? datum.descendants().sort((a, b) => a[x1] - b[x1]).pop()[x1] : datum[x1];
-    const xMin = orientation === 'horizontal' && datum.parent ? datum[x0] - (xMax - datum[x0]) * 0.1 : datum[x0];
-    const yMax = orientation === 'vertical' ? datum.descendants().sort((a, b) => a[y1] - b[y1]).pop()[y1] : datum[y1];
-    const yMin = orientation === 'vertical' && datum.parent ? datum[y0] - (yMax - datum[y0]) * 0.1 : datum[y0];
+    const max = (list, key) => Math.max.apply(null, list.map(d => d[key]));
+
+    const xMax = orientation === 'horizontal' ? max(datum.descendants(), x1) : datum[x1];
+    const xMin = orientation === 'horizontal' && datum.parent ? datum[x0] - (xMax - datum[x0]) * 0.05 : datum[x0];
+    const yMax = orientation === 'vertical' ? max(datum.descendants(), y1) : datum[y1];
+    const yMin = orientation === 'vertical' && datum.parent ? datum[y0] - (yMax - datum[y0]) * 0.05 : datum[y0];
 
     animate([xScale, yScale], [xMin, xMax], [yMin, yMax])
   });
@@ -96,6 +96,13 @@ export default (element, data = [], config) => {
   chart.addData(data);
 
   return chart
+};
+
+const getDatumPercentage = orientation => datum => {
+  return Math.round(orientation === 'horizontal' ?
+    (datum.x1 - datum.x0) * 100 :
+    (datum.y1 - datum.y0) * 100
+  );
 };
 
 const partition = function () {

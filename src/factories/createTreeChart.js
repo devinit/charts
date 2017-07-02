@@ -2,7 +2,9 @@ import Plottable from "plottable";
 import {createTitle} from "./createTitle";
 import {createChartTable} from "./createTable";
 import {createTreeDataset} from "./createDataset";
-import drawLabels from './drawLabels';
+import {color} from "d3";
+//noinspection JSFileReferences
+import Tooltip from "tooltip.js";
 
 /**
  * @typedef {Object} TreeChart
@@ -34,7 +36,7 @@ export default ({element, plot, config}) => {
 
     orientation = 'vertical',
 
-    showLabels = true,
+    labeling = {}
 
   } = config;
 
@@ -49,18 +51,17 @@ export default ({element, plot, config}) => {
   const x = orientation === 'vertical' ? 'x' : 'y';
   const y = orientation === 'horizontal' ? 'x' : 'y';
 
-  plot._drawLabels = drawLabels;
-
   plot
     .x(d => d[`${x}0`], xScale)
     .y(d => d[`${y}0`], yScale)
     .x2(d => d[`${x}1`], xScale)
     .y2(d => d[`${y}1`], yScale)
-    .attr("fill", d => d.color)
+    .attr("fill", d => d.color || '#abc')
     .attr("stroke", '#fff')
     .attr("stroke-width", 1)
-    .labelsEnabled(showLabels)
+    .labelsEnabled(labeling.showLabels || true)
     .label(d => d.data.label);
+
 
   const table = createChartTable({
     title: createTitle({title, titleAlignment}),
@@ -92,40 +93,6 @@ export default ({element, plot, config}) => {
 
   };
 
-  const onPointerEnter = (callback = d => d) => {
-
-    const interaction = new Plottable.Interactions.Pointer()
-      .onPointerEnter(function (point) {
-
-        const entities = plot.entitiesAt(point);
-
-        if (entities.length) {
-          callback(entities[0])
-        }
-
-      });
-
-    interaction.attachTo(plot);
-
-  };
-
-  const onPointerExit = (callback = d => d) => {
-
-    const interaction = new Plottable.Interactions.Pointer()
-      .onPointerEnter(function (point) {
-
-        const entities = plot.entitiesAt(point);
-
-        if (entities.length) {
-          callback(entities[0])
-        }
-
-      });
-
-    interaction.attachTo(plot);
-
-  };
-
   return {
 
     table,
@@ -133,10 +100,6 @@ export default ({element, plot, config}) => {
     addData,
 
     onClick,
-
-    onPointerEnter,
-
-    onPointerExit,
   };
 };
 
@@ -157,4 +120,84 @@ export const createColorFiller = (colors, rules, indicator) => d => {
   });
 
   return d;
+};
+
+export const createTipper = (container, labeling, percentage = d => 100) => {
+
+  return function (plot) {
+
+    let currentId = null;
+
+    const foreignObject = plot.foreground()
+      .append('foreignObject')
+      .html('<div id="tooltip-container"></div>');
+
+    const tooltipAnchor = plot.foreground()
+      .append('circle')
+      .attr('r', 3)
+      .attr('fill', 'transparent');
+
+    const tip = new Tooltip(tooltipAnchor.node(), {
+      title: 'Tooltip',
+      container: container,
+      template: '<div class="tooltip" role="tooltip">' +
+                  '<div class="tooltip-arrow"></div>' +
+                  '<div id="tt-title" class="tooltip-inner"></div>' +
+                  '<div id="tt-body" class="tooltip-body"></div>' +
+                '</div>'
+    });
+
+    new Plottable.Interactions.Pointer()
+      .onPointerEnter(() => {
+        tip.show()
+      })
+      .onPointerMove(p => {
+
+        const [entity] = plot.entitiesAt(p);
+
+        tooltipAnchor.attr('cx', p.x).attr('cy', p.y);
+        tip.hide();
+
+        if (entity) tip.show();
+
+        if (entity && entity.datum.id !== currentId) {
+          const percent = percentage(entity.datum);
+          tip._tooltipNode.querySelector('#tt-title').innerText = entity.datum.id;
+          tip._tooltipNode.querySelector('#tt-body').innerText
+            = `${percent === 100 ? '' : `${percent}% | `} ${labeling.prefix || ''} ${entity.datum.value} ${labeling.suffix || ''}`;
+
+          currentId = entity.datum.id;
+
+          plot.entities()
+            .forEach(entity => {
+              if (entity.selection.attr('initial-fill')) {
+                entity.selection.attr("fill", entity.selection.attr('initial-fill'));
+              } else {
+                entity.selection.attr("initial-fill", entity.selection.attr('fill'));
+              }
+            });
+
+          const fill = color(entity.selection.attr('initial-fill')).darker(0.8);
+
+          entity.selection.attr("fill", fill);
+        }
+
+      })
+      .onPointerExit(() => {
+
+        tip.hide();
+
+        plot.entities().forEach(entity => {
+          if (entity.selection.attr('initial-fill')) {
+            entity.selection.attr("fill", entity.selection.attr('initial-fill'));
+          } else {
+            entity.selection.attr("initial-fill", entity.selection.attr('fill'));
+          }
+        });
+
+        currentId = null;
+      })
+      .attachTo(plot);
+
+  }
 };
