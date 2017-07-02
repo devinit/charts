@@ -14,8 +14,16 @@ import Tooltip from "tooltip.js";
  * @property {'left'|'center'|'right'} titleAlignment=left - Title Alignment
  * @property {string[]} colors - Colors
  * @property {indicator} coloring - Color Indicator
- * @property {boolean} showLabels - Show Labels
+ * @property {Labelling} labeling - Label Configuration
  * @property {Tree} tree - Hierachy Configuration
+ */
+
+/**
+ * @typedef {Object} Labelling
+ * @private
+ * @property {boolean} showLabels=true
+ * @property {string} prefix
+ * @property {string} suffix
  */
 
 /**
