@@ -1,10 +1,11 @@
 import Plottable from "plottable";
-import {createTitle} from "./createTitle";
-import {createChartTable} from "./createTable";
-import {createTreeDataset} from "./createDataset";
 import {color} from "d3";
 //noinspection JSFileReferences
 import Tooltip from "tooltip.js";
+import {createTitle} from "./createTitle";
+import {createChartTable} from "./createTable";
+import {createTreeDataset} from "./createDataset";
+import approximate from "approximate-number";
 
 /**
  * @typedef {Object} TreeChart
@@ -149,10 +150,10 @@ export const createTipper = (container, labeling, percentage = d => 100) => {
       title: 'Tooltip',
       container: container,
       template: '<div class="tooltip" role="tooltip">' +
-                  '<div class="tooltip-arrow"></div>' +
-                  '<div id="tt-title" class="tooltip-inner"></div>' +
-                  '<div id="tt-body" class="tooltip-body"></div>' +
-                '</div>'
+      '<div class="tooltip-arrow"></div>' +
+      '<div id="tt-title" class="tooltip-inner"></div>' +
+      '<div id="tt-body" class="tooltip-body"></div>' +
+      '</div>'
     });
 
     new Plottable.Interactions.Pointer()
@@ -172,7 +173,7 @@ export const createTipper = (container, labeling, percentage = d => 100) => {
           const percent = percentage(entity.datum);
           tip._tooltipNode.querySelector('#tt-title').innerText = entity.datum.id;
           tip._tooltipNode.querySelector('#tt-body').innerText
-            = `${percent === 100 ? '' : `${percent}% | `} ${labeling.prefix || ''} ${entity.datum.value} ${labeling.suffix || ''}`;
+            = `${percent === 100 ? '' : `${percent}% | `} ${labeling.prefix || ''} ${approximate(entity.datum.value)} ${labeling.suffix || ''}`;
 
           currentId = entity.datum.id;
 

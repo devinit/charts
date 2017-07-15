@@ -37,12 +37,7 @@ export default (element, data = [], config) => {
 
     coloring = null,
 
-    tree = {
-      id: 'id',
-      parent: 'parent',
-      value: 'value',
-      depth: Infinity,
-    },
+    tree,
 
     // Treemap configuration
     treemap: {
