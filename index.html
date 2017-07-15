@@ -922,6 +922,116 @@
 
 <section>
     <div class="chart">
+        <div id="treemap-chart-w-level-indicators"></div>
+    </div>
+    <script>
+      DiCharts.draw({
+        element: document.getElementById('treemap-chart-w-level-indicators'),
+        config: {
+          title: 'Treemap Chart',
+          type: 'treemap',
+          coloring: 'color',
+          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
+          tree: {
+            value: 'value',
+            levels: ['planet', 'continent', 'country', 'city'],
+          },
+          labeling: {
+            suffix: 'tons'
+          }
+        },
+        data: [
+          {
+            "planet": 'Earth',
+          },
+          {
+            "planet": 'Earth',
+            "continent": 'South America',
+            "value": 2.3234e5,
+            "color": "teal"
+          },
+          {
+            "planet": 'Earth',
+            "continent": 'Africa',
+          },
+          {
+            "planet": 'Earth',
+            "continent": 'Europe',
+            "parent": 'World',
+          },
+          {
+            "planet": 'Earth',
+            "continent": 'Europe',
+            "country": 'Portugal',
+            "value": 9.23e4,
+          },
+          {
+            "planet": 'Earth',
+            "continent": 'Europe',
+            "country": 'Spain',
+            "value": 1.203e5,
+          },
+          {
+            "planet": 'Earth',
+            "continent": 'Africa',
+            "country": 'Kenya',
+            "value": 8.234e4,
+          },
+          {
+            "planet": 'Earth',
+            "continent": 'Africa',
+            "country": 'Uganda',
+          },
+          {
+            "planet": 'Earth',
+            "continent": 'Africa',
+            "country": 'Uganda',
+            "city": 'Kampala',
+            "value": 3e4,
+          },
+          {
+            "planet": 'Earth',
+            "continent": 'Africa',
+            "country": 'Uganda',
+            "city": 'Jinja',
+            "value": 2e4,
+          },
+        ]
+      })
+    </script>
+</section>
+
+<section>
+    <div class="chart">
+        <div id="treemap-chart-from-flat"></div>
+    </div>
+    <script>
+      DiCharts.draw({
+        element: document.getElementById('treemap-chart-from-flat'),
+        config: {
+          title: 'Treemap Chart',
+          type: 'treemap',
+          coloring: 'color',
+          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
+          tree: {
+            'id': 'Country',
+            'value': 'Population',
+          },
+          labeling: {
+            suffix: 'tons'
+          }
+        },
+        data: [
+          {'Country': 'Tanzania', 'Population': 53470000},
+          {'Country': 'Kenya', 'Population': 46050000},
+          {'Country': '‌Uganda', 'Population': 39030000},
+        ]
+      })
+    </script>
+</section>
+
+<section>
+    <div class="chart">
         <div id="compound-treemap-chart"></div>
     </div>
     <script>
