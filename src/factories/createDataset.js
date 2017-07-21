@@ -40,7 +40,7 @@ export const createTreeHierachy = (data, tree) => {
 
   let series = [];
 
-  if  (tree.id && tree.parent && tree.value) {
+  if (tree.id && tree.parent && tree.value) {
     series = data.map(datum => ({
 
       ...datum,
@@ -80,6 +80,8 @@ export const createTreeHierachy = (data, tree) => {
       },
 
       ...data.map(datum => ({
+
+        ...datum,
 
         label: datum[tree.id],
 

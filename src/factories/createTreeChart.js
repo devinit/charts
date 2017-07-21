@@ -112,7 +112,7 @@ export default ({element, plot, config}) => {
   };
 };
 
-export const createColorFiller = (colors, rules, indicator) => d => {
+export const createColorFiller = (colors = [], rules, indicator) => d => {
 
   d.eachBefore((node) => {
     if (node.depth === 0) {
