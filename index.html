@@ -163,7 +163,7 @@
 
 <section>
     <h2>Devinit Charts</h2>
-    <p>Draw charts from svg-like data</p>
+    <p>Draw charts from csv-like data</p>
 
     <div>
         <img src="https://travis-ci.org/devinit/charts.svg?branch=master" alt="Build Status">
@@ -1011,8 +1011,7 @@
         config: {
           title: 'Treemap Chart',
           type: 'treemap',
-          coloring: 'color',
-          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
+          coloring: 'Color',
           tree: {
             'id': 'Country',
             'value': 'Population',
@@ -1022,9 +1021,9 @@
           }
         },
         data: [
-          {'Country': 'Tanzania', 'Population': 53470000},
-          {'Country': 'Kenya', 'Population': 46050000},
-          {'Country': '‌Uganda', 'Population': 39030000},
+          {'Country': 'Tanzania', 'Population': 53470000, Color: 'teal'},
+          {'Country': 'Kenya', 'Population': 46050000, Color: 'yellow'},
+          {'Country': '‌Uganda', 'Population': 39030000, Color: 'orange'},
         ]
       })
     </script>
