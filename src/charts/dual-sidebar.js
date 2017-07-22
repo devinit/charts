@@ -12,8 +12,15 @@ import {createLinearAxisGridLines} from "../factories/createGrid";
  * @public
  * @property {'dual-sidebar'} type
  * @property {'indicator'} splitBy
+ * @property {number} splitBy
  *
  */
+
+/**
+ * @typedef {Object} DualSidebarConfig
+ * @property {number} gutter=100 - Gutter
+ */
+
 export default (element, data, config) => {
 
   const leftPlot = new Plottable.Plots.Bar(config.orientation);
@@ -42,6 +49,10 @@ export default (element, data, config) => {
     linearAxis,
 
     categoryAxis,
+
+    dualSidebar = {
+      gutter: 100
+    }
 
     // ... more config
 
@@ -113,10 +124,15 @@ export default (element, data, config) => {
         axisDirection: 'left',
       }),
 
+      dualSidebar,
+
     }),
   });
 
   table.renderTo(element);
+
+  leftPlot._drawLabels = drawLabels(dualSidebar);
+  rightPlot._drawLabels = drawLabels(dualSidebar);
 
   const chart = {
 
@@ -160,7 +176,7 @@ export default (element, data, config) => {
         // Joins sides into [left, right]
         .reduce(([sides = []], side) => [[...sides, side]], [])
 
-        // Makes sure subgroups on each side has same number of items
+        // Makes sure subgroups on each side have same number of items
         // Creates a dummy items for either subgroup with less number
         // of items
         .map(([left, right]) => {
@@ -170,18 +186,27 @@ export default (element, data, config) => {
             subGroupIds[groupIndex].forEach((subGroupId, subGroupIndex) => {
               const leftSubgroupLength = left[groupIndex][subGroupIndex].length;
               const rightSubgroupLength = right[groupIndex][subGroupIndex].length;
-              const itemToAdd = {value: 0, name: '', group: groupId, subGroup: subGroupId};
-              let numberOfItemsToAdd = Math.abs(leftSubgroupLength - rightSubgroupLength);
 
-              while (numberOfItemsToAdd) {
-                if (leftSubgroupLength > rightSubgroupLength) {
-                  right[groupIndex][subGroupIndex].push(itemToAdd)
-                } else {
-                  left[groupIndex][subGroupIndex].push(itemToAdd)
+              if (leftSubgroupLength > rightSubgroupLength) {
+                for (let i = rightSubgroupLength; i < leftSubgroupLength; i++) {
+                  right[groupIndex][subGroupIndex].push({
+                    ...left[groupIndex][subGroupIndex][i],
+                    [categoryAxis.indicator]: '',
+                    [linearAxis.indicator]: 0,
+                  })
                 }
-
-                numberOfItemsToAdd--;
               }
+
+              else if (leftSubgroupLength < rightSubgroupLength) {
+                for (let j = leftSubgroupLength; j < rightSubgroupLength; j++) {
+                  left[groupIndex][subGroupIndex].push({
+                    ...right[groupIndex][subGroupIndex][j],
+                    [categoryAxis.indicator]: '',
+                    [linearAxis.indicator]: 0,
+                  })
+                }
+              }
+
             })
           );
 
@@ -239,7 +264,7 @@ export default (element, data, config) => {
   return chart;
 };
 
-const drawLabels = function () {
+const drawLabels = (dualSidebar) => function () {
   const entities = this.entities();
   const foreground = this.foreground();
   const data = entities.map(entity => entity.datum);
@@ -268,38 +293,35 @@ const drawLabels = function () {
           .append('text')
           .text(groupId)
           .attr('class', 'group-label')
-          .attr('x', -50)
+          .attr('x', dualSidebar.gutter * -0.5)
           .attr('y', top - 5)
           .attr('text-anchor', 'middle');
+
+        makeUnique(groupEntities.map(entity => entity.datum.subGroup))
+          .map(subGroupId => {
+
+            const subGroupEntities = groupEntities.filter(entity => entity.datum.subGroup === subGroupId);
+
+            const nodes = subGroupEntities
+              .map(entity => entity.selection.node());
+
+            const bBoxes = nodes.map(selection => selection.getBBox());
+
+            const top = Math.min.apply(null, bBoxes.map(box => box.y));
+            const bottom = Math.max.apply(null, bBoxes.map(box => box.y + box.height));
+
+            const y = top + 5 + (bottom - top) / 2;
+
+            foreground
+              .append('text')
+              .text(subGroupId)
+              .attr('class', 'subGroup-label')
+              .attr('x', dualSidebar.gutter * -0.5)
+              .attr('y', y)
+              .attr('text-anchor', 'middle');
+
+          });
       }
-    });
-
-  makeUnique(data.map(d => d.subGroup))
-    .map(subGroupId => {
-
-      const groupEntities = entities.filter(entity => entity.datum.subGroup === subGroupId);
-
-      if (direction > 0) {
-
-        const nodes = groupEntities
-          .map(entity => entity.selection.node());
-
-        const bBoxes = nodes.map(selection => selection.getBBox());
-
-        const top = Math.min.apply(null, bBoxes.map(box => box.y));
-        const bottom = Math.max.apply(null, bBoxes.map(box => box.y + box.height));
-
-        const y = top + 5 + (bottom - top) / 2;
-
-        foreground
-          .append('text')
-          .text(subGroupId)
-          .attr('class', 'subGroup-label')
-          .attr('x', -50)
-          .attr('y', y)
-          .attr('text-anchor', 'middle');
-      }
-
     });
 
   entities
@@ -332,8 +354,6 @@ export const createLinearPlot = ({plot, categoryScale, linearScale, showLabels})
       .labelsEnabled(showLabels)
   }
 
-  plot._drawLabels = drawLabels;
-
   return plot
     .attr('class', d => `${d.group} ${d.subGroup}`)
     .attr('stroke', d => d.color)
@@ -343,7 +363,7 @@ export const createLinearPlot = ({plot, categoryScale, linearScale, showLabels})
     .y(d => d.label, categoryScale);
 };
 
-const createPlotAreaWithAxes = ({leftLinearAxis, rightLinearAxis, leftPlotArea, rightPlotArea, leftCategoryAxis, rightCategoryAxis}) => {
+const createPlotAreaWithAxes = ({leftLinearAxis, rightLinearAxis, leftPlotArea, rightPlotArea, leftCategoryAxis, rightCategoryAxis, dualSidebar}) => {
   const leftBar = new Plottable.Components.Table([
     [rightCategoryAxis, rightPlotArea,],
     [null, rightLinearAxis]
@@ -366,7 +386,7 @@ const createPlotAreaWithAxes = ({leftLinearAxis, rightLinearAxis, leftPlotArea, 
     ],
   ]);
 
-  barTable.columnPadding(100);
+  barTable.columnPadding(dualSidebar.gutter);
 
   table.columnWeight(0, 1);
   table.columnWeight(1, 3);
