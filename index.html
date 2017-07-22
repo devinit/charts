@@ -654,125 +654,180 @@
           titleAlignment: 'center',
           type: 'dual-sidebar',
           orientation: 'horizontal',
-          groupBy: 'flow-type',
-          subGroupBy: 'flow-group',
+          groupBy: 'flow_type',
+          subGroupBy: 'flow_category',
           splitBy: 'direction',
           colors: ['rgb(186, 12, 47)', 'rgb(0, 149, 200)', 'rgb(147, 50, 142)', 'rgb(234, 118, 0)', 'rgb(27, 54, 93)'],
-          coloring: 'color',
           showLabels: true,
           linearAxis: {
             showAxis: true,
             indicator: 'value',
             ticking: 'end',
-            axisMaximum: 2e10
+            axisMaximum: 3e9
           },
           categoryAxis: {
             showAxis: true,
-            indicator: 'flow-name',
+            indicator: 'flow_name',
             innerPadding: 1.5,
             outerPadding: 4,
+          },
+          dualSidebar: {
+            gutter: 150
           }
         },
         data: [
           {
-            "id": "GB",
-            "year": 2010,
-            "direction": "out",
-            "flow-type": "official",
-            "flow-name": "oda-out",
-            "value": 14426314980.947468,
-            "concept": "intl-flows-donors",
-            "flow-group": "oda"
+            "uid": "S1AUpyG-Lb",
+            "year": 2015,
+            "value": 2761410000,
+            "flow_name": "oda-in",
+            "flow_category": "ODA",
+            "flow_type": "official",
+            "direction": "in"
           },
           {
-            "id": "GB",
-            "year": 2010,
-            "direction": "in",
-            "flow-type": "official",
-            "flow-name": "oda-capital-repay",
-            "value": 373902497.4242109,
-            "concept": "intl-flows-donors",
-            "flow-group": "oda"
+            "uid": "Sy0eUTJMZLZ",
+            "year": 2015,
+            "value": 73980000,
+            "flow_name": "oda-interest-payments-out",
+            "flow_category": "ODA",
+            "flow_type": "official",
+            "direction": "out"
           },
           {
-            "id": "GB",
-            "year": 2010,
-            "direction": "in",
-            "flow-type": "official",
-            "flow-name": "oda-interest",
-            "value": 0,
-            "concept": "intl-flows-donors",
-            "flow-group": "oda"
+            "uid": "rJ0ZLakfWUZ",
+            "year": 2015,
+            "value": 282830000,
+            "flow_name": "oda-capital-payments-out",
+            "flow_category": "ODA",
+            "flow_type": "official",
+            "direction": "out"
           },
           {
-            "id": "GB",
-            "year": 2010,
-            "direction": "out",
-            "flow-type": "official",
-            "flow-name": "oofs-out",
-            "value": 29400199.253297247,
-            "concept": "intl-flows-donors",
-            "flow-group": "oofs"
+            "uid": "HJCMUpkM-UZ",
+            "year": 2015,
+            "value": 399180000,
+            "flow_name": "oofs-in",
+            "flow_category": "OOFs",
+            "flow_type": "official",
+            "direction": "in"
           },
           {
-            "id": "GB",
-            "year": 2010,
-            "direction": "in",
-            "flow-type": "official",
-            "flow-name": "oofs-interest",
-            "value": 0,
-            "concept": "intl-flows-donors",
-            "flow-group": "oofs"
+            "uid": "Hy0QLpkzbLW",
+            "year": 2015,
+            "value": 31410000,
+            "flow_name": "oofs-interest-payments-out",
+            "flow_category": "OOFs",
+            "flow_type": "official",
+            "direction": "out"
           },
           {
-            "id": "GB",
-            "year": 2010,
-            "direction": "in",
-            "flow-type": "official",
-            "flow-name": "oofs-capital-repay",
-            "value": 49886680.095122464,
-            "concept": "intl-flows-donors",
-            "flow-group": "oofs"
+            "uid": "r1CELTyfbL-",
+            "year": 2015,
+            "value": 79920000,
+            "flow_name": "oofs-capital-payments-out",
+            "flow_category": "OOFs",
+            "flow_type": "official",
+            "direction": "out"
           },
           {
-            "id": "GB",
-            "year": 2010,
-            "direction": "out",
-            "flow-type": "official",
-            "flow-name": "dfis-out",
-            "value": 0,
-            "concept": "intl-flows-donors",
-            "flow-group": "dfis"
+            "uid": "ByurUa1fZIZ",
+            "year": 2015,
+            "value": 918491000,
+            "flow_name": "long-debt-net-official-in",
+            "flow_category": "Long term debt",
+            "flow_type": "official",
+            "direction": "in"
           },
           {
-            "id": "GB",
-            "year": 2010,
-            "direction": "out",
-            "flow-type": "commercial",
-            "flow-name": "fdi-devcountries",
-            "value": 0,
-            "concept": "intl-flows-donors",
-            "flow-group": "fdi"
+            "uid": "Sk_L8T1fbUZ",
+            "year": 2015,
+            "value": 21944000,
+            "flow_name": "long-debt-off-amt-out",
+            "flow_category": "Long term debt",
+            "flow_type": "official",
+            "direction": "out"
           },
           {
-            "id": "GB",
-            "year": 2010,
-            "direction": "out",
-            "flow-type": "private",
-            "flow-name": "remittances-devcountries",
-            "value": 13866314048.571848,
-            "concept": "intl-flows-donors",
-            "flow-group": "remittances"
+            "uid": "HkOw8pyz-UZ",
+            "year": 2015,
+            "value": 125907000,
+            "flow_name": "long-debt-off-int-out",
+            "flow_category": "Long term debt",
+            "flow_type": "official",
+            "direction": "out"
           },
           {
-            "id": "GB",
-            "year": 2010,
-            "direction": "out",
-            "flow-type": "private",
-            "flow-name": "pda-out",
-            "value": 0,
-            "concept": "intl-flows-donors",
-            "flow-group": "pda"
+            "uid": "Hy__UT1MZLW",
+            "year": 2015,
+            "value": 1437000004.3704,
+            "flow_name": "fdi-in",
+            "flow_category": "FDI",
+            "flow_type": "commercial",
+            "direction": "in"
+          },
+          {
+            "uid": "rJOFLTkz-UZ",
+            "year": 2015,
+            "value": 217000004.3704,
+            "flow_name": "fdi-out",
+            "flow_category": "FDI",
+            "flow_type": "commercial",
+            "direction": "out"
+          },
+          {
+            "uid": "Hy8o8pkzWU-",
+            "year": 2015,
+            "value": 754104000,
+            "flow_name": "long-debt-disbursement-in",
+            "flow_category": "Long term debt",
+            "flow_type": "commercial",
+            "direction": "in"
+          },
+          {
+            "uid": "HyUnI6kzWIZ",
+            "year": 2015,
+            "value": 19786000,
+            "flow_name": "long-debt-comm-amt-out",
+            "flow_category": "Long term debt",
+            "flow_type": "commercial",
+            "direction": "out"
+          },
+          {
+            "uid": "BkL68aJGZLZ",
+            "year": 2015,
+            "value": 65811000,
+            "flow_name": "long-debt-comm-int-out",
+            "flow_category": "Long term debt",
+            "flow_type": "commercial",
+            "direction": "out"
+          },
+          {
+            "uid": "HyxR8TJGbUb",
+            "year": 2015,
+            "value": 612203000,
+            "flow_name": "short-debt-net-flow-in",
+            "flow_category": "Short term debt",
+            "flow_type": "commercial",
+            "direction": "in"
+          },
+          {
+            "uid": "rygkxI6kfZ8W",
+            "year": 2015,
+            "value": 38007000,
+            "flow_name": "short-debt-interest-out",
+            "flow_category": "Short term debt",
+            "flow_type": "commercial",
+            "direction": "out"
+          },
+          {
+            "uid": "BJaxlLa1GZ8Z",
+            "year": 2015,
+            "value": 1561429806.63255,
+            "flow_name": "remittances-in",
+            "flow_category": "Remittances",
+            "flow_type": "private",
+            "direction": "in"
           }
         ]
       })
