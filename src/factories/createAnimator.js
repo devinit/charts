@@ -1,58 +1,59 @@
+import {easeCircleInOut as ease} from "d3";
 
-// Eases scales in a linear fashion ^_^
+// Eases scales ^_^
 // ...
 export const createScaleAnimator = (duration) => {
 
   const frequency = 1000 / 24;
   const frames = duration / frequency;
-  const intervals = [];
+  let animationFrame, startTime;
 
   // Animator function:
   // takes an array of scales and a list of transformations for each scale
   return (scales, ...to) => new Promise((resolve) => {
 
-    // Stop all intervals
-    while (intervals.length) clearInterval(intervals.pop());
+    const initial = scales
+      .map(scale => scale.domain());
 
-    const steps = scales
-      .map(scale => scale.domain())
+    const diffs = initial
       .map(([fromMin, fromMax], i) => {
         const [toMin, toMax] = to[i];
 
         return [
-          (fromMin - toMin) / frames,
-          (toMax - fromMax) / frames
+          fromMin - toMin,
+          toMax - fromMax
         ]
       });
 
+    const animate = (timestamp) => {
+      const runtime = timestamp - startTime;
+      const progress = Math.min(runtime / duration, 1);
 
-    // TODO: Use animation frame
-    const interval = setInterval(() => {
-      const movements = scales
-        .map((scale, index) => {
+      const movements = initial
+        .map(([fn, fx], index) => {
+          const [dn, dx] = diffs[index];
 
-          const [fn, fx] = scale.domain();
-          const [toMin, toMax] = to[index];
-          const [dn, dx] = steps[index];
-
-          if (!(fn === toMin && fx === toMax)) {
-            return [
-              Math.abs(fn - toMin) < Math.abs(dn) ? toMin : fn - dn,
-              Math.abs(toMax - fx) < Math.abs(dx) ? toMax : fx + dx
-            ]
-          }
+          return [
+            fn - dn * ease(progress, 1, 0.2),
+            fx + dx * ease(progress, 1, 0.2)
+          ]
         });
 
-      if (movements.some(f => f)) {
-        focusScales(scales, ...movements)
+      focusScales(scales, ...movements);
+
+      if (runtime < duration) {
+        requestAnimationFrame(animate);
       } else {
-        clearInterval(interval);
+        cancelAnimationFrame(animationFrame);
         resolve()
       }
 
-    }, frequency);
+    };
 
-    intervals.push(interval);
+    requestAnimationFrame(timestamp => {
+      startTime = timestamp;
+      animate(timestamp)
+    })
   });
 
 };

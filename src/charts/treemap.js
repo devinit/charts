@@ -68,7 +68,7 @@ export default (element, data = [], config) => {
 
   const colorize = createColorFiller(colors, [], coloring);
 
-  const transform = root => layout(root).leaves().filter(d => d.depth <= tree.depth || Infinity);
+  const transform = root => layout(root).leaves();
 
   let listeners = [];
 
@@ -129,8 +129,11 @@ const createTreemapOnClickListener = (orientation, listeners) => {
     const previousDomain = [xScale.domain(), yScale.domain()];
 
     const shouldReset = [[nextDomain, previousDomain]]
-      .every(([[[a, b], [c, d]], [[w, x], [y, z]]]) =>
-      a === w && b === x && c === y && d === z);
+      .every(([[[a, b], [c, d]], [[w, x], [y, z]]]) => {
+        const diff = (a + b + c + d) - (w + x + y + z);
+
+        return +(diff.toFixed(2)) === 0
+      });
 
     const onAnimated = () => listeners.forEach(callback => callback(datum.data));
 
