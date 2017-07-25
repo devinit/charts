@@ -113,7 +113,7 @@ export const createTreeHierachy = (data, tree) => {
     .sum(node => {
       return node.children ? 0 : node.data.value;
     })
-    .sort((a, b) => a.value - b.value);
+    .sort((a, b) => b.value - a.value);
 
 };
 
