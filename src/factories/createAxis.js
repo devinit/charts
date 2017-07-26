@@ -28,6 +28,18 @@ import {configureAxisTicking, configureTimeAxisTicking} from "./configureTicking
  * @property {number} outerPadding - Outer Padding
  */
 
+/**
+ *
+ * @typedef {Object} TimeAxis - Category Axis Configuration
+ * @private
+ * @property {indicator} indicator - Data Indicator
+ * @property {boolean} showAxis - Show Axis
+ * @property {'years'|'months'|'days'|'hours'} ticking - Ticking method
+ * @property {number} tickingStep - Ticking interval
+ * @property {string} axisLabel - Axis Label
+ * @property {number} axisMargin - Margin
+ */
+
 export const createNumericAxis = (config) => {
 
   const {showAxis = true, axisOrientation, axisScale, axisLabel = null, axisMargin = 10, absolute = false, ticking = 'all'} = config;

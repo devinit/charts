@@ -137,7 +137,7 @@ export default ({element, plot, config}) => {
 const createTimeAnchor = (table, timeScale, anchor, legend = {}, listeners) => {
 
   const originDate = new Date(timeScale.domainMin());
-  const startDate = anchor.start ? new Date(anchor.start) : originDate;
+  const startDate = anchor.start ? new Date(anchor.start.toString()) : originDate;
   let currentYear = startDate.getFullYear().toString();
 
   const minYear = new Date(timeScale.domainMin()).getFullYear();
@@ -173,7 +173,7 @@ const createTimeAnchor = (table, timeScale, anchor, legend = {}, listeners) => {
     .attr('cx', xPosition)
     .attr('cy', topPosition)
     .attr('fill', 'rgb(232, 68, 58)')
-    .attr('stroke', '#aaa')
+    .attr('stroke', '#444')
     .attr('r', topPosition);
 
   const text = foreground.append('text')
@@ -191,7 +191,7 @@ const createTimeAnchor = (table, timeScale, anchor, legend = {}, listeners) => {
     .attr('x2', xPosition + 1)
     .attr('y1', topPosition + 22)
     .attr('y2', timeAxisBounds.top - foregroundBounds.top)
-    .attr('stroke', 'rgb(232, 68, 58)')
+    .attr('stroke', '#444')
     .attr('stroke-width', 2);
 
   const changeAnchorPosition = (year) => {
@@ -261,7 +261,7 @@ export const createTimePlot = ({plot, timeScale, linearScale}) => {
     .attr('stroke', d => d.color)
     .attr('fill', d => d.color)
     .attr('fill-opacity', d => d.opacity)
-    .x(d => new Date(d.label), timeScale)
+    .x(d => new Date(d.label.toString()), timeScale)
     .y(d => d.value, linearScale)
     .datasets([new Plottable.Dataset([])]);
 };

@@ -26,8 +26,8 @@ export const createTimeScale = (config = {}) => {
   const {axisMinimum = null, axisMaximum = null} = config;
 
   const scale = new Plottable.Scales.Time();
-  scale.domainMin(new Date(axisMinimum));
-  scale.domainMax(new Date(axisMaximum));
+  axisMaximum && scale.domainMin(new Date(axisMinimum.toString()));
+  axisMaximum && scale.domainMax(new Date(axisMaximum.toString()));
 
   // ...
 
