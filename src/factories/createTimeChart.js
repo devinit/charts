@@ -29,9 +29,7 @@ export default ({element, plot, config}) => {
 
     timeAxis,
 
-    anchor = {
-      start: 0,
-    },
+    anchor,
 
     legend = {},
 
@@ -54,7 +52,9 @@ export default ({element, plot, config}) => {
 
       linearAxis: createNumericAxis({...linearAxis, axisScale: linearScale, axisOrientation: 'vertical'}),
 
-      categoryAxis: createTimeAxis({...timeAxis, axisScale: timeScale, axisOrientation: 'horizontal'})
+      categoryAxis: createTimeAxis({...timeAxis, axisScale: timeScale, axisOrientation: 'horizontal'}),
+
+      anchor,
     }),
 
     legend: createColorLegend(colorScale, legend),
@@ -80,7 +80,9 @@ export default ({element, plot, config}) => {
 
   table.renderTo(element);
 
-  table.onAnchor(onTableAnchored);
+  if (anchor) {
+    table.onAnchor(onTableAnchored);
+  }
 
   const chart = {
 
@@ -134,7 +136,7 @@ export default ({element, plot, config}) => {
 };
 
 
-const createTimeAnchor = (table, timeScale, anchor, legend = {}, listeners) => {
+const createTimeAnchor = (table, timeScale, anchor = {start: 0}, legend = {}, listeners) => {
 
   const originDate = new Date(timeScale.domainMin());
   const startDate = anchor.start ? new Date(anchor.start.toString()) : originDate;
@@ -266,14 +268,17 @@ export const createTimePlot = ({plot, timeScale, linearScale}) => {
     .datasets([new Plottable.Dataset([])]);
 };
 
-const createPlotAreaWithAxes = ({linearAxis, plotArea, categoryAxis}) => {
+const createPlotAreaWithAxes = ({linearAxis, plotArea, categoryAxis, anchor}) => {
   const table = new Plottable.Components.Table([
     [null, null, null],
     [linearAxis, plotArea, null],
     [null, categoryAxis, null]
   ]);
 
-  table.rowWeight(0, 2);
+  if (anchor) {
+    table.rowWeight(0, 2);
+  }
+
   table.rowWeight(1, 3);
 
   return table;
