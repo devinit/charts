@@ -15,16 +15,8 @@ import approximate from "approximate-number";
  * @property {'left'|'center'|'right'} titleAlignment=left - Title Alignment
  * @property {string[]} colors - Colors
  * @property {indicator} coloring - Color Indicator
- * @property {Labelling} labeling - Label Configuration
+ * @property {Labeling} labeling - Label Configuration
  * @property {Tree} tree - Hierachy Configuration
- */
-
-/**
- * @typedef {Object} Labelling
- * @private
- * @property {boolean} showLabels=true
- * @property {string} prefix
- * @property {string} suffix
  */
 
 /**

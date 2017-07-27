@@ -2,14 +2,15 @@ import approximate from "approximate-number";
 import {color} from "d3"
 
 /**
- * @typedef {Object} Labelling
- * @property {string} prefix
- * @property {string} suffix
+ * @typedef {Object} Labeling
+ * @property {boolean} showLabels=true - Show Labels
+ * @property {string} prefix - Prefix
+ * @property {string} suffix - Suffix
  *
  */
 export const createTreeChartLabeler =  (config, percentage = d => 100) => {
   const {
-    prefix = '', suffix = ''
+    showLabels = true, prefix = '', suffix = ''
   } = config;
 
   return function () {

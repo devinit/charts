@@ -16,7 +16,7 @@ import {createLinearAxisGridLines} from "./createGrid";
  * @property {'left'|'center'|'right'} titleAlignment=left - Title Alignment
  * @property {('vertical'|'horizontal')} orientation=vertical - Orientation
  * @property {indicator} groupBy - Groups
- * @property {boolean} showLabels - Show Labels
+ * @property {Labeling} labeling - Labeling
  * @property {string[]} colors - Colors
  * @property {indicator} coloring - Color Indicator
  * @property {NumericAxis} linearAxis - Linear Axis
@@ -40,7 +40,7 @@ export const createLinearChart = ({element, plot, config}) => {
 
     coloring = null,
 
-    showLabels = true,
+    labeling,
 
     linearAxis,
 
@@ -63,7 +63,7 @@ export const createLinearChart = ({element, plot, config}) => {
     chart: createPlotAreaWithAxes(orientation, {
 
       plotArea: createPlotWithGridlines({
-        plot: createLinearPlot({plot, orientation, categoryScale, linearScale, showLabels}),
+        plot: createLinearPlot({plot, orientation, categoryScale, linearScale, labeling}),
         grid: createLinearAxisGridLines({...linearAxis, orientation, scale: linearScale})
       }),
 
@@ -117,10 +117,14 @@ export const createPlotWithGridlines = ({plot, grid}) => {
   return grid ? new Plottable.Components.Group([grid, plot]) : plot
 };
 
-export const createLinearPlot = ({plot, orientation, categoryScale, linearScale, showLabels}) => {
+export const createLinearPlot = ({plot, orientation, categoryScale, linearScale, labeling = {}}) => {
+  const {
+    showLabels = true, prefix = '', suffix = ''
+  } = labeling;
+
   if (showLabels && plot.labelsEnabled) {
     plot
-      .labelFormatter(d => approximate(d))
+      .labelFormatter(d => `${prefix}${approximate(d)}${suffix}`)
       .labelsEnabled(showLabels)
   }
 
