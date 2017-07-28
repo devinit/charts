@@ -156,32 +156,34 @@ export const createTipper = (container, labeling, percentage = d => 100) => {
 
         const [entity] = plot.entitiesAt(p);
 
-        tooltipAnchor.attr('cx', p.x).attr('cy', p.y);
-        tip.hide();
+        requestAnimationFrame(() => {
+          tooltipAnchor.attr('cx', p.x).attr('cy', p.y);
+          tip.hide();
 
-        if (entity) tip.show();
+          if (entity) tip.show();
 
-        if (entity && entity.datum.id !== currentId) {
-          const percent = percentage(entity.datum);
-          tip._tooltipNode.querySelector('#tt-title').innerText = entity.datum.id;
-          tip._tooltipNode.querySelector('#tt-body').innerText
-            = `${percent === 100 ? '' : `${percent}% | `} ${labeling.prefix || ''} ${approximate(entity.datum.value)} ${labeling.suffix || ''}`;
+          if (entity && entity.datum.id !== currentId) {
+            const percent = percentage(entity.datum);
+            tip._tooltipNode.querySelector('#tt-title').innerText = entity.datum.id;
+            tip._tooltipNode.querySelector('#tt-body').innerText
+              = `${percent === 100 ? '' : `${percent}% | `} ${labeling.prefix || ''} ${approximate(entity.datum.value)} ${labeling.suffix || ''}`;
 
-          currentId = entity.datum.id;
+            currentId = entity.datum.id;
 
-          plot.entities()
-            .forEach(entity => {
-              if (entity.selection.attr('initial-fill')) {
-                entity.selection.attr("fill", entity.selection.attr('initial-fill'));
-              } else {
-                entity.selection.attr("initial-fill", entity.selection.attr('fill'));
-              }
-            });
+            plot.entities()
+              .forEach(entity => {
+                if (entity.selection.attr('initial-fill')) {
+                  entity.selection.attr("fill", entity.selection.attr('initial-fill'));
+                } else {
+                  entity.selection.attr("initial-fill", entity.selection.attr('fill'));
+                }
+              });
 
-          const fill = color(entity.selection.attr('initial-fill')).darker(0.8);
+            const fill = color(entity.selection.attr('initial-fill')).darker(0.8);
 
-          entity.selection.attr("fill", fill);
-        }
+            entity.selection.attr("fill", fill);
+          }
+        })
 
       })
       .onPointerExit(() => {

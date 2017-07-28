@@ -8,6 +8,7 @@ import {createPlotWithGridlines} from "./createLinearChart";
 import {createNumericAxis, createTimeAxis} from "./createAxis";
 import {createLinearScale, createTimeScale} from "./createScale";
 import {makeUnique} from "./createDataset";
+import {createLineTipper} from "../charts/line";
 
 export default ({element, plot, config}) => {
 
@@ -22,6 +23,8 @@ export default ({element, plot, config}) => {
     colors = [],
 
     coloring = null,
+
+    labeling,
 
     showLabels = true,
 
@@ -64,23 +67,25 @@ export default ({element, plot, config}) => {
 
   const listeners = [];
 
-  let moveAnchor = null;
+  plot.onAnchor(createLineTipper(element, labeling, timeScale, 'vertical'));
 
-  let onTableAnchored = (table) => {
-    // waiting till table is setup, hopefully 500ms will
-    // always be sufficient
-    // TODO: Use onRender event instead
-    // see https://github.com/palantir/plottable/issues/1755
-    setTimeout(() => {
-      moveAnchor = createTimeAnchor(table, timeScale, anchor, legend, listeners)
-    }, 500);
-  };
+  let moveAnchor = null;
 
   table.addClass('timeline');
 
   table.renderTo(element);
 
   if (anchor) {
+    let onTableAnchored = (table) => {
+      // waiting till table is setup, hopefully 500ms will
+      // always be sufficient
+      // TODO: Use onRender event instead
+      // see https://github.com/palantir/plottable/issues/1755
+      setTimeout(() => {
+        moveAnchor = createTimeAnchor(table, timeScale, anchor, legend, listeners)
+      }, 500);
+    };
+
     table.onAnchor(onTableAnchored);
   }
 
@@ -103,6 +108,7 @@ export default ({element, plot, config}) => {
           .filter(d => d[groupBy] === groupId)
           .map((item) => {
             return {
+              group: groupId,
               label: item[timeAxis.indicator],
               value: item[linearAxis.indicator],
               color: item[coloring] || colors[index] || '#abc',

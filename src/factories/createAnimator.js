@@ -3,11 +3,6 @@ import {easeCircleInOut as ease} from "d3";
 // Eases scales ^_^
 // ...
 export const createScaleAnimator = (duration) => {
-
-  const frequency = 1000 / 24;
-  const frames = duration / frequency;
-  let animationFrame, startTime;
-
   // Animator function:
   // takes an array of scales and a list of transformations for each scale
   return (scales, ...to) => new Promise((resolve) => {
@@ -25,9 +20,7 @@ export const createScaleAnimator = (duration) => {
         ]
       });
 
-    const animate = (timestamp) => {
-      const runtime = timestamp - startTime;
-      const progress = Math.min(runtime / duration, 1);
+    const stepFn = progress => {
 
       const movements = initial
         .map(([fn, fx], index) => {
@@ -40,22 +33,59 @@ export const createScaleAnimator = (duration) => {
         });
 
       focusScales(scales, ...movements);
-
-      if (runtime < duration) {
-        requestAnimationFrame(animate);
-      } else {
-        cancelAnimationFrame(animationFrame);
-        resolve()
-      }
-
     };
 
     requestAnimationFrame(timestamp => {
-      startTime = timestamp;
+      const animate = createAnimator(stepFn, timestamp, duration, resolve);
       animate(timestamp)
     })
   });
 
+};
+
+export const createTooltipAnimator = (duration, anchor, tooltip) => {
+
+  return (position) => new Promise((resolve, reject) => {
+
+    const initial = anchor.node().getBBox();
+
+    const diff = {
+      x: position.x - initial.x,
+      y: position.y - initial.y,
+    };
+
+    const stepFn = progress => {
+      tooltip.hide();
+      anchor.attr('cx', initial.x + diff.x * ease(progress, 1, 0.2));
+      anchor.attr('cy', initial.y + diff.y * ease(progress, 1, 0.2));
+      tooltip.show();
+    };
+
+    requestAnimationFrame(timestamp => {
+      const animate = createAnimator(stepFn, timestamp, duration, resolve);
+      animate(timestamp)
+    });
+  })
+};
+
+const createAnimator = (stepFn, startTime, duration, callback) => {
+
+  let animationFrame = null;
+
+  return function animate(timestamp) {
+    const runtime = timestamp - startTime;
+    const progress = Math.min(runtime / duration, 1);
+
+    stepFn(progress);
+
+    if (runtime < duration) {
+      animationFrame = requestAnimationFrame(animate);
+    } else {
+      cancelAnimationFrame(animationFrame);
+      callback();
+    }
+
+  }
 };
 
 const focusScales = (scales, ...domains) => {

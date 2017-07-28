@@ -80,6 +80,11 @@ export const createLinearChart = ({element, plot, config}) => {
   table.renderTo(element);
 
   return {
+    linearScale,
+
+    categoryScale,
+
+    colorScale,
 
     table,
 
@@ -98,6 +103,7 @@ export const createLinearChart = ({element, plot, config}) => {
           .filter(d => d[groupBy] === groupId)
           .map((item) => {
             return {
+              group: groupId,
               label: item[categoryAxis.indicator],
               value: item[linearAxis.indicator],
               color: item[coloring] || colors[index] || '#abc',
