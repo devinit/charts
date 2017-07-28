@@ -114,10 +114,10 @@ export const createLineTipper = (container, labeling = {}, scale, orientation = 
         .reduce((_, d) => d);
 
       if (entities.length && currentHash !== position.x.toString() + position.y.toString()) {
-        tooltip.hide();
+        tip.hide();
         tooltipAnchor.attr('cx', position.x);
         tooltipAnchor.attr('cy', position.y);
-        tooltip.show();
+        tip.show();
           tip._tooltipNode.querySelector('#tt-title').innerText = entities[0].datum.label;
           tip._tooltipNode.querySelector('#tt-body').innerHTML =
             entities.map(e => template(e.datum)).join('');
