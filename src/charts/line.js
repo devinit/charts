@@ -76,8 +76,6 @@ export const createLineTipper = (container, labeling = {}, scale, orientation = 
     `,
   });
 
-  const animate = createTooltipAnimator(1, tooltipAnchor, tip);
-
   const template = datum => `
       <div>
         <span style="background: ${datum.color}; width: 10px; height: 10px; display: inline-block"></span>
@@ -116,11 +114,13 @@ export const createLineTipper = (container, labeling = {}, scale, orientation = 
         .reduce((_, d) => d);
 
       if (entities.length && currentHash !== position.x.toString() + position.y.toString()) {
-        animate(position).then(() => {
+        tooltip.hide();
+        tooltipAnchor.attr('cx', position.x);
+        tooltipAnchor.attr('cy', position.y);
+        tooltip.show();
           tip._tooltipNode.querySelector('#tt-title').innerText = entities[0].datum.label;
           tip._tooltipNode.querySelector('#tt-body').innerHTML =
             entities.map(e => template(e.datum)).join('');
-        });
         currentHash = position.x.toString() + position.y.toString()
 
       }
