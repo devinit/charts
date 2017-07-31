@@ -103,19 +103,34 @@ export default ({element, plot, config}) => {
           .range(groupIds.map((d, i) => colors[i] || '#abc'));
       }
 
-      const datasets = groupIds.map((groupId, index) =>
-        data
+      const startYear = timeAxis.axisMinimum || Math.min.apply(null, data.map(d => d[timeAxis.indicator]));
+      const stopYear = timeAxis.axisMaximum || Math.max.apply(null, data.map(d => d[timeAxis.indicator]));
+
+      const datasets = groupIds.map((groupId, index) => {
+        const dataset = data
           .filter(d => d[groupBy] === groupId)
-          .map((item) => {
-            return {
+          .reduce((map, item) => ({...map, [item[timeAxis.indicator]]: {
+            group: groupId,
+            label: item[timeAxis.indicator],
+            value: item[linearAxis.indicator],
+            color: item[coloring] || colors[index] || '#abc',
+            opacity: 1,
+          }}), {});
+
+        for (let year = startYear; year <= stopYear; year++) {
+          if (!dataset[year]) {
+            dataset[year] = {
               group: groupId,
-              label: item[timeAxis.indicator],
-              value: item[linearAxis.indicator],
-              color: item[coloring] || colors[index] || '#abc',
+              label: year,
+              value: 0,
+              color: colors[index] || '#abc',
               opacity: 1,
             }
-          })
-      );
+          }
+        }
+
+        return Object.keys(dataset).map(year => dataset[year])
+      });
 
       plot.datasets(datasets.map(d => new Plottable.Dataset(d)));
 
