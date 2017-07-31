@@ -1,5 +1,5 @@
 import Plottable from "plottable";
-import approximate from 'approximate-number';
+import approximate from "approximate-number";
 import {createChartTable} from "./createTable";
 import {createTitle} from "./createTitle";
 import {createColorLegend} from "./createLegend";
@@ -7,6 +7,7 @@ import {makeUnique} from "./createDataset";
 import {createCategoryScale, createLinearScale} from "./createScale";
 import {createCategoryAxis, createNumericAxis} from "./createAxis";
 import {createLinearAxisGridLines} from "./createGrid";
+import {createScaleAnimator} from "./createAnimator";
 
 /**
  * @typedef {Object} LinearCategoryChart
@@ -77,6 +78,8 @@ export const createLinearChart = ({element, plot, config}) => {
     legendPosition: legend.position || 'bottom'
   });
 
+  const animate = createScaleAnimator(500);
+
   table.renderTo(element);
 
   return {
@@ -112,8 +115,19 @@ export const createLinearChart = ({element, plot, config}) => {
           })
       );
 
-      plot.datasets(datasets.map(d => new Plottable.Dataset(d)));
+      if (plot.datasets().length) {
+        const sums = [];
 
+        for (let i = 0; i < Math.max.apply(null, datasets.map(d => d.length)); i++) {
+          sums[i] = datasets.reduce((sum, set) => sum + (set[i] ? set[i].value : 0), 0)
+        }
+
+        const axisMaximum = Math.max.apply(null, sums);
+
+        animate([linearScale], [linearAxis.axisMinimum || 0, axisMaximum]);
+      }
+
+      plot.datasets(datasets.map(d => new Plottable.Dataset(d)));
     },
 
   };

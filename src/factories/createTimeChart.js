@@ -9,6 +9,7 @@ import {createNumericAxis, createTimeAxis} from "./createAxis";
 import {createLinearScale, createTimeScale} from "./createScale";
 import {makeUnique} from "./createDataset";
 import {createLineTipper} from "../charts/line";
+import {createScaleAnimator} from "./createAnimator";
 
 export default ({element, plot, config}) => {
 
@@ -64,6 +65,8 @@ export default ({element, plot, config}) => {
 
     legendPosition: legend.position || 'bottom'
   });
+
+  const animate = createScaleAnimator(500);
 
   const listeners = [];
 
@@ -146,6 +149,18 @@ export default ({element, plot, config}) => {
           )
       });
 
+      if (plot.datasets().length) {
+        const sums = [];
+
+        for (let i = 0; i < Math.max.apply(null, datasets.map(d => d.length)); i++) {
+          sums[i] = datasets.reduce((sum, set) => sum + (set[i] ? set[i].value : 0), 0)
+        }
+
+        const axisMaximum = Math.max.apply(null, sums);
+
+        animate([linearScale], [linearAxis.axisMinimum || 0, axisMaximum]);
+      }
+
       plot.datasets(datasets.map(d => new Plottable.Dataset(d)));
 
     },
@@ -159,7 +174,7 @@ export default ({element, plot, config}) => {
     moveAnchor: year => {
       if (!moveAnchor) {
         // Retry if anchor is not ready
-        setTimeout(() => chart.moveAnchor(year), 200);
+        setTimeout(() => chart.moveAnchor(year.toString()), 200);
       } else {
         moveAnchor(year);
       }
@@ -238,6 +253,12 @@ const createTimeAnchor = (table, timeScale, anchor = {start: 0}, legend = {}, li
     // -- remove this condition at your own risk.
     // just kidding, i think
     if (year !== currentYear && year >= minYear && year <= maxYear) {
+
+      const foregroundBounds = foreground.node().getBoundingClientRect();
+      const timeAxisBounds = timeAxis.content().node().getBoundingClientRect();
+
+      const leftOffset = timeAxisBounds.left - foregroundBounds.left;
+
       const xPosition = timeScale.scaleTransformation(year);
 
       circle.attr('cx', leftOffset + xPosition);
@@ -293,14 +314,12 @@ const createTimeAnchor = (table, timeScale, anchor = {start: 0}, legend = {}, li
 };
 
 export const createTimePlot = ({plot, timeScale, linearScale}) => {
-
   return plot
     .attr('stroke', d => d.color)
     .attr('fill', d => d.color)
     .attr('fill-opacity', d => d.opacity)
     .x(d => new Date(d.label.toString()), timeScale)
     .y(d => d.value, linearScale)
-    .datasets([new Plottable.Dataset([])]);
 };
 
 const createPlotAreaWithAxes = ({linearAxis, plotArea, categoryAxis, anchor}) => {
