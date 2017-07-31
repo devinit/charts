@@ -107,8 +107,9 @@ export default ({element, plot, config}) => {
       const stopYear = timeAxis.axisMaximum || Math.max.apply(null, data.map(d => d[timeAxis.indicator]));
 
       const datasets = groupIds.map((groupId, index) => {
-        const dataset = data
-          .filter(d => d[groupBy] === groupId)
+        const group = data.filter(d => d[groupBy] === groupId);
+
+        const dataset = group
           .reduce((map, item) => ({
             ...map,
 
@@ -130,7 +131,7 @@ export default ({element, plot, config}) => {
               group: groupId,
               label: year,
               value: 0,
-              color: colors[index] || '#abc',
+              color: group[0][coloring] || colors[index] || '#abc',
               opacity: 1,
             }]
           }
