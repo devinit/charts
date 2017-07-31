@@ -1,5 +1,5 @@
 import Plottable from "plottable";
-import {drag, event} from 'd3';
+import {drag, event} from "d3";
 import {createTitle} from "./createTitle";
 import {createChartTable} from "./createTable";
 import {createColorLegend} from "./createLegend";
@@ -109,27 +109,40 @@ export default ({element, plot, config}) => {
       const datasets = groupIds.map((groupId, index) => {
         const dataset = data
           .filter(d => d[groupBy] === groupId)
-          .reduce((map, item) => ({...map, [item[timeAxis.indicator]]: {
-            group: groupId,
-            label: item[timeAxis.indicator],
-            value: item[linearAxis.indicator],
-            color: item[coloring] || colors[index] || '#abc',
-            opacity: 1,
-          }}), {});
+          .reduce((map, item) => ({
+            ...map,
+
+            [item[timeAxis.indicator]]: [
+              ...(map[item[timeAxis.indicator]] || []),
+              {
+                group: groupId,
+                label: item[timeAxis.indicator],
+                value: item[linearAxis.indicator],
+                color: item[coloring] || colors[index] || '#abc',
+                opacity: 1,
+              }
+            ]
+          }), {});
 
         for (let year = startYear; year <= stopYear; year++) {
           if (!dataset[year]) {
-            dataset[year] = {
+            dataset[year] = [{
               group: groupId,
               label: year,
               value: 0,
               color: colors[index] || '#abc',
               opacity: 1,
-            }
+            }]
           }
         }
 
-        return Object.keys(dataset).map(year => dataset[year])
+        return Object.keys(dataset)
+          .map(year =>
+            dataset[year]
+              .reduce((s, d) =>
+                ({...s, value: s.value + d.value})
+              )
+          )
       });
 
       plot.datasets(datasets.map(d => new Plottable.Dataset(d)));

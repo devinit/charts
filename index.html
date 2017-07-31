@@ -181,7 +181,7 @@
         element: document.getElementById('line_chart'),
         config: {
           title: 'Line Chart',
-          type: 'line',
+          type: 'timeline',
           groupBy: 'Months',
           colors: ['red1', '#93328e', '#b7bf10', '#004862'],
           coloring: 'color',
@@ -194,9 +194,13 @@
             axisMinimum: 0,
             axisMargin: 0,
           },
-          categoryAxis: {
+          timeAxis: {
             showAxis: true,
             indicator: 'Years',
+            axisMinimum: 2000,
+            axisMaximum: 2018,
+            ticking: 'years',
+            tickingStep: 5,
           },
           legend: {
             showLegend: true
@@ -209,7 +213,6 @@
           {"Rainfall": 1500000, "Years": "2003", "Months": "Jan"},
           {"Rainfall": 1800000, "Years": "2004", "Months": "Jan"},
           {"Rainfall": 2000000, "Years": "2005", "Months": "Jan"},
-          {"Rainfall": 1200000, "Years": "2006", "Months": "Jan"},
           {"Rainfall": 2700000, "Years": "2007", "Months": "Jan"},
           {"Rainfall": 2300000, "Years": "2008", "Months": "Jan"},
           {"Rainfall": 2100000, "Years": "2009", "Months": "Jan"},
