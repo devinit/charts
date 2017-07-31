@@ -74,7 +74,6 @@ export const createTimeAxis = (config) => {
   if (!showAxis) return null;
 
   const axis = new Plottable.Axes.Time(axisScale, 'bottom');
-  axis.formatter(d => approximate(d));
   axis.showEndTickLabels(true);
   axis.margin(0);
 
