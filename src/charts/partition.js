@@ -75,6 +75,9 @@ export default (element, data = [], config) => {
     const yMin = orientation === 'vertical' && datum.parent ? datum[y0] - (yMax - datum[y0]) * 0.05 : datum[y0];
 
     animate([xScale, yScale], [xMin, xMax], [yMin, yMax])
+      .then(() => {
+        listeners.forEach(callback => callback(datum))
+      })
   });
 
   const chart = {
