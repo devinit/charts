@@ -142,8 +142,8 @@ export default (element, data, config) => {
 
       const plots = [leftPlot, rightPlot];
 
-      const splittingIds = makeUnique(data.map(d => d[splitBy]));
-      const groupIds = makeUnique(data.map(d => d[groupBy]));
+      const splittingIds = makeUnique(data.map(d => d[splitBy])).sort((a, b) => a > b ? 1 : -1);
+      const groupIds = makeUnique(data.map(d => d[groupBy])).sort((a, b) => a > b ? 1 : -1);
       const subGroupIds = groupIds.map(groupId => makeUnique(
         data
           .filter(d => d[groupBy] === groupId)
