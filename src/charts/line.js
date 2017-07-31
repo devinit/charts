@@ -108,7 +108,7 @@ export const createLineTipper = (container, labeling = {}, scale, orientation = 
           y: [...p.y, e.position.y],
         }]), [{x: [], y: []}])
         .map(({x, y}) => ({
-          x: x.reduce((sum, k) => sum + k) / x.length,
+          x: x.reduce((sum, k) => sum + k, 0) / x.length,
           y: Math.min.apply(null, y)
         }))
         .reduce((_, d) => d);
