@@ -135,9 +135,8 @@
 
   .tooltip {
     padding: 5px 10px;
-    background: #444;
-    color: #fff;
-    margin-bottom: 5px;
+    background: #fff;
+    color: #000;
     box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25);
     text-align: center;
 
@@ -152,27 +151,51 @@
     }
 
     .tooltip-arrow {
+      position: absolute;
       width: 0;
       height: 0;
-      border: 5px solid transparent;
+      border: 11px solid transparent;
+
+      &:before {
+        content: ' ';
+        position: absolute;
+        left: -10px;
+        width: 0;
+        height: 0;
+        border: 10px solid transparent;
+      }
     }
 
-    // when tooltip faces down
+    // When tooltip faces up
     &[x-placement='bottom'] {
+      margin-top: 10px;
+
       .tooltip-arrow {
-        position: absolute;
-        top: -10px;
-        border-bottom-color: #444;
+        top: -20px;
+        border-bottom-color: rgba(0, 0, 0, 0.25);
       }
+
+      .tooltip-arrow:before {
+        top: -9px;
+        border-bottom-color: #fff;
+      }
+
     }
 
-    // when tooltip faces up
+    // When tooltip faces down
     &[x-placement='top'] {
+      margin-bottom: 10px;
+
       .tooltip-arrow {
-        position: absolute;
-        bottom: -10px;
-        border-top-color: #444;
+        bottom: -20px;
+        border-top-color: rgba(0, 0, 0, 0.25);
       }
+
+      .tooltip-arrow:before {
+        bottom: -9px;
+        border-top-color: #fff;
+      }
+
     }
 
   }
