@@ -178,6 +178,10 @@ export default ({element, plot, config}) => {
       } else {
         moveAnchor(year);
       }
+    },
+
+    destroy: () => {
+      table.destroy();
     }
 
   };

@@ -130,6 +130,10 @@ export const createLinearChart = ({element, plot, config}) => {
       plot.datasets(datasets.map(d => new Plottable.Dataset(d)));
     },
 
+    destroy() {
+      table.destroy();
+    }
+
   };
 };
 

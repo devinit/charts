@@ -85,7 +85,13 @@ export default ({element, plot, config}) => {
 
     table,
 
-    addData
+    addData,
+
+    update: addData,
+
+    destroy: () => {
+      table.destroy();
+    }
   };
 
 };

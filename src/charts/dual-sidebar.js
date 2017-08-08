@@ -134,128 +134,135 @@ export default (element, data, config) => {
   leftPlot._drawLabels = drawLabels(dualSidebar);
   rightPlot._drawLabels = drawLabels(dualSidebar);
 
+  const addData = (data = []) => {
+
+    const plots = [leftPlot, rightPlot];
+
+    const splittingIds = makeUnique(data.map(d => d[splitBy])).sort((a, b) => a > b ? 1 : -1);
+    const groupIds = makeUnique(data.map(d => d[groupBy])).sort((a, b) => a > b ? 1 : -1);
+    const subGroupIds = groupIds.map(groupId => makeUnique(
+      data
+        .filter(d => d[groupBy] === groupId)
+        .map(d => d[subGroupBy])
+        .sort((a, b) => a > b ? 1 : -1)
+      )
+    );
+
+    splittingIds.slice(0, 2)
+      .sort((a, b) => a > b ? 1 : -1)
+      // Split data into split sides
+      .map(splitPoint => data.filter(d => d[splitBy] === splitPoint))
+      .map(sides =>
+
+        groupIds
+        // Create groups for each split side
+        // Makes sure each side has same number
+        // groups
+          .map(groupId => sides.filter(d => d[groupBy] === groupId))
+          // Creates subgroups for each group
+          .map((group, groupIndex) =>
+
+            subGroupIds[groupIndex].map(subGroupId =>
+              group
+                .filter(item => item[subGroupBy] === subGroupId)
+            )
+          )
+      )
+
+      // Joins sides into [left, right]
+      .reduce(([sides = []], side) => [[...sides, side]], [])
+
+      // Makes sure subgroups on each side have same number of items
+      // Creates a dummy items for either subgroup with less number
+      // of items
+      .map(([left, right]) => {
+
+        groupIds.forEach((groupId, groupIndex) =>
+
+          subGroupIds[groupIndex].forEach((subGroupId, subGroupIndex) => {
+            const leftSubgroupLength = left[groupIndex][subGroupIndex].length;
+            const rightSubgroupLength = right[groupIndex][subGroupIndex].length;
+
+            if (leftSubgroupLength > rightSubgroupLength) {
+              for (let i = rightSubgroupLength; i < leftSubgroupLength; i++) {
+                right[groupIndex][subGroupIndex].push({
+                  ...left[groupIndex][subGroupIndex][i],
+                  [categoryAxis.indicator]: '',
+                  [linearAxis.indicator]: 0,
+                })
+              }
+            }
+
+            else if (leftSubgroupLength < rightSubgroupLength) {
+              for (let j = leftSubgroupLength; j < rightSubgroupLength; j++) {
+                left[groupIndex][subGroupIndex].push({
+                  ...right[groupIndex][subGroupIndex][j],
+                  [categoryAxis.indicator]: '',
+                  [linearAxis.indicator]: 0,
+                })
+              }
+            }
+
+          })
+        );
+
+        return [left, right];
+
+      })
+      .reduce((all, groups) => [...all, ...groups], [])
+      .forEach((groups, index) => {
+
+        const direction = index === 0 ? -1 : 1;
+
+        const series = groups.reduce((groups, group, groupIndex) => [
+
+          ...groups,
+
+          ...group.reduce((group, subGroup) => [
+
+            ...group,
+
+            ...subGroup.map(item => ({
+
+              ...item,
+
+              direction: direction,
+
+              color: item[coloring] || colors[groupIndex] || '#abc',
+
+            }))
+
+          ], [])
+
+        ], []);
+
+        const dataset = series.map((item, index) => ({
+
+          ...item,
+
+          label: index,
+          value: item[linearAxis.indicator] * direction,
+          opacity: 1,
+          group: item[groupBy],
+          subGroup: item[subGroupBy],
+          name: item[categoryAxis.indicator],
+        }));
+
+        plots[index].datasets([dataset].map(d => new Plottable.Dataset(d)))
+
+      });
+  };
   const chart = {
 
     table,
 
-    addData: (data = []) => {
+    addData,
 
-      const plots = [leftPlot, rightPlot];
+    update: addData,
 
-      const splittingIds = makeUnique(data.map(d => d[splitBy])).sort((a, b) => a > b ? 1 : -1);
-      const groupIds = makeUnique(data.map(d => d[groupBy])).sort((a, b) => a > b ? 1 : -1);
-      const subGroupIds = groupIds.map(groupId => makeUnique(
-        data
-          .filter(d => d[groupBy] === groupId)
-          .map(d => d[subGroupBy])
-          .sort((a, b) => a > b ? 1 : -1)
-        )
-      );
-
-      splittingIds.slice(0, 2)
-        .sort((a, b) => a > b ? 1 : -1)
-        // Split data into split sides
-        .map(splitPoint => data.filter(d => d[splitBy] === splitPoint))
-        .map(sides =>
-
-          groupIds
-          // Create groups for each split side
-          // Makes sure each side has same number
-          // groups
-            .map(groupId => sides.filter(d => d[groupBy] === groupId))
-            // Creates subgroups for each group
-            .map((group, groupIndex) =>
-
-              subGroupIds[groupIndex].map(subGroupId =>
-                group
-                  .filter(item => item[subGroupBy] === subGroupId)
-              )
-            )
-        )
-
-        // Joins sides into [left, right]
-        .reduce(([sides = []], side) => [[...sides, side]], [])
-
-        // Makes sure subgroups on each side have same number of items
-        // Creates a dummy items for either subgroup with less number
-        // of items
-        .map(([left, right]) => {
-
-          groupIds.forEach((groupId, groupIndex) =>
-
-            subGroupIds[groupIndex].forEach((subGroupId, subGroupIndex) => {
-              const leftSubgroupLength = left[groupIndex][subGroupIndex].length;
-              const rightSubgroupLength = right[groupIndex][subGroupIndex].length;
-
-              if (leftSubgroupLength > rightSubgroupLength) {
-                for (let i = rightSubgroupLength; i < leftSubgroupLength; i++) {
-                  right[groupIndex][subGroupIndex].push({
-                    ...left[groupIndex][subGroupIndex][i],
-                    [categoryAxis.indicator]: '',
-                    [linearAxis.indicator]: 0,
-                  })
-                }
-              }
-
-              else if (leftSubgroupLength < rightSubgroupLength) {
-                for (let j = leftSubgroupLength; j < rightSubgroupLength; j++) {
-                  left[groupIndex][subGroupIndex].push({
-                    ...right[groupIndex][subGroupIndex][j],
-                    [categoryAxis.indicator]: '',
-                    [linearAxis.indicator]: 0,
-                  })
-                }
-              }
-
-            })
-          );
-
-          return [left, right];
-
-        })
-        .reduce((all, groups) => [...all, ...groups], [])
-        .forEach((groups, index) => {
-
-          const direction = index === 0 ? -1 : 1;
-
-          const series = groups.reduce((groups, group, groupIndex) => [
-
-            ...groups,
-
-            ...group.reduce((group, subGroup) => [
-
-              ...group,
-
-              ...subGroup.map(item => ({
-
-                ...item,
-
-                direction: direction,
-
-                color: item[coloring] || colors[groupIndex] || '#abc',
-
-              }))
-
-            ], [])
-
-          ], []);
-
-          const dataset = series.map((item, index) => ({
-
-            ...item,
-
-            label: index,
-            value: item[linearAxis.indicator] * direction,
-            opacity: 1,
-            group: item[groupBy],
-            subGroup: item[subGroupBy],
-            name: item[categoryAxis.indicator],
-          }));
-
-          plots[index].datasets([dataset].map(d => new Plottable.Dataset(d)))
-
-        });
-    },
+    destroy: () => {
+      table.destroy();
+    }
 
   };
 

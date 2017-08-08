@@ -91,53 +91,60 @@ export default ({element, plot, config}) => {
 
   table.renderTo(element);
 
+  const addData = data => {
+    const rangeMaximum = Math.max.apply(null, data.map(d => d[bubble.indicator]));
+
+    bubbleScale
+      .domain([0, rangeMaximum])
+      .range([10, 50]);
+
+    const mapping = data
+      .sort((a, b) => b[groupBy] - a[groupBy])
+      .reduce((groups, datum) => {
+
+        return {
+
+          ...groups,
+
+          [datum[groupBy]]: [
+
+            ...(groups[datum[groupBy]] || []),
+
+            {
+              ...datum,
+              x: datum[horizontalAxis.indicator],
+              y: datum[verticalAxis.indicator],
+              z: datum[bubble.indicator]
+            }
+
+          ]
+        };
+
+      }, {});
+
+    const datasets = Object.keys(mapping)
+      .map((group, index) => mapping[group]
+        .map(d => ({
+          ...d,
+          color: d[coloring] || colors[index] || '#abc'
+        })));
+
+    colorScale
+      .domain(Object.keys(mapping))
+      .range(Object.keys(mapping).map((_, index) => colors[index] || '#abc'));
+
+    scatterPlot.datasets(datasets.map(d => new Plottable.Dataset(d)));
+  };
   return {
 
     table,
 
-    addData: data => {
-      const rangeMaximum = Math.max.apply(null, data.map(d => d[bubble.indicator]));
+    addData,
 
-      bubbleScale
-        .domain([0, rangeMaximum])
-        .range([10, 50]);
+    update: addData,
 
-      const mapping = data
-        .sort((a, b) => b[groupBy] - a[groupBy])
-        .reduce((groups, datum) => {
-
-          return {
-
-            ...groups,
-
-            [datum[groupBy]]: [
-
-              ...(groups[datum[groupBy]] || []),
-
-              {
-                ...datum,
-                x: datum[horizontalAxis.indicator],
-                y: datum[verticalAxis.indicator],
-                z: datum[bubble.indicator]
-              }
-
-            ]
-          };
-
-        }, {});
-
-      const datasets = Object.keys(mapping)
-        .map((group, index) => mapping[group]
-          .map(d => ({
-            ...d,
-            color: d[coloring] || colors[index] || '#abc'
-          })));
-
-      colorScale
-        .domain(Object.keys(mapping))
-        .range(Object.keys(mapping).map((_, index) => colors[index] || '#abc'));
-
-      scatterPlot.datasets(datasets.map(d => new Plottable.Dataset(d)));
+    destroy: () => {
+      table.destroy();
     }
   }
 }

@@ -92,6 +92,11 @@ export default ({element, plot, config}) => {
 
     interaction.attachTo(plot);
 
+    plot.onDetach(plot => {
+      interaction.detachFrom(plot);
+      tip.dispose()
+    })
+
   };
 
   return {
@@ -100,7 +105,13 @@ export default ({element, plot, config}) => {
 
     addData,
 
+    update: addData,
+
     onClick,
+
+    destroy: () => {
+      table.destroy();
+    }
   };
 };
 

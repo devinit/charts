@@ -96,24 +96,31 @@ export default (element, data, config) => {
 
   const colorize = createColorFiller(colors, [], coloring);
 
+  const addData = data => {
+
+    const root = colorize(createTreeHierachy(data, tree));
+
+    const rectangles = layout(root).descendants();
+
+    const all = rectangles
+      .filter(d => d.depth <= 2);
+
+    plot.datasets([new Plottable.Dataset(all)]);
+
+    const summary = rectangles.filter(d => d.depth === 1);
+
+    summaryPlot.datasets([new Plottable.Dataset(summary)]);
+  };
   const chart = {
 
     table,
 
-    addData: data => {
+    addData,
 
-      const root = colorize(createTreeHierachy(data, tree));
+    update: addData,
 
-      const rectangles = layout(root).descendants();
-
-      const all = rectangles
-        .filter(d => d.depth <= 2);
-
-      plot.datasets([new Plottable.Dataset(all)]);
-
-      const summary = rectangles.filter(d => d.depth === 1);
-
-      summaryPlot.datasets([new Plottable.Dataset(summary)]);
+    destroy: () => {
+      table.destroy();
     }
 
   };

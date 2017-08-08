@@ -128,4 +128,9 @@ export const createLineTipper = (container, labeling = {}, scale, orientation = 
     });
 
   interaction.attachTo(plot);
+
+  plot.onDetach(plot => {
+    interaction.detachFrom(plot);
+    tip.dispose()
+  })
 };
