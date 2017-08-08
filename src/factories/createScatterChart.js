@@ -45,6 +45,8 @@ export default ({element, plot, config}) => {
 
     colors = [],
 
+    coloring = null,
+
     horizontalAxis,
 
     verticalAxis,
@@ -94,13 +96,11 @@ export default ({element, plot, config}) => {
     table,
 
     addData: data => {
-
-      const rangeMinimum = Math.pow(10, Math.floor(Math.log10(Math.min.apply(null, data.map(d => d[bubble.indicator])))));
-      const rangeMaximum = Math.pow(10, Math.ceil(Math.log10(Math.max.apply(null, data.map(d => d[bubble.indicator])))));
+      const rangeMaximum = Math.max.apply(null, data.map(d => d[bubble.indicator]));
 
       bubbleScale
-        .domain([bubble.minimum || 0, bubble.maximum || 100])
-        .range([rangeMinimum, rangeMaximum]);
+        .domain([0, rangeMaximum])
+        .range([10, 50]);
 
       const mapping = data
         .sort((a, b) => b[groupBy] - a[groupBy])
@@ -114,20 +114,28 @@ export default ({element, plot, config}) => {
 
               ...(groups[datum[groupBy]] || []),
 
-              {x: datum[horizontalAxis.indicator], y: datum[verticalAxis.indicator], z: datum[bubble.indicator]}
+              {
+                ...datum,
+                x: datum[horizontalAxis.indicator],
+                y: datum[verticalAxis.indicator],
+                z: datum[bubble.indicator]
+              }
 
             ]
           };
 
         }, {});
 
-      const coloring = Object.keys(mapping)
-        .map((k, index) => ({group: k || 'Unknown', color: colors[index] || '#abc'}));
-
       const datasets = Object.keys(mapping)
-        .map((group, index) => mapping[group].map(d => ({...d, color: coloring[index].color})));
+        .map((group, index) => mapping[group]
+          .map(d => ({
+            ...d,
+            color: d[coloring] || colors[index] || '#abc'
+          })));
 
-      colorScale.domain(coloring.map(k => k.group)).range(coloring.map(k => k.color));
+      colorScale
+        .domain(Object.keys(mapping))
+        .range(Object.keys(mapping).map((_, index) => colors[index] || '#abc'));
 
       scatterPlot.datasets(datasets.map(d => new Plottable.Dataset(d)));
     }
@@ -138,12 +146,13 @@ const createScatterPlot = ({plot, horizontalScale, verticalScale, bubbleScale}) 
   return plot
     .attr('name', d => d.z)
     .attr('fill', d => d.color)
-    .attr('stroke', '#fff')
-    .attr('stroke-width', 1)
-    .attr('opacity', 1)
+    .attr('stroke', 'rgb(51, 51, 51)')
+    .attr('stroke-width', 2)
+    .attr('opacity', 0.8)
     .x(d => d.x, horizontalScale)
     .y(d => d.y, verticalScale)
     .size(d => d.z, bubbleScale)
+    .animated(true)
 };
 
 
