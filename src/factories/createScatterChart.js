@@ -201,7 +201,7 @@ const createScatterAnnotations = ({annotations, verticalScale, horizontalScale, 
       .attr('x', x0)
       .attr('y', y0)
       .attr('width', x1 - x0)
-      .attr('height', y1 - y0)
+      .attr('height', y1 - y0 - 10)
       .attr('fill', fill || '#ccc')
       .attr('opacity', '0.5');
 
@@ -209,7 +209,7 @@ const createScatterAnnotations = ({annotations, verticalScale, horizontalScale, 
       .foreground()
       .append('foreignObject')
       .attr('width', x1 - x0)
-      .attr('height', y1 - y0)
+      .attr('height', y1 - y0 - 10)
       .attr('x', x0)
       .attr('y', y0)
       .html(`
