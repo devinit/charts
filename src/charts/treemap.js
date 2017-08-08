@@ -74,6 +74,11 @@ export default (element, data = [], config) => {
 
   treeChart.onClick(createTreemapOnClickListener(orientation, listeners));
 
+  const addData = data => {
+    const root = colorize(createTreeHierachy(data, tree));
+    treeChart.addData(transform(root))
+  };
+
   const chart = {
 
     ...treeChart,
@@ -82,10 +87,9 @@ export default (element, data = [], config) => {
       listeners.push(callback)
     },
 
-    addData: data => {
-      const root = colorize(createTreeHierachy(data, tree));
-      treeChart.addData(transform(root))
-    }
+    addData,
+
+    update: addData,
   };
 
   chart.addData(data);

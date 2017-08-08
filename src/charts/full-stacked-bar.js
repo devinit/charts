@@ -31,15 +31,19 @@ export default (element, data, config) => {
     }
   });
 
+  const addData = data => linearChart.addData(createFullStackedDataset(
+    data,
+    config.linearAxis.indicator,
+    config.categoryAxis.indicator,
+  ));
+
   const chart = {
 
     ...linearChart,
 
-    addData: data => linearChart.addData(createFullStackedDataset(
-      data,
-      config.linearAxis.indicator,
-      config.categoryAxis.indicator,
-    )),
+    addData,
+
+    update: addData,
   };
 
   chart.addData(data);
