@@ -1241,6 +1241,8 @@
 
           type: 'bubble',
 
+          coloring: 'color',
+
           colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
 
           groupBy: 'Region',
@@ -1271,18 +1273,41 @@
           bubble: {
             indicator: 'Age',
             label: 'Age (Yrs)',
-            minimum: 0,
-            maximum: 100,
           },
 
           legend: {
             showLegend: true,
-          }
+          },
+
+          annotations: [
+            {
+              title: 'The Red zone',
+              body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam, animi atque consectetur consequatur delectus esse excepturi exercitationem fugit impedit libero molestias, non officia provident quae, repellendus suscipit tempore vel veritatis.',
+              fill: 'red',
+              horizontalAxis: {
+                minimum: 130,
+                maximum: 150,
+              },
+              verticalAxis: {
+                minimum: 10,
+                maximum: 70,
+              },
+            },
+            {
+              title: 'The Green zone',
+              body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam, animi atque consectetur consequatur delectus esse excepturi exercitationem fugit impedit libero molestias, non officia provident quae, repellendus suscipit tempore vel veritatis.',
+              fill: 'green',
+              horizontalAxis: {
+                minimum: 155,
+                maximum: 170,
+              },
+            },
+          ]
 
         },
         data: [
-          {"Age": 63, "Weight": 47, "Height": 151, "Region": 'Kampala'},
-          {"Age": 63, "Weight": 36, "Height": 139, "Region": 'Kampala'},
+          {"Age": 5, "Weight": 47, "Height": 151, "Region": 'Kampala'},
+          {"Age": 150, "Weight": 36, "Height": 139, "Region": 'Kampala', color: 'green'},
           {"Age": 65, "Weight": 31, "Height": 136, "Region": 'Kampala'},
           {"Age": 41, "Weight": 53, "Height": 156, "Region": 'Kampala'},
           {"Age": 51, "Weight": 41, "Height": 145, "Region": 'Kampala'},
