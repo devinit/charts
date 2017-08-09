@@ -3261,7 +3261,7 @@ pkg-dir@^1.0.0:
   dependencies:
     find-up "^1.0.0"
 
-plottable@^3.1.1:
+plottable@3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/plottable/-/plottable-3.1.1.tgz#f47517a55aa6494af0a63b537b8412a7af75ed22"
   dependencies:
