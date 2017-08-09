@@ -232,7 +232,6 @@ const createScatterPlot = ({plot, horizontalScale, verticalScale, bubbleScale}) 
     .x(d => d.x, horizontalScale)
     .y(d => d.y, verticalScale)
     .size(d => d.z, bubbleScale)
-    .animated(true)
 };
 
 
