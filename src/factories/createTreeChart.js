@@ -159,7 +159,7 @@ export const createTipper = (container, labeling, percentage = d => 100) => {
       '</div>'
     });
 
-    new Plottable.Interactions.Pointer()
+    const interaction = new Plottable.Interactions.Pointer()
       .onPointerEnter(() => {
         tip.show()
       })
@@ -212,6 +212,8 @@ export const createTipper = (container, labeling, percentage = d => 100) => {
         currentId = null;
       })
       .attachTo(plot);
+
+    plot.onDetach(() => interaction.detachFrom(plot))
 
   }
 };
