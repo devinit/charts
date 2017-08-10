@@ -5,6 +5,8 @@ import {createScatterGridLines} from "./createGrid";
 import {createChartTable} from "./createTable";
 import {createTitle} from "./createTitle";
 import {createColorLegend} from "./createLegend";
+//noinspection JSFileReferences
+import Tooltip from "tooltip.js";
 import {color} from "d3";
 
 /**
@@ -58,6 +60,8 @@ export default ({element, plot, config}) => {
 
     annotations = [],
 
+    tooltips = {}
+
   } = config;
 
   const horizontalScale = createLinearScale(horizontalAxis);
@@ -94,12 +98,16 @@ export default ({element, plot, config}) => {
 
   table.renderTo(element);
 
-  const addData = data => {
-    const rangeMaximum = Math.max.apply(null, data.map(d => d[bubble.indicator]));
+  plot.onAnchor(createTipper(element, tooltips, [verticalAxis, horizontalAxis, bubble]));
 
-    bubbleScale
-      .domain([0, rangeMaximum])
-      .range([10, 50]);
+  const addData = data => {
+
+    if (bubble) {
+      const rangeMaximum = Math.max.apply(null, data.map(d => d[bubble.indicator]));
+      bubbleScale
+        .domain([0, rangeMaximum])
+        .range([10, 50]);
+    }
 
     const mapping = data
       .sort((a, b) => b[groupBy] - a[groupBy])
@@ -117,7 +125,7 @@ export default ({element, plot, config}) => {
               ...datum,
               x: datum[horizontalAxis.indicator],
               y: datum[verticalAxis.indicator],
-              z: datum[bubble.indicator]
+              ...(bubble ? {z: datum[bubble.indicator]} : {})
             }
 
           ]
@@ -162,9 +170,9 @@ export default ({element, plot, config}) => {
 
 const createScatterAnnotations = ({annotations, verticalScale, horizontalScale, plot}) => {
 
-  plot.background().selectAll('*').remove();
+  plot.background().selectAll('.annotation-background').remove();
 
-  plot.foreground().selectAll('*').remove();
+  plot.foreground().selectAll('.annotation-text').remove();
 
   annotations.forEach(({title, body, fill, horizontalAxis = {}, verticalAxis = {}}) => {
     const x0 = horizontalScale.scale(
@@ -198,6 +206,7 @@ const createScatterAnnotations = ({annotations, verticalScale, horizontalScale, 
     plot
       .background()
       .append('rect')
+      .attr('class', 'annotation-background')
       .attr('x', x0)
       .attr('y', y0)
       .attr('width', x1 - x0)
@@ -208,6 +217,7 @@ const createScatterAnnotations = ({annotations, verticalScale, horizontalScale, 
     plot
       .foreground()
       .append('foreignObject')
+      .attr('class', 'annotation-text')
       .attr('width', x1 - x0)
       .attr('height', y1 - y0 - 10)
       .attr('x', x0)
@@ -223,7 +233,7 @@ const createScatterAnnotations = ({annotations, verticalScale, horizontalScale, 
 };
 
 const createScatterPlot = ({plot, horizontalScale, verticalScale, bubbleScale}) => {
-  return plot
+  plot
     .attr('name', d => d.z)
     .attr('fill', d => d.color)
     .attr('stroke', 'rgb(51, 51, 51)')
@@ -231,7 +241,13 @@ const createScatterPlot = ({plot, horizontalScale, verticalScale, bubbleScale}) 
     .attr('opacity', 0.8)
     .x(d => d.x, horizontalScale)
     .y(d => d.y, verticalScale)
-    .size(d => d.z, bubbleScale)
+
+  if (bubbleScale) {
+    plot.size(d => d.z, bubbleScale);
+  } else {
+    plot.size(d => 12, createLinearScale({}).domain([0, 100]).range([0, 100]));
+  }
+  return plot
 };
 
 
@@ -239,4 +255,84 @@ const createPlotAreaWithAxes = ({horizontalAxis, plotArea, verticalAxis}) => {
   const plotAreaWithAxes = [[verticalAxis, plotArea], [null, horizontalAxis]];
 
   return new Plottable.Components.Table(plotAreaWithAxes);
+};
+
+export const createTipper = (container, tooltips = {}, axes) => {
+
+  const {
+    enable = true,
+    titleIndicator,
+  } = tooltips;
+
+  if (!enable) {
+    return (plot) => {};
+  }
+
+  return function (plot) {
+
+    let currentId = null;
+
+    const tooltipAnchor = plot.foreground()
+      .append('circle')
+      .attr('r', 3)
+      .attr('fill', 'transparent');
+
+    const tip = new Tooltip(tooltipAnchor.node(), {
+      title: 'Tooltip',
+      container: container,
+      template: '<div class="tooltip" role="tooltip" style="text-align: left;">' +
+      '<div class="tooltip-arrow"></div>' +
+      '<div id="tt-title" class="tooltip-inner"></div>' +
+      '<div id="tt-body" class="tooltip-body"></div>' +
+      '</div>'
+    });
+
+    const interaction = new Plottable.Interactions.Pointer()
+      .onPointerEnter(() => {
+      })
+      .onPointerMove(p => {
+
+        const [entity] = plot.entitiesAt(p);
+
+        requestAnimationFrame(() => {
+
+          if (entity) {
+            const id = `${entity.datum.x}-${entity.datum.y}`;
+
+            if (id !== currentId) {
+              tip.hide();
+              tooltipAnchor
+                .attr('cx', entity.position.x)
+                .attr('cy', entity.position.y);
+              tip.show();
+
+              tip._tooltipNode.querySelector('#tt-title').innerText = titleIndicator && entity.datum[titleIndicator];
+              tip._tooltipNode.querySelector('#tt-body').innerHTML = `<table>${
+                axes
+                  .filter(axis => axis)
+                  .map(axis => `<tr><td>${axis.axisLabel || axis.label}</td><td>${entity.datum[axis.indicator]}</td></tr>`)
+                  .join('')
+                }
+              </table>`;
+
+              currentId = `${entity.datum.x}-${entity.datum.y}`;
+            }
+          } else {
+            currentId = null;
+            tip.hide();
+          }
+        })
+
+      })
+      .onPointerExit(() => {
+
+        tip.hide();
+
+        currentId = null;
+      })
+      .attachTo(plot);
+
+    plot.onDetach(() => interaction.detachFrom(plot))
+
+  }
 };
