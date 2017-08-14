@@ -8,6 +8,7 @@ import {createColorLegend} from "./createLegend";
 //noinspection JSFileReferences
 import Tooltip from "tooltip.js";
 import {color} from "d3";
+import {createDataAnimator} from "./createAnimator";
 
 /**
  * @typedef {Object} ScatterChart - Scatter chart configuration
@@ -44,6 +45,8 @@ export default ({element, plot, config}) => {
 
     titleAlignment = 'left',
 
+    idIndicator = 'id',
+
     groupBy,
 
     colors = [],
@@ -70,7 +73,7 @@ export default ({element, plot, config}) => {
   const bubbleScale = createLinearScale({});
   const colorScale = new Plottable.Scales.Color();
 
-  const scatterPlot = createScatterPlot({plot, horizontalScale, verticalScale, bubbleScale});
+  const scatterPlot = createScatterPlot({plot, horizontalScale, verticalScale, bubbleScale, idIndicator});
   const scatterGridLines = createScatterGridLines({horizontalScale, verticalScale, horizontalAxis, verticalAxis});
 
   // TODO: Add bubble scale legend
@@ -96,21 +99,34 @@ export default ({element, plot, config}) => {
     legendPosition: legend.position || 'bottom',
   });
 
+  // ...
+  const selectionListeners = [];
+  const animate = createDataAnimator(idIndicator, ['x', 'y', 'z'], 2000);
+  const clickTipper = createClickTipper(element, tooltips, idIndicator, selectionListeners);
+  const tipper = createTipper(element, tooltips, [verticalAxis, horizontalAxis, bubble]);
+
   table.renderTo(element);
 
-  plot.onAnchor(createTipper(element, tooltips, [verticalAxis, horizontalAxis, bubble]));
+  plot.onAnchor(plot => {
+    setTimeout(() => {
+      tipper(plot);
+      clickTipper.init(plot)
+    }, 500)
+  });
+
 
   const addData = data => {
+    bubbleScale
+      .domain([0, 3e2])
+      .range([12, 50]);
 
-    if (bubble) {
-      const rangeMaximum = Math.max.apply(null, data.map(d => d[bubble.indicator]));
-      bubbleScale
-        .domain([0, rangeMaximum])
-        .range([10, 50]);
-    }
+    const callback = data => {
+      // const rangeMinimum = Math.min.apply(null, data.map(d => d.z));
+      // const rangeMaximum = Math.max.apply(null, data.map(d => d.z));
+      clickTipper.update(plot)
+    };
 
     const mapping = data
-      .sort((a, b) => b[groupBy] - a[groupBy])
       .reduce((groups, datum) => {
 
         return {
@@ -125,7 +141,7 @@ export default ({element, plot, config}) => {
               ...datum,
               x: datum[horizontalAxis.indicator],
               y: datum[verticalAxis.indicator],
-              ...(bubble ? {z: datum[bubble.indicator]} : {})
+              z: datum[bubble.indicator] || 12
             }
 
           ]
@@ -144,7 +160,17 @@ export default ({element, plot, config}) => {
       .domain(Object.keys(mapping))
       .range(Object.keys(mapping).map((_, index) => colors[index] || '#abc'));
 
-    scatterPlot.datasets(datasets.map(d => new Plottable.Dataset(d)));
+    if (!scatterPlot.datasets().length) {
+      const dataset = datasets.reduce((all, set) => [...all, ...set], []);
+
+      if (bubble) {
+        callback(dataset);
+      }
+
+      scatterPlot.datasets([new Plottable.Dataset(dataset)]);
+    } else {
+      animate(scatterPlot, callback, datasets);
+    }
 
     createScatterAnnotations({
       annotations,
@@ -164,6 +190,10 @@ export default ({element, plot, config}) => {
 
     destroy: () => {
       table.destroy();
+    },
+
+    onSelect: (callback) => {
+      selectionListeners.push(callback);
     }
   }
 }
@@ -210,7 +240,7 @@ const createScatterAnnotations = ({annotations, verticalScale, horizontalScale, 
       .attr('x', x0)
       .attr('y', y0)
       .attr('width', x1 - x0)
-      .attr('height', y1 - y0 - 10)
+      .attr('height', y1 - y0)
       .attr('fill', fill || '#ccc')
       .attr('opacity', '0.5');
 
@@ -219,7 +249,7 @@ const createScatterAnnotations = ({annotations, verticalScale, horizontalScale, 
       .append('foreignObject')
       .attr('class', 'annotation-text')
       .attr('width', x1 - x0)
-      .attr('height', y1 - y0 - 10)
+      .attr('height', y1 - y0)
       .attr('x', x0)
       .attr('y', y0)
       .html(`
@@ -232,7 +262,7 @@ const createScatterAnnotations = ({annotations, verticalScale, horizontalScale, 
   })
 };
 
-const createScatterPlot = ({plot, horizontalScale, verticalScale, bubbleScale}) => {
+const createScatterPlot = ({plot, horizontalScale, verticalScale, bubbleScale, idIndicator}) => {
   plot
     .attr('name', d => d.z)
     .attr('fill', d => d.color)
@@ -241,15 +271,14 @@ const createScatterPlot = ({plot, horizontalScale, verticalScale, bubbleScale}) 
     .attr('opacity', 0.8)
     .x(d => d.x, horizontalScale)
     .y(d => d.y, verticalScale)
+    .size(d => d.z, bubbleScale);
 
-  if (bubbleScale) {
-    plot.size(d => d.z, bubbleScale);
-  } else {
-    plot.size(d => 12, createLinearScale({}).domain([0, 100]).range([0, 100]));
+  if (idIndicator) {
+    plot.attr('id', d => `bubble-${d[idIndicator]}`)
   }
+
   return plot
 };
-
 
 const createPlotAreaWithAxes = ({horizontalAxis, plotArea, verticalAxis}) => {
   const plotAreaWithAxes = [[verticalAxis, plotArea], [null, horizontalAxis]];
@@ -257,14 +286,96 @@ const createPlotAreaWithAxes = ({horizontalAxis, plotArea, verticalAxis}) => {
   return new Plottable.Components.Table(plotAreaWithAxes);
 };
 
-export const createTipper = (container, tooltips = {}, axes) => {
+const createClickTipper = (container, tooltips, idIndicator, listeners) => {
+
+  const {enable = true, titleIndicator,} = tooltips;
+
+  const selected = {};
+
+  if (!enable || !titleIndicator || !idIndicator) {
+    return {
+      init: (plot) => {},
+      update: () => {},
+    };
+  }
+
+  const template = '<div class="tooltip" role="tooltip" style="text-align: left;">' +
+    '<div class="tooltip-arrow"></div>' +
+    '<div id="tt-title" class="tooltip-inner"></div>' +
+    '<div id="tt-body" class="tooltip-body"></div>' +
+    '</div>';
+
+  return {
+    init: (plot) => {
+      container.style.overflow = 'hidden';
+
+      const interaction = new Plottable.Interactions.Click()
+        .onClick(p => {
+          const [entity] = plot.entitiesAt(p);
+
+          const id = entity.datum[idIndicator];
+
+          if (entity && !selected[id]) {
+
+            const selection = plot.content().select(`path#bubble-${id}`);
+
+            const node = selection.node();
+
+            if (node) {
+              const tip = new Tooltip(node, {
+                title: entity.datum[titleIndicator],
+                placement: 'bottom',
+                container,
+                template,
+              });
+
+              selected[id] = tip;
+
+              tip.show();
+
+              listeners.forEach(listener => typeof listener === 'function' && listener(id))
+            }
+          }
+
+          else if (entity && selected[id]) {
+            const tip = selected[id];
+
+            tip.hide();
+            tip.dispose();
+
+            selected[id] = null;
+
+            listeners.forEach(listener => typeof listener === 'function' && listener(id))
+          }
+        })
+        .attachTo(plot);
+
+      plot.onDetach(() => interaction.detachFrom(plot))
+    },
+    update: () => {
+      Object
+        .keys(selected)
+        .filter(key => selected[key])
+        .map(key => {
+          let tip = selected[key];
+          tip.hide();
+
+          if (tip.reference.id === `bubble-${key}`) {
+            tip.show();
+          }
+        });
+    },
+  }
+};
+
+const createTipper = (container, tooltips = {}, axes) => {
 
   const {
     enable = true,
     titleIndicator,
   } = tooltips;
 
-  if (!enable) {
+  if (!enable || !titleIndicator) {
     return (plot) => {};
   }
 
@@ -309,7 +420,7 @@ export const createTipper = (container, tooltips = {}, axes) => {
               tip._tooltipNode.querySelector('#tt-title').innerText = titleIndicator && entity.datum[titleIndicator];
               tip._tooltipNode.querySelector('#tt-body').innerHTML = `<table>${
                 axes
-                  .filter(axis => axis)
+                  .filter(axis => axis && entity.datum[axis.indicator || ''])
                   .map(axis => `<tr><td>${axis.axisLabel || axis.label}</td><td>${entity.datum[axis.indicator]}</td></tr>`)
                   .join('')
                 }
