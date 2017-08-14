@@ -294,8 +294,10 @@ const createClickTipper = (container, tooltips, idIndicator, listeners) => {
 
   if (!enable || !titleIndicator || !idIndicator) {
     return {
-      init: (plot) => {},
-      update: () => {},
+      init: (plot) => {
+      },
+      update: () => {
+      },
     };
   }
 
@@ -313,39 +315,41 @@ const createClickTipper = (container, tooltips, idIndicator, listeners) => {
         .onClick(p => {
           const [entity] = plot.entitiesAt(p);
 
-          const id = entity.datum[idIndicator];
+          if (entity) {
+            const id = entity.datum[idIndicator];
 
-          if (entity && !selected[id]) {
+            if (!selected[id]) {
 
-            const selection = plot.content().select(`path#bubble-${id}`);
+              const selection = plot.content().select(`path#bubble-${id}`);
 
-            const node = selection.node();
+              const node = selection.node();
 
-            if (node) {
-              const tip = new Tooltip(node, {
-                title: entity.datum[titleIndicator],
-                placement: 'bottom',
-                container,
-                template,
-              });
+              if (node) {
+                const tip = new Tooltip(node, {
+                  title: entity.datum[titleIndicator],
+                  placement: 'bottom',
+                  container,
+                  template,
+                });
 
-              selected[id] = tip;
+                selected[id] = tip;
 
-              tip.show();
+                tip.show();
+
+                listeners.forEach(listener => typeof listener === 'function' && listener(id))
+              }
+            }
+
+            else if (selected[id]) {
+              const tip = selected[id];
+
+              tip.hide();
+              tip.dispose();
+
+              selected[id] = null;
 
               listeners.forEach(listener => typeof listener === 'function' && listener(id))
             }
-          }
-
-          else if (entity && selected[id]) {
-            const tip = selected[id];
-
-            tip.hide();
-            tip.dispose();
-
-            selected[id] = null;
-
-            listeners.forEach(listener => typeof listener === 'function' && listener(id))
           }
         })
         .attachTo(plot);
@@ -376,7 +380,8 @@ const createTipper = (container, tooltips = {}, axes) => {
   } = tooltips;
 
   if (!enable || !titleIndicator) {
-    return (plot) => {};
+    return (plot) => {
+    };
   }
 
   return function (plot) {
