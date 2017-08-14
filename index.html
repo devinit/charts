@@ -1254,6 +1254,9 @@
             axisLabel: 'Height (cm)',
             indicator: 'Height',
 
+            axisMinimum: 110,
+            axisMaximum: 180,
+
             showGridlines: true,
           },
 
@@ -1265,7 +1268,7 @@
             indicator: 'Weight',
 
             axisMinimum: 0,
-            axisMaximum: 80,
+            axisMaximum: 100,
 
             showGridlines: true,
           },
@@ -1302,25 +1305,48 @@
                 maximum: 170,
               },
             },
-          ]
+          ],
+
+          tooltips: {
+            titleIndicator: 'Region',
+          },
 
         },
         data: [
-          {"Age": 5, "Weight": 47, "Height": 151, "Region": 'Kampala'},
-          {"Age": 150, "Weight": 36, "Height": 139, "Region": 'Kampala', color: 'green'},
-          {"Age": 65, "Weight": 31, "Height": 136, "Region": 'Kampala'},
-          {"Age": 41, "Weight": 53, "Height": 156, "Region": 'Kampala'},
-          {"Age": 51, "Weight": 41, "Height": 145, "Region": 'Kampala'},
-          {"Age": 35, "Weight": 62, "Height": 163, "Region": 'Kampala'},
-          {"Age": 32, "Weight": 38, "Height": 149, "Region": 'Kampala'},
-          {"Age": 60, "Weight": 36, "Height": 144, "Region": 'Jinja'},
-          {"Age": 56, "Weight": 42, "Height": 120, "Region": 'Jinja'},
-          {"Age": 70, "Weight": 54, "Height": 160, "Region": 'Jinja'},
-          {"Age": 45, "Weight": 45, "Height": 126, "Region": 'Jinja'},
-          {"Age": 36, "Weight": 56, "Height": 138, "Region": 'Jinja'},
-          {"Age": 28, "Weight": 65, "Height": 136, "Region": 'Jinja'},
-          {"Age": 40, "Weight": 70, "Height": 170, "Region": 'Jinja'},
+          {id: '1', "Age": 25, "Weight": 47, "Height": 151, "Region": 'Kampala'},
+          {id: '2', "Age": 150, "Weight": 36, "Height": 139, "Region": 'Kampala', color: 'green'},
+          {id: '3', "Age": 65, "Weight": 31, "Height": 136, "Region": 'Kampala'},
+          {id: '4', "Age": 41, "Weight": 53, "Height": 156, "Region": 'Kampala'},
+          {id: '5', "Age": 51, "Weight": 41, "Height": 145, "Region": 'Kampala'},
+          {id: '6', "Age": 35, "Weight": 62, "Height": 163, "Region": 'Kampala'},
+          {id: '7', "Age": 32, "Weight": 38, "Height": 149, "Region": 'Kampala'},
+          {id: '8', "Age": 60, "Weight": 36, "Height": 144, "Region": 'Jinja'},
+          {id: '9', "Age": 56, "Weight": 42, "Height": 120, "Region": 'Jinja'},
+          {id: '10', "Age": 70, "Weight": 54, "Height": 160, "Region": 'Jinja'},
+          {id: '11', "Age": 45, "Weight": 45, "Height": 126, "Region": 'Jinja'},
+          {id: '12', "Age": 36, "Weight": 56, "Height": 138, "Region": 'Jinja'},
+          {id: '13', "Age": 28, "Weight": 65, "Height": 136, "Region": 'Jinja'},
+          {id: '14', "Age": 40, "Weight": 70, "Height": 170, "Region": 'Jinja'},
         ]
+      }).then(chart => {
+        setTimeout(() => {
+          chart.update([
+            {id: '1', "Weight": 47, "Height": 151, "Region": 'Kampala'},
+            {id: '2', "Weight": 50, "Height": 139, "Region": 'Kampala', color: 'green'},
+            {id: '3', "Weight": 31, "Height": 136, "Region": 'Kampala'},
+            {id: '4', "Weight": 53, "Height": 156, "Region": 'Kampala'},
+            {id: '5', "Weight": 41, "Height": 145, "Region": 'Kampala'},
+            {id: '6', "Weight": 62, "Height": 163, "Region": 'Kampala'},
+            {id: '7', "Weight": 38, "Height": 149, "Region": 'Kampala'},
+            {id: '8', "Weight": 36, "Height": 144, "Region": 'Jinja'},
+            {id: '10', "Weight": 54, "Height": 160, "Region": 'Jinja'},
+            {id: '11', "Weight": 45, "Height": 126, "Region": 'Jinja'},
+            {id: '12', "Weight": 56, "Height": 138, "Region": 'Jinja'},
+            {id: '13', "Weight": 65, "Height": 136, "Region": 'Jinja'},
+            {id: '14', "Weight": 70, "Height": 170, "Region": 'Jinja'},
+            {id: '15', "Weight": 40, "Height": 120, "Region": 'Jinja'},
+          ]);
+        }, 10000)
       })
     </script>
 </section>
