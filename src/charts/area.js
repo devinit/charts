@@ -1,5 +1,5 @@
 import Plottable from "plottable";
-import {createLineChart} from "./line";
+import {createLineChart} from "../factories/createLineChart";
 
 /**
  * @typedef {LinearCategoryChart} Area

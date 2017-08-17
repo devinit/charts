@@ -1,5 +1,5 @@
 import Plottable from "plottable";
-import {createLineChart} from "./line";
+import {createLineChart} from "../factories/createLineChart";
 import {createFullStackedDataset} from "../factories/createDataset";
 
 /**
