@@ -3,11 +3,8 @@ const destination = `dist/di-charts.schema.json`;
 
 exports.publish = function (data) {
 
-  const definitions = data()
-    .get()
-    .filter(doc => !doc.undocumented)
-    .filter(doc => doc.kind === 'typedef')
-    .filter(doc => doc.name)
+  const definitions = data().get()
+    .filter(doc => !doc.undocumented && doc.kind === 'typedef' && doc.name)
     .reduce((all, doc) => {
       let {name, access, type, properties} = doc;
 
