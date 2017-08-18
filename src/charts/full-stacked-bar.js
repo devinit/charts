@@ -1,5 +1,5 @@
 import Plottable from "plottable";
-import {createLinearChart} from "../factories/createLinearChart";
+import createBarChart from "../factories/createBarChart";
 import {createFullStackedDataset} from "../factories/createDataset";
 
 /**
@@ -14,22 +14,11 @@ export default (element, data, config) => {
 
   const plot = new Plottable.Plots.StackedBar(orientation);
 
-  const linearChart = createLinearChart({
+  const linearChart = createBarChart(
     element,
     plot,
-    config: {
-      orientation,
-
-      linearAxis: {
-        axisMaximum: 100,
-        axisMinimum: 0,
-
-        ...linearAxis,
-      },
-
-      ...more
-    }
-  });
+    config
+  );
 
   const addData = data => linearChart.addData(createFullStackedDataset(
     data,

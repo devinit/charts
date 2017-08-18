@@ -1,5 +1,5 @@
 import Plottable from "plottable";
-import { createLinearChart } from '../factories/createLinearChart'
+import createBarChart from "../factories/createBarChart";
 
 /**
  * @typedef {LinearCategoryChart} Bar
@@ -15,7 +15,7 @@ export default (element, data, config) => {
 
   // ... apply bar configuration
 
-  const chart = createLinearChart({element, plot, config: {orientation, ...more}});
+  const chart = createBarChart(element, plot, config);
 
   chart.addData(data);
 
