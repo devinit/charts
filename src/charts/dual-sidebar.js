@@ -177,7 +177,7 @@ export default (element, data, config) => {
       // of items
       .map(([left, right]) => {
 
-        groupIds.forEach((groupId, groupIndex) =>
+        groupIds.forEach((groupId, groupIndex) => {
 
           subGroupIds[groupIndex].forEach((subGroupId, subGroupIndex) => {
             const leftSubgroupLength = left[groupIndex][subGroupIndex].length;
@@ -203,8 +203,24 @@ export default (element, data, config) => {
               }
             }
 
-          })
-        );
+          });
+
+          left[groupIndex].push([{
+            ...(left[groupIndex][0][0] || {}),
+            [subGroupBy]: '',
+            [categoryAxis.indicator]: '',
+            [linearAxis.indicator]: 0,
+          }]);
+
+          right[groupIndex].push([{
+            ...(right[groupIndex][0][0] || {}),
+            [subGroupBy]: '',
+            [categoryAxis.indicator]: '',
+            [linearAxis.indicator]: 0,
+          }]);
+
+        });
+
 
         return [left, right];
 
@@ -301,7 +317,7 @@ const drawLabels = (dualSidebar) => function () {
           .text(groupId)
           .attr('class', 'group-label')
           .attr('x', dualSidebar.gutter * -0.5)
-          .attr('y', top - 5)
+          .attr('y', top - 15)
           .attr('text-anchor', 'middle');
 
         makeUnique(groupEntities.map(entity => entity.datum.subGroup))
