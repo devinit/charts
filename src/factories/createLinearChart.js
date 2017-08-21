@@ -24,7 +24,6 @@ import {createScaleAnimator} from "./createAnimator";
  * @property {CategoryAxis} categoryAxis - Category Axis
  * @property {ColorLegend} legend - Legend
  */
-
 export const createLinearChart = ({element, plot, config}) => {
 
   const {
@@ -143,13 +142,13 @@ export const createPlotWithGridlines = ({plot, grid}) => {
 
 export const createLinearPlot = ({plot, orientation, categoryScale, linearScale, labeling = {}}) => {
   const {
-    showLabels = true, prefix = '', suffix = ''
+    showLabels = false, prefix = '', suffix = ''
   } = labeling;
 
-  if (showLabels && plot.labelsEnabled) {
+  if (plot.labelsEnabled) {
     plot
       .labelFormatter(d => `${prefix}${approximate(d)}${suffix}`)
-      .labelsEnabled(showLabels)
+      .labelsEnabled(showLabels);
   }
 
   return plot
