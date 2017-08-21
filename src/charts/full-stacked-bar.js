@@ -10,14 +10,22 @@ import {createFullStackedDataset} from "../factories/createDataset";
  */
 export default (element, data, config) => {
 
-  const { orientation, linearAxis = {}, ...more } = config;
+  const { orientation, linearAxis } = config;
 
   const plot = new Plottable.Plots.StackedBar(orientation);
 
   const linearChart = createBarChart(
     element,
     plot,
-    config
+    {
+      ...config,
+      linearAxis: {
+        ...linearAxis,
+
+        axisMaximum: 100,
+        axisMinimum: 0,
+      }
+    }
   );
 
   const addData = data => linearChart.addData(createFullStackedDataset(
