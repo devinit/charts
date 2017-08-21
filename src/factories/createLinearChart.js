@@ -1,5 +1,5 @@
 import Plottable from "plottable";
-import approximate from "approximate-number";
+import approximate from "./approximate";
 import {createChartTable} from "./createTable";
 import {createTitle} from "./createTitle";
 import {createColorLegend} from "./createLegend";

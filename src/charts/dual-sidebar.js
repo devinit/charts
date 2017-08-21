@@ -1,5 +1,5 @@
 import Plottable from "plottable";
-import approximate from "approximate-number";
+import approximate from "../factories/approximate";
 import {createChartTable} from "../factories/createTable";
 import {createTitle} from "../factories/createTitle";
 import {makeUnique} from "../factories/createDataset";

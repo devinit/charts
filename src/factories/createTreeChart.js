@@ -5,7 +5,7 @@ import Tooltip from "tooltip.js";
 import {createTitle} from "./createTitle";
 import {createChartTable} from "./createTable";
 import {createTreeDataset} from "./createDataset";
-import approximate from "approximate-number";
+import approximate from "./approximate";
 
 /**
  * @typedef {Object} TreeChart

@@ -1,4 +1,4 @@
-import approximate from "approximate-number";
+import approximate from "./approximate";
 import {color} from "d3"
 
 /**

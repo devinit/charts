@@ -1,7 +1,7 @@
 import Plottable from "plottable";
 //noinspection JSFileReferences
 import Tooltip from "tooltip.js";
-import approximate from "approximate-number";
+import approximate from "./approximate";
 import {createLinearChart} from "../factories/createLinearChart";
 
 export const createLineChart = (element, plot, config) => {

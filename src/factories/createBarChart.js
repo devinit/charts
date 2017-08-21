@@ -1,6 +1,6 @@
 import Plottable from "plottable";
 import {color} from "d3";
-import approximate from "approximate-number";
+import approximate from "./approximate";
 import {createLinearChart} from "./createLinearChart";
 
 export default (element, plot, config) => {
