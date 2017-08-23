@@ -8,13 +8,17 @@ export default (element, plot, config) => {
   const chart = createLinearChart({element, plot, config});
 
   if (interactions.enable) {
-    plot.onAnchor(createBarInteraction(config.orientation, config.labeling));
+    plot.onAnchor(plot => {
+      setTimeout(() => {
+        createBarInteraction(config.orientation, config.labeling, config.highlight)(plot)
+      }, 500)
+    });
   }
 
   return chart;
 }
 
-const createBarInteraction = (orientation = 'vertical', labeling = {}) => {
+const createBarInteraction = (orientation = 'vertical', labeling = {}, highlight = []) => {
 
   const {
     prefix = '',
@@ -37,6 +41,26 @@ const createBarInteraction = (orientation = 'vertical', labeling = {}) => {
   };
 
   return plot => {
+    // QUICKFIX: Highlight some bars in a bar chart
+    if (highlight.length) {
+      plot.entities()
+        .filter(entity => highlight.indexOf(entity.datum.label) > -1)
+        .forEach(entity => {
+          const { x, y, width, height } = entity.selection.node().getBBox();
+
+          plot
+            .background()
+            .append('text')
+            .attr('class', 'plot-label hover-label')
+            .attr('x', orientation === 'vertical' ? x + ( width / 2 ) : width + x + 5)
+            .attr('y', orientation === 'horizontal' ? y + ( height / 2 ) : y - 10)
+            .attr('text-anchor', orientation === 'vertical' ? 'middle' : 'start')
+            .attr('style', `fill: ${entity.selection.attr("fill")}`)
+            .text(`${prefix}${approximate(entity.datum.value)}${suffix}`);
+        })
+    }
+
+
     const interaction = new Plottable.Interactions.Pointer()
       .onPointerExit(() => {
         reset(plot);
@@ -59,6 +83,7 @@ const createBarInteraction = (orientation = 'vertical', labeling = {}) => {
             .attr('x', orientation === 'vertical' ? x + ( width / 2 ) : width + x + 5)
             .attr('y', orientation === 'horizontal' ? y + ( height / 2 ) : y - 10)
             .attr('text-anchor', orientation === 'vertical' ? 'middle' : 'start')
+            .attr('style', `fill: ${entity.selection.attr("fill")}`)
             .text(`${prefix}${approximate(entity.datum.value)}${suffix}`);
 
           const fill = color(entity.selection.attr('initial-fill')).darker(0.7);
