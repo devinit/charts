@@ -304,13 +304,9 @@ const drawLabels = (dualSidebar) => function () {
 
       if (direction > 0 && groupEntities.length) {
 
-        const nodes = groupEntities
-          .map(entity => entity.selection.node());
+        const nodeYValues = groupEntities.map(entity => entity.selection.node().y.baseVal.value);
 
-        //noinspection JSUnresolvedFunction
-        const bBoxes = nodes.map(selection => selection.getBBox());
-
-        const top = Math.min.apply(null, bBoxes.map(box => box.y));
+        const top = Math.min.apply(null, nodeYValues);
 
         foreground
           .append('text')
@@ -325,13 +321,10 @@ const drawLabels = (dualSidebar) => function () {
 
             const subGroupEntities = groupEntities.filter(entity => entity.datum.subGroup === subGroupId);
 
-            const nodes = subGroupEntities
-              .map(entity => entity.selection.node());
+            const nodeYValues = subGroupEntities.map(entity => entity.selection.node().y.baseVal.value);
 
-            const bBoxes = nodes.map(selection => selection.getBBox());
-
-            const top = Math.min.apply(null, bBoxes.map(box => box.y));
-            const bottom = Math.max.apply(null, bBoxes.map(box => box.y + box.height));
+            const top = Math.min.apply(null, nodeYValues);
+            const bottom = Math.max.apply(null, nodeYValues);
 
             const y = top + 5 + (bottom - top) / 2;
 
