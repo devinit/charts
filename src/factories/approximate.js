@@ -8,25 +8,24 @@ const format = number => (+number.toFixed(1)).toString();
 const approximate = (number) => {
 
   const absolute = Math.abs(number);
-  const polarity = number < 0 ? '-' : '';
 
   if (absolute < THOUSAND) {
-    return polarity + format(number)
+    return format(number)
   }
 
   if (absolute < MILLION) {
-    return `${polarity + format(number / THOUSAND)}k`
+    return `${format(number / THOUSAND)}k`
   }
 
   if (absolute < BILLION) {
-    return `${polarity}${format(number / MILLION)}m`
+    return `${format(number / MILLION)}m`
   }
 
   if (number < TRILLION) {
-    return `${polarity}${format(number / BILLION)}bn`
+    return `${format(number / BILLION)}bn`
   }
 
-  return `${polarity}${format(number / TRILLION)}tr`
+  return `${format(number / TRILLION)}tr`
 };
 
 export default approximate
