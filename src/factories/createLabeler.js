@@ -4,13 +4,15 @@ import {color} from "d3"
 /**
  * @typedef {Object} Labeling
  * @property {boolean} showLabels=true - Show Labels
+ * @property {boolean} showValues=true - Show Values
+ * @property {boolean} showPercents=true - Show Percents
  * @property {string} prefix - Prefix
  * @property {string} suffix - Suffix
  *
  */
 export const createTreeChartLabeler =  (config, percentage = d => 100) => {
   const {
-    showLabels = true, prefix = '', suffix = ''
+    showLabels = true, showValues = true, showPercents = false, prefix = '', suffix = ''
   } = config;
 
   return function () {
@@ -31,11 +33,12 @@ export const createTreeChartLabeler =  (config, percentage = d => 100) => {
 
         const datum = entity.datum;
         const value = approximate(datum.value);
-        const label = this._label(datum);
+        const label = showLabels ? this._label(datum) : '';
         const percent = percentage(datum);
 
-        const percentageLabel = percent === 100 ? '' : `${percent}% | `;
-        const valueLabel = `${prefix ? prefix + ' ' : ''}${value}${suffix ?  ' ' + suffix : ''}`;
+        const percentageLabel = percent === 100 ? '' : showPercents ? `${percent}% | ` : '';
+        const valueLabel = showValues ? `${prefix ? prefix + ' ' : ''}${value}${suffix ?  ' ' + suffix : ''}` : '';
+
 
         foreground
           .append('foreignObject')
