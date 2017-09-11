@@ -1,17 +1,36 @@
-export const palette = new Map();
+// @flow
+interface Chart {
+  update(data: Object[]): void;
+}
 
-export const setColorPalette = (colors) => {
+type DrawArguments = {
+  element: Element,
+  config: Object,
+  data: Object[],
+}
+
+type Color = {
+  name: string,
+  color: string,
+}
+
+export const palette: Map<string, string> = new Map();
+
+export const setColorPalette = (colors: Color[]) => {
   colors.forEach(({name, color}) => palette.set(name, color));
 };
 
-export const draw = ({element, data, config: {colors, ...config}}) => {
+export const draw = (args: DrawArguments) => {
+  const {element, data, config: {colors, ...config}} = args;
 
-  return new Promise(function (resolve, reject) {
+  //noinspection UnnecessaryLocalVariableJS
+  const promise: Promise<Chart> = new Promise(function (resolve, reject) {
     if (!config.type) return reject(new Error('No chart type specified'));
 
+    // $FlowFixMe
     import(`./charts/${config.type}.js`)
-      .then(function (chart) {
-        resolve(chart.default(
+      .then(function (factory) {
+        const chart: Chart = factory.default(
           element,
           // Substitute color indicators
           config.coloring ?
@@ -29,12 +48,15 @@ export const draw = ({element, data, config: {colors, ...config}}) => {
               colors.map(color => palette.get(color) || color) :
               colors,
           }
-        ));
+        );
+
+        resolve(chart);
       })
       .catch(error => {
         reject(error)
       })
-  })
+  });
+  return promise;
 
 };
 
