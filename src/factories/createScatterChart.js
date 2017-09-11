@@ -9,6 +9,7 @@ import {createColorLegend} from "./createLegend";
 import Tooltip from "tooltip.js";
 import {color} from "d3";
 import {createDataAnimator} from "./createAnimator";
+import approximate from './approximate'
 
 /**
  * @typedef {Object} ScatterChart - Scatter chart configuration
@@ -77,15 +78,28 @@ export default ({element, plot, config}) => {
   const scatterGridLines = createScatterGridLines({horizontalScale, verticalScale, horizontalAxis, verticalAxis});
 
   // TODO: Add bubble scale legend
+
+  const vAxis = createNumericAxis({
+    axisScale: verticalScale,
+    axisOrientation: 'vertical',
+    ...verticalAxis
+  });
+
+  const hAxis = createNumericAxis({
+    axisScale: horizontalScale,
+    axisOrientation: 'horizontal',
+    ...horizontalAxis
+  });
+
   const table = createChartTable({
 
     title: createTitle({title, titleAlignment}),
 
     chart: createPlotAreaWithAxes({
 
-      verticalAxis: createNumericAxis({axisScale: verticalScale, axisOrientation: 'vertical', ...verticalAxis}),
+      verticalAxis: vAxis,
 
-      horizontalAxis: createNumericAxis({axisScale: horizontalScale, axisOrientation: 'horizontal', ...horizontalAxis}),
+      horizontalAxis: hAxis,
 
       plotArea: new Plottable.Components.Group([
         scatterGridLines,
@@ -115,7 +129,7 @@ export default ({element, plot, config}) => {
   });
 
 
-  const addData = data => {
+  const update = data => {
     bubbleScale
       .domain([0, 3e2])
       .range([12, 50]);
@@ -182,11 +196,21 @@ export default ({element, plot, config}) => {
 
   return {
 
+    _config: config,
+
     table,
 
-    addData,
+    verticalScale,
 
-    update: addData,
+    horizontalScale,
+
+    verticalAxis: vAxis,
+
+    horizontalAxis: hAxis,
+
+    plot,
+
+    update,
 
     destroy: () => {
       table.destroy();
@@ -194,6 +218,14 @@ export default ({element, plot, config}) => {
 
     onSelect: (callback) => {
       selectionListeners.push(callback);
+    },
+
+    updateHorizontalAxis: config => {
+      createNumericAxis(config, hAxis)
+    },
+
+    updateVerticalAxis: config => {
+      createNumericAxis(config, vAxis)
     }
   }
 }
@@ -426,7 +458,9 @@ const createTipper = (container, tooltips = {}, axes) => {
               tip._tooltipNode.querySelector('#tt-body').innerHTML = `<table>${
                 axes
                   .filter(axis => axis && entity.datum[axis.indicator || ''])
-                  .map(axis => `<tr><td>${axis.axisLabel || axis.label}</td><td>${entity.datum[axis.indicator]}</td></tr>`)
+                  .map(axis => 
+                    `<tr><td>${axis.axisLabel || axis.label}</td>` +
+                    `<td style="text-align: right">${approximate(entity.datum[axis.indicator])}</td></tr>`)
                   .join('')
                 }
               </table>`;

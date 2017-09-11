@@ -13,7 +13,7 @@ export default (element, data, config) => {
 
   const linearChart = createLineChart(element, plot, config);
 
-  linearChart.addData(data);
+  linearChart.update(data);
 
   return linearChart
 };

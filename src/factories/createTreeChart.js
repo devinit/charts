@@ -71,7 +71,7 @@ export default ({element, plot, config}) => {
 
   table.renderTo(element);
 
-  const addData = (data = null) => {
+  const update = (data = null) => {
     if (data) {
       plot.datasets(createTreeDataset(data));
     }
@@ -103,9 +103,7 @@ export default ({element, plot, config}) => {
 
     table,
 
-    addData,
-
-    update: addData,
+    update,
 
     onClick,
 

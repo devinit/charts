@@ -80,7 +80,7 @@ export default (element, data = [], config) => {
       })
   });
 
-  const addData = data => treeChart.addData(transform(data));
+  const update = data => treeChart.update(transform(data));
 
   const chart = {
 
@@ -90,12 +90,10 @@ export default (element, data = [], config) => {
       listeners.push(callback)
     },
 
-    addData,
-
-    update: addData,
+    update,
   };
 
-  chart.addData(data);
+  chart.update(data);
 
   return chart
 };

@@ -96,7 +96,7 @@ export default (element, data, config) => {
 
   const colorize = createColorFiller(colors, [], coloring);
 
-  const addData = data => {
+  const update = data => {
 
     const root = colorize(createTreeHierachy(data, tree));
 
@@ -115,9 +115,7 @@ export default (element, data, config) => {
 
     table,
 
-    addData,
-
-    update: addData,
+    update,
 
     destroy: () => {
       table.destroy();
@@ -125,7 +123,7 @@ export default (element, data, config) => {
 
   };
 
-  chart.addData(data, tree);
+  chart.update(data, tree);
 
   return chart
 };

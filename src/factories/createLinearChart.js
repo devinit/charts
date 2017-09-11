@@ -90,7 +90,7 @@ export const createLinearChart = ({element, plot, config}) => {
 
     table,
 
-    addData: (data = []) => {
+    update: (data = []) => {
 
       const groupIds = makeUnique(data.map(d => d[groupBy]));
 

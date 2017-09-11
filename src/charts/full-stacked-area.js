@@ -28,7 +28,7 @@ export default (element, data, config) => {
     }
   );
 
-  const addData = data => linearChart.addData(createFullStackedDataset(
+  const update = data => linearChart.update(createFullStackedDataset(
     data,
     config.linearAxis.indicator,
     config.categoryAxis.indicator,
@@ -38,12 +38,10 @@ export default (element, data, config) => {
 
     ...linearChart,
 
-    addData,
-
-    update: addData,
+    update,
   };
 
-  chart.addData(data);
+  chart.update(data);
 
   return chart;
 };

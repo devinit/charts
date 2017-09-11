@@ -7,7 +7,7 @@ export default (element, data, config) => {
 
   const chart = createTimePlot({element, plot, config});
 
-  chart.addData(data);
+  chart.update(data);
 
   return chart;
 

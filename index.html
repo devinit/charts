@@ -669,13 +669,20 @@
           groupBy: 'flow_type',
           subGroupBy: 'flow_category',
           splitBy: 'direction',
-          colors: ['rgb(186, 12, 47)', 'rgb(0, 149, 200)', 'rgb(147, 50, 142)', 'rgb(234, 118, 0)', 'rgb(27, 54, 93)'],
+          colors: [
+            'rgb(186, 12, 47)',
+            'rgb(0, 149, 200)',
+            'rgb(147, 50, 142)',
+            'rgb(234, 118, 0)',
+            'rgb(27, 54, 93)'
+          ],
           showLabels: true,
           linearAxis: {
             showAxis: true,
             indicator: 'value',
             ticking: 'end',
-            axisMaximum: 3e9
+            axisMaximum: 3e9,
+            absolute: true,
           },
           categoryAxis: {
             showAxis: true,

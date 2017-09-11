@@ -13,7 +13,7 @@ export default (element, data, config) => {
 
   const chart  = createCircularChart({element, plot, config});
 
-  chart.addData(data);
+  chart.update(data);
 
   return chart;
 
