@@ -4,7 +4,7 @@ import {createChartTable} from "../factories/createTable";
 import {createTitle} from "../factories/createTitle";
 import {makeUnique} from "../factories/createDataset";
 import {createCategoryScale, createLinearScale} from "../factories/createScale";
-import {createCategoryAxis, createNumericAxis} from "../factories/createAxis";
+import {createAxisModifier, createCategoryAxis, createNumericAxis} from "../factories/createAxis";
 import {createLinearAxisGridLines} from "../factories/createGrid";
 
 /**
@@ -58,6 +58,7 @@ export default (element, data, config) => {
 
   } = config;
 
+  const {format, modify} = createAxisModifier(linearAxis);
   const leftCategoryScale = createCategoryScale(categoryAxis);
   const rightCategoryScale = createCategoryScale(categoryAxis);
 
@@ -81,7 +82,7 @@ export default (element, data, config) => {
           categoryScale: leftCategoryScale,
           linearScale: leftLinearScale,
           showLabels
-        }),
+        }, modify),
         grid: createLinearAxisGridLines({...linearAxis, orientation, scale: leftLinearScale})
       }),
 
@@ -92,7 +93,7 @@ export default (element, data, config) => {
           categoryScale: rightCategoryScale,
           linearScale: rightLinearScale,
           showLabels
-        }),
+        }, modify),
         grid: createLinearAxisGridLines({...linearAxis, orientation, scale: rightLinearScale})
       }),
 
@@ -100,15 +101,14 @@ export default (element, data, config) => {
         ...linearAxis,
         axisScale: leftLinearScale,
         axisOrientation: orientation,
-        absolute: true
-      }),
+      }, format),
 
       rightLinearAxis: createNumericAxis({
         ...linearAxis,
         axisScale: rightLinearScale,
         axisOrientation: orientation,
         absolute: true
-      }),
+      }, format),
 
       leftCategoryAxis: createCategoryAxis({
         showAxis: false,
@@ -134,7 +134,7 @@ export default (element, data, config) => {
   leftPlot._drawLabels = drawLabels(dualSidebar);
   rightPlot._drawLabels = drawLabels(dualSidebar);
 
-  const addData = (data = []) => {
+  const update = (data = []) => {
 
     const plots = [leftPlot, rightPlot];
 
@@ -272,9 +272,7 @@ export default (element, data, config) => {
 
     table,
 
-    addData,
-
-    update: addData,
+    update,
 
     destroy: () => {
       table.destroy();
@@ -282,7 +280,7 @@ export default (element, data, config) => {
 
   };
 
-  chart.addData(data);
+  chart.update(data);
 
   return chart;
 };
@@ -363,7 +361,7 @@ export const createPlotWithGridlines = ({plot, grid}) => {
   return grid ? new Plottable.Components.Group([grid, plot]) : plot
 };
 
-export const createLinearPlot = ({plot, categoryScale, linearScale, showLabels}) => {
+export const createLinearPlot = ({plot, categoryScale, linearScale, showLabels}, modify) => {
   if (showLabels && plot.labelsEnabled) {
     plot
       .labelFormatter(d => approximate(Math.abs(d)))
@@ -375,7 +373,7 @@ export const createLinearPlot = ({plot, categoryScale, linearScale, showLabels})
     .attr('stroke', d => d.color)
     .attr('fill', d => d.color)
     .attr('fill-opacity', d => d.opacity)
-    .x(d => d.value, linearScale)
+    .x(d => modify(d.value), linearScale)
     .y(d => d.label, categoryScale);
 };
 

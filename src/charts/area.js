@@ -15,7 +15,7 @@ const area = function (element, data, config) {
 
   const chart = createLineChart(element, plot, config);
 
-  chart.addData(data);
+  chart.update(data);
 
   return chart
 };

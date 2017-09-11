@@ -25,7 +25,7 @@ This library exposes a `draw` function that takes an object with the following p
  - data: a list of entries
  
 The function returns an object with the following methods
-- addData(data: Array): adds data to dataset 
+- update(data: Array): updates visualised data
  
  Example:
 ```js

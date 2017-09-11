@@ -62,7 +62,7 @@ export default ({element, plot, config}) => {
 
   table.renderTo(element);
 
-  const addData = (data = []) => {
+  const update = (data = []) => {
 
     const series = data.map((d, i) => ({
       label: d[circular.label],
@@ -85,9 +85,7 @@ export default ({element, plot, config}) => {
 
     table,
 
-    addData,
-
-    update: addData,
+    update,
 
     destroy: () => {
       table.destroy();
