@@ -1,4 +1,6 @@
 // @flow
+import hash from "object-hash";
+
 interface Chart {
   update(data: Object[]): void;
 }
@@ -22,6 +24,8 @@ export const setColorPalette = (colors: Color[]) => {
 
 export const draw = (args: DrawArguments) => {
   const {element, data, config: {colors, ...config}} = args;
+
+  let currentHash = hash(data);
 
   //noinspection UnnecessaryLocalVariableJS
   const promise: Promise<Chart> = new Promise(function (resolve, reject) {
@@ -50,7 +54,17 @@ export const draw = (args: DrawArguments) => {
           }
         );
 
-        resolve(chart);
+        resolve({
+          ...chart,
+
+          update: (data: Object[]) => {
+            const nextHash = hash(data);
+            if (data && currentHash !== nextHash) {
+              chart.update(data);
+              currentHash = nextHash;
+            }
+          }
+        });
       })
       .catch(error => {
         reject(error)
