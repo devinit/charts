@@ -92,6 +92,7 @@ export default (element, data = [], config) => {
 
     setLabeling(labeling) {
       plot._drawLabels = createTreeChartLabeler(labeling, getDatumPercentage(orientation));
+      plot._drawLabels();
     },
 
     update,
