@@ -6,6 +6,7 @@ import {createTitle} from "./createTitle";
 import {createChartTable} from "./createTable";
 import {createTreeDataset} from "./createDataset";
 import approximate from "./approximate";
+import {createColorLegend} from "./createLegend";
 
 /**
  * @typedef {Object} TreeChart
@@ -16,6 +17,7 @@ import approximate from "./approximate";
  * @property {string[]} colors - Colors
  * @property {indicator} coloring - Color Indicator
  * @property {Labeling} labeling - Label Configuration
+ * @property {TreeLegend} legend - Legend
  * @property {Tree} tree - Hierachy Configuration
  */
 
@@ -37,7 +39,9 @@ export default ({element, plot, config}) => {
 
     orientation = 'vertical',
 
-    labeling = {}
+    labeling = {},
+    
+    legend = {},
 
   } = config;
 
@@ -48,6 +52,8 @@ export default ({element, plot, config}) => {
   const yScale = new Plottable.Scales.Linear();
   yScale.domainMin(0);
   yScale.domainMax(1);
+  
+  const colorScale = new Plottable.Scales.Color();
 
   const x = orientation === 'vertical' ? 'x' : 'y';
   const y = orientation === 'horizontal' ? 'x' : 'y';
@@ -63,10 +69,16 @@ export default ({element, plot, config}) => {
     .labelsEnabled(labeling.showLabels || true)
     .label(d => d.data.label);
 
+  const colorLegend = createColorLegend(colorScale, legend);
 
   const table = createChartTable({
     title: createTitle({title, titleAlignment}),
-    chart: plot
+    
+    chart: plot,
+
+    legend: colorLegend,
+
+    legendPosition: legend.position || 'bottom'
   });
 
   table.renderTo(element);
@@ -75,12 +87,19 @@ export default ({element, plot, config}) => {
     if (data) {
       plot.datasets(createTreeDataset(data));
     }
+
+    if (legend.showLegend) {
+      const leveled = data.filter(d => d.depth === legend.depth);
+      colorScale
+       .domain(leveled.map(d => d.id))
+       .range(leveled.map(d => d.color));
+    }
   };
 
   const onClick = (callback = d => d) => {
 
     const interaction = new Plottable.Interactions.Click()
-      .onClick(function (point) {
+      .onClick(point => {
 
         const entities = plot.entitiesAt(point);
 
@@ -88,14 +107,32 @@ export default ({element, plot, config}) => {
           callback(entities, xScale, yScale)
         }
 
-      });
+      })
+      .attachTo(plot);
 
-    interaction.attachTo(plot);
+    if (legend.showLegend) {
+      const legendInteraction = new Plottable.Interactions.Click()
+        .onClick(point => {
+          const [clicked] = colorLegend.entitiesAt(point);
+
+          if (clicked) {
+            const entities = plot.entities()
+              .filter(d => d.datum.id === clicked.datum);
+
+            callback(entities, xScale, yScale)
+          }
+        })
+        .attachTo(colorLegend);
+
+      colorLegend.onDetach(legend => {
+        legendInteraction.detachFrom(legend);
+      })
+    }
 
     plot.onDetach(plot => {
       interaction.detachFrom(plot);
       tip.dispose()
-    })
+    });
 
   };
 

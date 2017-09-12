@@ -12,6 +12,18 @@ import Plottable from 'plottable';
  * @property {number} rowSpan - Maximum entries per row
  */
 
+/**
+ * @typedef {ColorLegend} TreeLegend
+ * @private
+ * @property {number} depth - Depth of Legend
+ */
+
+/**
+ *
+ * @param {Color} colorScale
+ * @param {ColorLegend} config
+ * @returns {*}
+ */
 export const createColorLegend = (colorScale, config = {}) => {
 
   const {
