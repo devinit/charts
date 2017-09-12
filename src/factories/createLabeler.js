@@ -12,7 +12,7 @@ import {color} from "d3"
  */
 export const createTreeChartLabeler =  (config, percentage = d => 100) => {
   const {
-    showLabels = true, showValues = true, showPercents = false, prefix = '', suffix = ''
+    showLabels = true, showValues = true, showPercents = true, prefix = '', suffix = ''
   } = config;
 
   return function () {
