@@ -58,7 +58,7 @@ export default (element, data = [], config) => {
     const datum = entity.datum;
 
     // TODO: Rethink orientation implementation for tree chats
-    // It might be better to fix orientation for each tree chart
+    // It might be better to set a fixed orientation for each tree chart
     //
     const x = orientation === 'vertical' ? 'x' : 'y';
     const y = orientation === 'horizontal' ? 'x' : 'y';
@@ -87,7 +87,11 @@ export default (element, data = [], config) => {
     ...treeChart,
 
     onClick: (callback) => {
-      listeners.push(callback)
+      listeners.push(callback);
+    },
+
+    setLabeling(labeling) {
+      plot._drawLabels = createTreeChartLabeler(labeling, getDatumPercentage(orientation));
     },
 
     update,

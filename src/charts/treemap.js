@@ -87,6 +87,10 @@ export default (element, data = [], config) => {
       listeners.push(callback)
     },
 
+    setLabeling(labeling) {
+      plot._drawLabels = createTreeChartLabeler(labeling, getDatumPercentage);
+    },
+
     update,
   };
 
