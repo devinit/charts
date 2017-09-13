@@ -1,5 +1,7 @@
 import Plottable from "plottable";
 import {color} from "d3";
+//noinspection JSFileReferences
+import Tooltip from "tooltip.js";
 import approximate from "./approximate";
 import {createLinearChart} from "./createLinearChart";
 
@@ -7,16 +9,94 @@ export default (element, plot, config) => {
   const { interactions = { enable: false } } = config;
   const chart = createLinearChart({element, plot, config});
 
-  if (interactions.enable) {
-    plot.onAnchor(plot => {
-      setTimeout(() => {
+  plot.onAnchor(plot => {
+    setTimeout(() => {
+      if (interactions.enable) {
         createBarInteraction(config.orientation, config.labeling, config.highlight)(plot)
-      }, 500)
-    });
-  }
+      }
+
+      createBarTipper(element, config.labeling, chart.categoryScale, config.orientation)(plot);
+    }, 500)
+  });
 
   return chart;
 }
+
+export const createBarTipper = (container, labeling = {}, scale, orientation = 'vertical') => (plot) => {
+
+  let currentHash = null;
+
+  const foreignObject = plot.foreground()
+    .append('foreignObject')
+    .html('<div id="tooltip-container"></div>');
+
+  const tooltipAnchor = plot.foreground()
+    .append('circle')
+    .attr('r', 3)
+    .attr('fill', 'transparent');
+
+  const tip = new Tooltip(tooltipAnchor.node(), {
+    title: 'Tooltip',
+    container: container,
+    template: `
+        <div class="tooltip" role="tooltip">
+          <div class="tooltip-arrow"></div>
+          <div id="tt-title" class="tooltip-inner"></div>
+          <div id="tt-body" class="tooltip-body"></div>
+        </div>
+    `,
+  });
+
+  const template = datum => `
+      <div>
+        <span style="background: ${datum.color}; width: 10px; height: 10px; display: inline-block"></span>
+        <span>${datum.group ? (datum.group + ':') : ''} ${approximate(datum.value)}</span>
+      </div>
+    `;
+
+  const interaction = new Plottable.Interactions.Pointer()
+    .onPointerEnter(() => tip.show())
+    .onPointerExit(() => tip.hide())
+    .onPointerMove(point => {
+
+      const entities = plot.entitiesIn({min: point.x - 1, max: point.x + 1}, {
+        min: 0,
+        max: plot.height()
+      });
+
+      const position = entities
+        .reduce(([p], e) => ([{
+          x: [...p.x, e.position.x],
+          y: [...p.y, e.position.y],
+        }]), [{x: [], y: []}])
+        .map(({x, y}) => ({
+          x: x.reduce((sum, k) => sum + k, 0) / x.length,
+          y: Math.min.apply(null, y)
+        }))
+        .reduce((_, d) => d);
+
+      if (entities.length && currentHash !== position.x.toString() + position.y.toString()) {
+        requestAnimationFrame(() => {
+          tip.hide();
+          tooltipAnchor.attr('cx', position.x);
+          tooltipAnchor.attr('cy', position.y);
+          tip.show();
+          tip._tooltipNode.querySelector('#tt-title').innerText = entities[0].datum.label;
+          tip._tooltipNode.querySelector('#tt-body').innerHTML =
+            entities.map(e => template(e.datum)).join('');
+          currentHash = position.x.toString() + position.y.toString()
+        });
+      }
+
+    });
+
+  interaction.attachTo(plot);
+
+  plot.onDetach(plot => {
+    interaction.detachFrom(plot);
+    tip.dispose()
+  })
+};
 
 const createBarInteraction = (orientation = 'vertical', labeling = {}, highlight = []) => {
 
