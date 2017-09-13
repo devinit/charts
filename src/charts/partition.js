@@ -1,4 +1,5 @@
 import Plottable from "plottable";
+import hash from "object-hash";
 import createTreeChart, {createColorFiller, createTipper} from "../factories/createTreeChart";
 import {createTreeHierachy} from "../factories/createDataset";
 import {createScaleAnimator} from "../factories/createAnimator";
@@ -82,6 +83,10 @@ export default (element, data = [], config) => {
 
   const update = data => treeChart.update(transform(data));
 
+  const hashes = {
+    labeling: hash(labeling),
+  };
+
   const chart = {
 
     ...treeChart,
@@ -91,8 +96,14 @@ export default (element, data = [], config) => {
     },
 
     setLabeling(labeling) {
-      plot._drawLabels = createTreeChartLabeler(labeling, getDatumPercentage(orientation));
-      plot._drawLabels();
+      const labelingHash = hash(labeling);
+
+      if (hashes.labeling !== labelingHash) {
+        plot._drawLabels = createTreeChartLabeler(labeling, getDatumPercentage(orientation));
+        // delay label redraw like plottable does
+        setTimeout(() => plot._drawLabels(), 200);
+        hashes.labeling = labelingHash
+      }
     },
 
     update,
