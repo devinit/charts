@@ -1,5 +1,6 @@
 import Plottable from "plottable";
 import {color} from "d3";
+import sha1 from "object-hash";
 //noinspection JSFileReferences
 import Tooltip from "tooltip.js";
 import approximate from "./approximate";
@@ -152,7 +153,10 @@ export const createBarTipper = (container, labeling = {}, scale, orientation = '
       .reduce((_, d) => d);
 
   const interaction = new Plottable.Interactions.Pointer()
-    .onPointerExit(() => tip.hide())
+    .onPointerExit(() => {
+      tip.hide();
+      currentHash = null;
+    })
     .onPointerMove(point => {
 
       const entities = getEntities(point);
@@ -220,7 +224,10 @@ export const createLineTipper = (container, labeling = {}, scale, orientation = 
 
   const interaction = new Plottable.Interactions.Pointer()
     .onPointerEnter(() => tip.show())
-    .onPointerExit(() => tip.hide())
+    .onPointerExit(() => {
+      tip.hide();
+      currentHash = null;
+    })
     .onPointerMove(point => {
       let halfStepWidth = 0;
 
@@ -248,16 +255,19 @@ export const createLineTipper = (container, labeling = {}, scale, orientation = 
         }))
         .reduce((_, d) => d);
 
-      if (entities.length && currentHash !== position.x.toString() + position.y.toString()) {
-        tip.hide();
-        tooltipAnchor.attr('cx', position.x);
-        tooltipAnchor.attr('cy', position.y);
-        tip.show();
-        tip._tooltipNode.querySelector('#tt-title').innerText = entities[0].datum.label;
-        tip._tooltipNode.querySelector('#tt-body').innerHTML =
-          entities.map(e => template(e.datum)).join('');
-        currentHash = position.x.toString() + position.y.toString()
+      const hash = position.x.toString() + position.y.toString();
 
+      if (entities.length && currentHash !== hash) {
+        requestAnimationFrame(() => {
+          tip.hide();
+          tooltipAnchor.attr('cx', position.x);
+          tooltipAnchor.attr('cy', position.y);
+          tip.show();
+          tip._tooltipNode.querySelector('#tt-title').innerText = entities[0].datum.label;
+          tip._tooltipNode.querySelector('#tt-body').innerHTML =
+            entities.map(e => template(e.datum)).join('');
+          currentHash = hash;
+        })
       }
 
     });
