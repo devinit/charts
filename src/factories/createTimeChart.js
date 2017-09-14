@@ -8,7 +8,7 @@ import {createPlotWithGridlines} from "./createLinearChart";
 import {createNumericAxis, createTimeAxis} from "./createAxis";
 import {createLinearScale, createTimeScale} from "./createScale";
 import {makeUnique} from "./createDataset";
-import {createLineTipper} from "./createLineChart";
+import {createLineTipper} from "./createTooltipper";
 import {createScaleAnimator} from "./createAnimator";
 
 export default ({element, plot, config}) => {

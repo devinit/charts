@@ -10,6 +10,7 @@ import Tooltip from "tooltip.js";
 import {color} from "d3";
 import {createDataAnimator} from "./createAnimator";
 import approximate from './approximate'
+import {createScatterClickTipper, createScatterTipper} from "./createTooltipper";
 
 /**
  * @typedef {Object} ScatterChart - Scatter chart configuration
@@ -116,8 +117,8 @@ export default ({element, plot, config}) => {
   // ...
   const selectionListeners = [];
   const animate = createDataAnimator(idIndicator, ['x', 'y', 'z'], 2000);
-  const clickTipper = createClickTipper(element, tooltips, idIndicator, selectionListeners);
-  const tipper = createTipper(element, tooltips, [verticalAxis, horizontalAxis, bubble]);
+  const clickTipper = createScatterClickTipper(element, tooltips, idIndicator, selectionListeners);
+  const tipper = createScatterTipper(element, tooltips, [verticalAxis, horizontalAxis, bubble]);
 
   table.renderTo(element);
 
@@ -316,173 +317,4 @@ const createPlotAreaWithAxes = ({horizontalAxis, plotArea, verticalAxis}) => {
   const plotAreaWithAxes = [[verticalAxis, plotArea], [null, horizontalAxis]];
 
   return new Plottable.Components.Table(plotAreaWithAxes);
-};
-
-const createClickTipper = (container, tooltips, idIndicator, listeners) => {
-
-  const {enable = true, titleIndicator,} = tooltips;
-
-  const selected = {};
-
-  if (!enable || !titleIndicator || !idIndicator) {
-    return {
-      init: (plot) => {
-      },
-      update: () => {
-      },
-    };
-  }
-
-  const template = '<div class="tooltip" role="tooltip" style="text-align: left;">' +
-    '<div class="tooltip-arrow"></div>' +
-    '<div id="tt-title" class="tooltip-inner"></div>' +
-    '<div id="tt-body" class="tooltip-body"></div>' +
-    '</div>';
-
-  return {
-    init: (plot) => {
-      container.style.overflow = 'hidden';
-
-      const interaction = new Plottable.Interactions.Click()
-        .onClick(p => {
-          const [entity] = plot.entitiesAt(p);
-
-          if (entity) {
-            const id = entity.datum[idIndicator];
-
-            if (!selected[id]) {
-
-              const selection = plot.content().select(`path#bubble-${id}`);
-
-              const node = selection.node();
-
-              if (node) {
-                const tip = new Tooltip(node, {
-                  title: entity.datum[titleIndicator],
-                  placement: 'bottom',
-                  container,
-                  template,
-                });
-
-                selected[id] = tip;
-
-                tip.show();
-
-                listeners.forEach(listener => typeof listener === 'function' && listener(id))
-              }
-            }
-
-            else if (selected[id]) {
-              const tip = selected[id];
-
-              tip.hide();
-              tip.dispose();
-
-              selected[id] = null;
-
-              listeners.forEach(listener => typeof listener === 'function' && listener(id))
-            }
-          }
-        })
-        .attachTo(plot);
-
-      plot.onDetach(() => interaction.detachFrom(plot))
-    },
-    update: () => {
-      Object
-        .keys(selected)
-        .filter(key => selected[key])
-        .map(key => {
-          let tip = selected[key];
-          tip.hide();
-
-          if (tip.reference.id === `bubble-${key}`) {
-            tip.show();
-          }
-        });
-    },
-  }
-};
-
-const createTipper = (container, tooltips = {}, axes) => {
-
-  const {
-    enable = true,
-    titleIndicator,
-  } = tooltips;
-
-  if (!enable || !titleIndicator) {
-    return (plot) => {
-    };
-  }
-
-  return function (plot) {
-
-    let currentId = null;
-
-    const tooltipAnchor = plot.foreground()
-      .append('circle')
-      .attr('r', 3)
-      .attr('fill', 'transparent');
-
-    const tip = new Tooltip(tooltipAnchor.node(), {
-      title: 'Tooltip',
-      container: container,
-      template: '<div class="tooltip" role="tooltip" style="text-align: left;">' +
-      '<div class="tooltip-arrow"></div>' +
-      '<div id="tt-title" class="tooltip-inner"></div>' +
-      '<div id="tt-body" class="tooltip-body"></div>' +
-      '</div>'
-    });
-
-    const interaction = new Plottable.Interactions.Pointer()
-      .onPointerEnter(() => {
-      })
-      .onPointerMove(p => {
-
-        const [entity] = plot.entitiesAt(p);
-
-        requestAnimationFrame(() => {
-
-          if (entity) {
-            const id = `${entity.datum.x}-${entity.datum.y}`;
-
-            if (id !== currentId) {
-              tip.hide();
-              tooltipAnchor
-                .attr('cx', entity.position.x)
-                .attr('cy', entity.position.y);
-              tip.show();
-
-              tip._tooltipNode.querySelector('#tt-title').innerText = titleIndicator && entity.datum[titleIndicator];
-              tip._tooltipNode.querySelector('#tt-body').innerHTML = `<table>${
-                axes
-                  .filter(axis => axis && entity.datum[axis.indicator || ''])
-                  .map(axis => 
-                    `<tr><td>${axis.axisLabel || axis.label}</td>` +
-                    `<td style="text-align: right">${approximate(entity.datum[axis.indicator])}</td></tr>`)
-                  .join('')
-                }
-              </table>`;
-
-              currentId = `${entity.datum.x}-${entity.datum.y}`;
-            }
-          } else {
-            currentId = null;
-            tip.hide();
-          }
-        })
-
-      })
-      .onPointerExit(() => {
-
-        tip.hide();
-
-        currentId = null;
-      })
-      .attachTo(plot);
-
-    plot.onDetach(() => interaction.detachFrom(plot))
-
-  }
 };

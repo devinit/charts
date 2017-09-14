@@ -1,5 +1,5 @@
 import Plottable from "plottable";
-import createRectangleChart, {createColorFiller, createTipper} from "../factories/createTreeChart";
+import createRectangleChart, {createColorFiller} from "../factories/createTreeChart";
 import {createTreeHierachy} from "../factories/createDataset";
 import {createScaleAnimator} from '../factories/createAnimator'
 import {
@@ -12,6 +12,7 @@ import {
   treemapSquarify
 } from "d3";
 import {createTreeChartLabeler} from "../factories/createLabeler";
+import {createTreeTipper} from "../factories/createTooltipper";
 
 /**
  * @typedef {TreeChart} Treemap
@@ -54,7 +55,7 @@ export default (element, data = [], config) => {
 
   const plot = new Plottable.Plots.Rectangle();
 
-  plot.onAnchor(createTipper(element, labeling, getDatumPercentage));
+  plot.onAnchor(createTreeTipper(element, labeling, getDatumPercentage));
 
   plot._drawLabels = createTreeChartLabeler(labeling, getDatumPercentage);
 

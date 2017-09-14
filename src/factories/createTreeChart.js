@@ -1,11 +1,7 @@
 import Plottable from "plottable";
-import {color} from "d3";
-//noinspection JSFileReferences
-import Tooltip from "tooltip.js";
 import {createTitle} from "./createTitle";
 import {createChartTable} from "./createTable";
 import {createTreeDataset} from "./createDataset";
-import approximate from "./approximate";
 import {createColorLegend} from "./createLegend";
 
 /**
@@ -167,88 +163,4 @@ export const createColorFiller = (colors = [], rules, indicator) => d => {
   });
 
   return d;
-};
-
-export const createTipper = (container, labeling, percentage = d => 100) => {
-
-  return function (plot) {
-
-    let currentId = null;
-
-    const foreignObject = plot.foreground()
-      .append('foreignObject')
-      .html('<div id="tooltip-container"></div>');
-
-    const tooltipAnchor = plot.foreground()
-      .append('circle')
-      .attr('r', 3)
-      .attr('fill', 'transparent');
-
-    const tip = new Tooltip(tooltipAnchor.node(), {
-      title: 'Tooltip',
-      container: container,
-      template: '<div class="tooltip" role="tooltip">' +
-      '<div class="tooltip-arrow"></div>' +
-      '<div id="tt-title" class="tooltip-inner"></div>' +
-      '<div id="tt-body" class="tooltip-body"></div>' +
-      '</div>'
-    });
-
-    const interaction = new Plottable.Interactions.Pointer()
-      .onPointerEnter(() => {
-        tip.show()
-      })
-      .onPointerMove(p => {
-
-        const [entity] = plot.entitiesAt(p);
-
-        requestAnimationFrame(() => {
-          tooltipAnchor.attr('cx', p.x).attr('cy', p.y);
-          tip.hide();
-
-          if (entity) tip.show();
-
-          if (entity && entity.datum.id !== currentId) {
-            const percent = percentage(entity.datum);
-            tip._tooltipNode.querySelector('#tt-title').innerText = entity.datum.id;
-            tip._tooltipNode.querySelector('#tt-body').innerText
-              = `${percent === 100 ? '' : `${percent}% | `} ${labeling.prefix || ''} ${approximate(entity.datum.value)} ${labeling.suffix || ''}`;
-
-            currentId = entity.datum.id;
-
-            plot.entities()
-              .forEach(entity => {
-                if (entity.selection.attr('initial-fill')) {
-                  entity.selection.attr("fill", entity.selection.attr('initial-fill'));
-                } else {
-                  entity.selection.attr("initial-fill", entity.selection.attr('fill'));
-                }
-              });
-
-            const fill = color(entity.selection.attr('initial-fill')).darker(0.8);
-
-            entity.selection.attr("fill", fill);
-          }
-        })
-
-      })
-      .onPointerExit(() => {
-
-        tip.hide();
-
-        plot.entities().forEach(entity => {
-          if (entity.selection.attr('initial-fill')) {
-            entity.selection.attr("fill", entity.selection.attr('initial-fill'));
-          } else {
-            entity.selection.attr("initial-fill", entity.selection.attr('fill'));
-          }
-        });
-
-        currentId = null;
-      })
-      .attachTo(plot);
-
-    plot.onDetach(() => interaction.detachFrom(plot))
-
-  }
 };

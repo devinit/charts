@@ -6,7 +6,7 @@ import {makeUnique} from "../factories/createDataset";
 import {createCategoryScale, createLinearScale} from "../factories/createScale";
 import {createAxisModifier, createCategoryAxis, createNumericAxis} from "../factories/createAxis";
 import {createLinearAxisGridLines} from "../factories/createGrid";
-import {createBarTipper} from "../factories/createBarChart";
+import {createBarTipper} from "../factories/createTooltipper";
 
 /**
  * @typedef {LinearCategoryChart} DualSidebar

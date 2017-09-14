@@ -1,10 +1,3 @@
-import Plottable from "plottable";
-import hash from "object-hash";
-import createTreeChart, {createColorFiller, createTipper} from "../factories/createTreeChart";
-import {createTreeHierachy} from "../factories/createDataset";
-import {createScaleAnimator} from "../factories/createAnimator";
-import {createTreeChartLabeler} from "../factories/createLabeler";
-
 /**
  * @typedef {TreeChart} Partition
  * @public
@@ -12,6 +5,14 @@ import {createTreeChartLabeler} from "../factories/createLabeler";
  * @property {('vertical'|'horizontal')} orientation=horizontal - Orientation
  *
  */
+import Plottable from "plottable";
+import hash from "object-hash";
+import createTreeChart, {createColorFiller} from "../factories/createTreeChart";
+import {createTreeHierachy} from "../factories/createDataset";
+import {createScaleAnimator} from "../factories/createAnimator";
+import {createTreeChartLabeler} from "../factories/createLabeler";
+import {createTreeTipper} from "../factories/createTooltipper";
+
 export default (element, data = [], config) => {
 
   const {
@@ -32,7 +33,7 @@ export default (element, data = [], config) => {
 
   const plot = new Plottable.Plots.Rectangle();
 
-  plot.onAnchor(createTipper(element, labeling, getDatumPercentage(orientation)));
+  plot.onAnchor(createTreeTipper(element, labeling, getDatumPercentage(orientation)));
 
   plot._drawLabels = createTreeChartLabeler(labeling, getDatumPercentage(orientation));
 
