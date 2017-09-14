@@ -6,7 +6,10 @@ import approximate from "./approximate";
 import {createLinearChart} from "./createLinearChart";
 
 export default (element, plot, config) => {
-  const { interactions = { enable: false } } = config;
+  const {
+    interactions = { enable: false },
+    tooltips = { enable: true },
+  } = config;
   const chart = createLinearChart({element, plot, config});
 
   plot.onAnchor(plot => {
@@ -15,7 +18,9 @@ export default (element, plot, config) => {
         createBarInteraction(config.orientation, config.labeling, config.highlight)(plot)
       }
 
-      createBarTipper(element, config.labeling, chart.categoryScale, config.orientation)(plot);
+      if (tooltips.enable) {
+        createBarTipper(element, config.labeling, chart.categoryScale, config.orientation)(plot);
+      }
     }, 500)
   });
 
@@ -35,8 +40,18 @@ export const createBarTipper = (container, labeling = {}, scale, orientation = '
     .attr('r', 3)
     .attr('fill', 'transparent');
 
+  const placement = orientation => {
+    return {
+      'vertical': 'top',
+      'horizontal': 'right',
+      'inverted-vertical': 'bottom',
+      'inverted-horizontal': 'left',
+    }[orientation];
+  }
+
   const tip = new Tooltip(tooltipAnchor.node(), {
     title: 'Tooltip',
+    placement: placement(orientation),
     container: container,
     template: `
         <div class="tooltip" role="tooltip">
@@ -47,35 +62,47 @@ export const createBarTipper = (container, labeling = {}, scale, orientation = '
     `,
   });
 
-  const template = datum => `
-      <div>
-        <span style="background: ${datum.color}; width: 10px; height: 10px; display: inline-block"></span>
-        <span>${datum.group ? (datum.group + ':') : ''} ${approximate(datum.value)}</span>
-      </div>
-    `;
+  const template = datum => {
+    return `
+        <div>
+          <span style="background: ${datum.color}; width: 10px; height: 10px; display: inline-block"></span>
+          <span>${datum.group ? (datum.group + ':') : ''} ${approximate(datum.value)}</span>
+        </div>
+      `;
+  };
+
+  const getEntities = (point) =>
+    plot.entitiesIn(
+      orientation === 'vertical' ? { min: point.x - 1, max: point.x + 1 } : {min: 0, max: plot.width()},
+      orientation !== 'vertical' ? { min: point.y - 1, max: point.y + 1 } : { min: 0, max: plot.height() }
+    );
+
+  const getPosition = entities =>
+    entities
+      .reduce(([p], e) => ([{
+        x: [...p.x, e.position.x],
+        y: [...p.y, e.position.y],
+      }]), [{x: [], y: []}])
+      .map(({x, y}) => ({
+        x: orientation === 'vertical' ? x.reduce((sum, k) => sum + k, 0) / x.length : Math.min.apply(null, x),
+        y: orientation !== 'vertical' ? y.reduce((sum, k) => sum + k, 0) / y.length : Math.min.apply(null, y),
+      }))
+      .reduce((_, d) => d);
 
   const interaction = new Plottable.Interactions.Pointer()
-    .onPointerEnter(() => tip.show())
+    // .onPointerEnter(() => tip.show())
     .onPointerExit(() => tip.hide())
     .onPointerMove(point => {
 
-      const entities = plot.entitiesIn({min: point.x - 1, max: point.x + 1}, {
-        min: 0,
-        max: plot.height()
-      });
+      const entities = getEntities(point);
 
-      const position = entities
-        .reduce(([p], e) => ([{
-          x: [...p.x, e.position.x],
-          y: [...p.y, e.position.y],
-        }]), [{x: [], y: []}])
-        .map(({x, y}) => ({
-          x: x.reduce((sum, k) => sum + k, 0) / x.length,
-          y: Math.min.apply(null, y)
-        }))
-        .reduce((_, d) => d);
+      const position = getPosition(entities);
 
-      if (entities.length && currentHash !== position.x.toString() + position.y.toString()) {
+      const sum = entities.reduce((sum, e) => sum + e.datum.value, 0);
+
+      const hash = position.x.toString() + position.y.toString();
+
+      if (entities.length && sum && currentHash !== hash) {
         requestAnimationFrame(() => {
           tip.hide();
           tooltipAnchor.attr('cx', position.x);
@@ -84,7 +111,7 @@ export const createBarTipper = (container, labeling = {}, scale, orientation = '
           tip._tooltipNode.querySelector('#tt-title').innerText = entities[0].datum.label;
           tip._tooltipNode.querySelector('#tt-body').innerHTML =
             entities.map(e => template(e.datum)).join('');
-          currentHash = position.x.toString() + position.y.toString()
+          currentHash = hash;
         });
       }
 

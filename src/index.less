@@ -195,6 +195,42 @@
       }
     }
 
+    // When tooltip faces left
+    &[x-placement='right'] {
+      margin-left: 10px;
+
+      .tooltip-arrow {
+        top: 10px;
+        left: -20px;
+        border-right-color: rgba(0, 0, 0, 0.25);
+      }
+
+      .tooltip-arrow:before {
+        top: -10px;
+        left: -9px;
+        border-right-color: #fff;
+      }
+
+    }
+
+    // When tooltip faces right
+    &[x-placement='left'] {
+      margin-right: 10px;
+
+      .tooltip-arrow {
+        top: 10px;
+        right: -20px;
+        border-left-color: rgba(0, 0, 0, 0.25);
+      }
+
+      .tooltip-arrow:before {
+        top: -10px;
+        left: -11px;
+        border-left-color: #fff;
+      }
+
+    }
+
     // When tooltip faces up
     &[x-placement='bottom'] {
       margin-top: 10px;
