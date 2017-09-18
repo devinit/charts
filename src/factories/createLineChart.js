@@ -3,7 +3,13 @@ import {createLineTipper} from "./createTooltipper";
 
 export const createLineChart = (element, plot, config) => {
 
-  const {categoryAxis = {}, ...more} = config;
+  const {
+    categoryAxis = {},
+    tooltips = {
+      enable: true,
+    },
+    ...more
+  } = config;
 
   const chart = createLinearChart({
     element,
@@ -25,7 +31,11 @@ export const createLineChart = (element, plot, config) => {
 
   const {linearScale, categoryScale} = chart;
 
-  plot.onAnchor(createLineTipper(element, config.labeling, categoryScale, config.orientation));
+  plot.onAnchor(plot => {
+    if (tooltips.enable) {
+      return createLineTipper(element, config.labeling, categoryScale, config.orientation)(plot);
+    }
+  });
 
   return chart;
 };

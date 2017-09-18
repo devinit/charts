@@ -9,8 +9,8 @@ import {configureAxisTicking, configureTimeAxisTicking} from "./configureTicking
  * @property {boolean} showAxis - Show Axis
  * @property {boolean} showGridlines - Show Grid lines
  * @property {'all'|'even'|'odd'|'sparse'} ticking=all - Ticking method
- * @property {'log'|'multiply'|'power'} modifiers - Axis Modifiers
- * @property {number} modifiermodifierParam - Axis Modifier arguments
+ * @property {'log'|'multiply'|'power'} modifier - Axis Modifiers
+ * @property {number} modifierParam - Axis Modifier arguments
  * @property {string} axisLabel - Label
  * @property {number} axisMargin - Margin
  * @property {number} axisMinimum - Minimum

@@ -22,6 +22,7 @@ import {createScaleAnimator} from "./createAnimator";
  * @property {indicator} coloring - Color Indicator
  * @property {NumericAxis} linearAxis - Linear Axis
  * @property {CategoryAxis} categoryAxis - Category Axis
+ * @property {Tooltip} tooltips - Tooltips
  * @property {ColorLegend} legend - Legend
  */
 export const createLinearChart = ({element, plot, config}) => {
