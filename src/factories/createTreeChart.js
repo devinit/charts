@@ -15,6 +15,7 @@ import {createColorLegend} from "./createLegend";
  * @property {Labeling} labeling - Label Configuration
  * @property {TreeLegend} legend - Legend
  * @property {Tree} tree - Hierachy Configuration
+ * @property {Tooltip} tooltips - Tooltips
  */
 
 /**

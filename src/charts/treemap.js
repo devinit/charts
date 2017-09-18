@@ -49,13 +49,21 @@ export default (element, data = [], config) => {
 
     labeling = {},
 
+    tooltips = {
+      enable: true
+    },
+
     ...more
 
   } = config;
 
   const plot = new Plottable.Plots.Rectangle();
 
-  plot.onAnchor(createTreeTipper(element, labeling, getDatumPercentage));
+  plot.onAnchor((plot) => {
+    if (tooltips.enable) {
+      createTreeTipper(element, labeling, getDatumPercentage)(plot)
+    }
+  });
 
   plot._drawLabels = createTreeChartLabeler(labeling, getDatumPercentage);
 

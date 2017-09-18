@@ -1,9 +1,13 @@
 import Plottable from "plottable";
 import {color} from "d3";
-import sha1 from "object-hash";
 //noinspection JSFileReferences
 import Tooltip from "tooltip.js";
 import approximate from "./approximate";
+
+/**
+ * @typedef Tooltip
+ * @property {boolean} enable
+ */
 
 export const createTreeTipper = (container, labeling, percentage = d => 100) => {
 
