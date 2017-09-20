@@ -5,7 +5,7 @@ import Tooltip from "tooltip.js";
 import approximate from "./approximate";
 
 /**
- * @typedef Tooltip
+ * @typedef {Object} Tooltip
  * @property {boolean} enable
  */
 
