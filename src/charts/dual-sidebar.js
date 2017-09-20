@@ -1,5 +1,5 @@
 import Plottable from "plottable";
-import approximate from "../factories/approximate";
+import {flattenDeep, groupBy as group, keys, mapValues, uniq, values} from "lodash";
 import {createChartTable} from "../factories/createTable";
 import {createTitle} from "../factories/createTitle";
 import {makeUnique} from "../factories/createDataset";
@@ -13,7 +13,8 @@ import {createBarTipper} from "../factories/createTooltipper";
  * @public
  * @property {'dual-sidebar'} type
  * @property {'indicator'} splitBy
- * @property {number} splitBy
+ * @property {string} splitBy
+ * @property {'indicator'}
  *
  */
 
@@ -41,6 +42,8 @@ export default (element, data, config) => {
 
     subGroupBy,
 
+    orderBy,
+
     colors = [],
 
     coloring = null,
@@ -55,7 +58,7 @@ export default (element, data, config) => {
       gutter: 100
     },
 
-    tooltips = { enable: true },
+    tooltips = {enable: true},
 
     // ... more config
 
@@ -157,133 +160,97 @@ export default (element, data, config) => {
 
     const plots = [leftPlot, rightPlot];
 
-    const splittingIds = makeUnique(data.map(d => d[splitBy])).sort((a, b) => a > b ? 1 : -1);
-    const groupIds = makeUnique(data.map(d => d[groupBy])).sort((a, b) => a > b ? 1 : -1);
-    const subGroupIds = groupIds.map(groupId => makeUnique(
-      data
-        .filter(d => d[groupBy] === groupId)
-        .map(d => d[subGroupBy])
-        .sort((a, b) => a > b ? 1 : -1)
-      )
-    );
+    const sorted = orderBy ? data.sort((a, b) => a[orderBy] > b[orderBy] ? 1 : -1) : data;
 
-    splittingIds.slice(0, 2)
-      .sort((a, b) => a > b ? 1 : -1)
-      // Split data into split sides
-      .map(splitPoint => data.filter(d => d[splitBy] === splitPoint))
-      .map(sides =>
-
-        groupIds
-        // Create groups for each split side
-        // Makes sure each side has same number
-        // groups
-          .map(groupId => sides.filter(d => d[groupBy] === groupId))
-          // Creates subgroups for each group
-          .map((group, groupIndex) =>
-
-            subGroupIds[groupIndex].map(subGroupId =>
-              group
-                .filter(item => item[subGroupBy] === subGroupId)
-            )
-          )
-      )
-
-      // Joins sides into [left, right]
+    values(group(sorted, d => d[splitBy]))
+      .slice(0, 2)
+      .sort((a, b) => a[0][splitBy] > a[0][splitBy] ? 1 : 1)
+      .map(side => mapValues(group(side, d => d[groupBy]), grp => group(grp, d => d[subGroupBy])))
       .reduce(([sides = []], side) => [[...sides, side]], [])
-
-      // Makes sure subgroups on each side have same number of items
-      // Creates a dummy items for either subgroup with less number
-      // of items
       .map(([left, right]) => {
 
-        groupIds.forEach((groupId, groupIndex) => {
+        uniq([...keys(left), ...keys(right)])
+          .forEach(groupId => {
 
-          subGroupIds[groupIndex].forEach((subGroupId, subGroupIndex) => {
-            const leftSubgroupLength = left[groupIndex][subGroupIndex].length;
-            const rightSubgroupLength = right[groupIndex][subGroupIndex].length;
+            const subGroupIds = uniq([...keys(left[groupId] || {}), ...keys(right[groupId] || {})]);
 
-            if (leftSubgroupLength > rightSubgroupLength) {
-              for (let i = rightSubgroupLength; i < leftSubgroupLength; i++) {
-                right[groupIndex][subGroupIndex].push({
-                  ...left[groupIndex][subGroupIndex][i],
-                  [categoryAxis.indicator]: '',
-                  [linearAxis.indicator]: 0,
-                })
+            subGroupIds.forEach(subGroupId => {
+              // Safety first: Applying seat belts
+              // ...
+              left[groupId] = left[groupId] || {};
+              left[groupId][subGroupId] = left[groupId][subGroupId] || [];
+              right[groupId] = right[groupId] || {};
+              right[groupId][subGroupId] = right[groupId][subGroupId] || [];
+
+              // ...
+              const leftSubGroupSize = left[groupId][subGroupId].length;
+              const rightSubGroupSize = right[groupId][subGroupId].length;
+
+              if (leftSubGroupSize > rightSubGroupSize) {
+                for (let i = rightSubGroupSize; i < leftSubGroupSize; i++) {
+                  right[groupId][subGroupId].push({
+                    ...left[groupId][subGroupId][i],
+                    [categoryAxis.indicator]: '',
+                    [linearAxis.indicator]: 0,
+                  })
+                }
               }
-            }
 
-            else if (leftSubgroupLength < rightSubgroupLength) {
-              for (let j = leftSubgroupLength; j < rightSubgroupLength; j++) {
-                left[groupIndex][subGroupIndex].push({
-                  ...right[groupIndex][subGroupIndex][j],
-                  [categoryAxis.indicator]: '',
-                  [linearAxis.indicator]: 0,
-                })
+              else if (leftSubGroupSize < rightSubGroupSize) {
+                for (let j = leftSubGroupSize; j < rightSubGroupSize; j++) {
+                  left[groupId][subGroupId].push({
+                    ...right[groupId][subGroupId][j],
+                    [categoryAxis.indicator]: '',
+                    [linearAxis.indicator]: 0,
+                  })
+                }
               }
-            }
 
+            });
+
+            // Add a dummy item to the end of every subgroup to create
+            // an 'artificial' padding
+            left[groupId][''] = [{
+              ...(left[groupId][subGroupIds[0]][0] || {}),
+              [subGroupBy]: '',
+              [categoryAxis.indicator]: '',
+              [linearAxis.indicator]: 0,
+            }];
+
+            right[groupId][''] = [{
+              ...(right[groupId][subGroupIds[0]][0] || {}),
+              [subGroupBy]: '',
+              [categoryAxis.indicator]: '',
+              [linearAxis.indicator]: 0,
+            }];
           });
 
-          left[groupIndex].push([{
-            ...(left[groupIndex][0][0] || {}),
-            [subGroupBy]: '',
-            [categoryAxis.indicator]: '',
-            [linearAxis.indicator]: 0,
-          }]);
 
-          right[groupIndex].push([{
-            ...(right[groupIndex][0][0] || {}),
-            [subGroupBy]: '',
-            [categoryAxis.indicator]: '',
-            [linearAxis.indicator]: 0,
-          }]);
-
-        });
-
-
-        return [left, right];
-
+        return [left, right]
       })
-      .reduce((all, groups) => [...all, ...groups], [])
-      .forEach((groups, index) => {
-
+      .reduce((all, side) => [...all, ...side], [])
+      .forEach((side, index) => {
         const direction = index === 0 ? -1 : 1;
 
-        const series = groups.reduce((groups, group, groupIndex) => [
+        const series = flattenDeep(
+          values(side).map((grp, index) => flattenDeep(values(grp)).map(datum => ({
+            ...datum,
+            direction,
+            color: datum[coloring] || colors[index] || '#abc',
+          })))
+        );
 
-          ...groups,
-
-          ...group.reduce((group, subGroup) => [
-
-            ...group,
-
-            ...subGroup.map(item => ({
-
-              ...item,
-
-              direction: direction,
-
-              color: item[coloring] || colors[groupIndex] || '#abc',
-
-            }))
-
-          ], [])
-
-        ], []);
-
-        const dataset = series.map((item, index) => ({
-          ...item,
-
+        const dataset = series.map((datum, index) => ({
+          ...datum,
           index,
-          label: item[categoryAxis.indicator],
-          value: item[linearAxis.indicator] * direction,
+          label: datum[categoryAxis.indicator],
+          value: datum[linearAxis.indicator] * direction,
           opacity: 1,
-          category: item[groupBy],
-          subCategory: item[subGroupBy],
+          category: datum[groupBy],
+          subCategory: datum[subGroupBy],
         }));
 
         plots[index].datasets([dataset].map(d => new Plottable.Dataset(d)))
-
       });
   };
 
