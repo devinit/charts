@@ -1,11 +1,16 @@
+// @flow
 const THOUSAND = 1e3;
 const MILLION = 1e6;
 const BILLION = 1e9;
 const TRILLION = 1e12;
 
-const format = number => (+number.toFixed(1)).toString();
+// see: http://www.jacklmoore.com/notes/rounding-in-javascript/
+const roundNum = (num, length): string =>
+  (Math.round(num * (10 ** length)) / (10 ** length)).toFixed(length);
 
-const approximate = (number) => {
+const format = number => roundNum(number, 1);
+
+const approximate = (number: number): string => {
 
   const absolute = Math.abs(number);
 
