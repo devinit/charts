@@ -1,6 +1,6 @@
 import Plottable from "plottable";
 import {createLinearScale} from "./createScale";
-import {createNumericAxis} from "./createAxis";
+import {createAxisModifier, createNumericAxis} from "./createAxis";
 import {createScatterGridLines} from "./createGrid";
 import {createChartTable} from "./createTable";
 import {createTitle} from "./createTitle";
@@ -22,6 +22,7 @@ import {createScatterClickTipper, createScatterTipper} from "./createTooltipper"
  * @property {NumericAxis} horizontalAxis - Horizontal Axis
  * @property {NumericAxis} verticalAxis - Vertical Axis
  * @property {Bubble} bubble - Bubble
+ * @property {Tooltip} tooltips - Tooltips
  * @property {ColorLegend} legend - Legend
  */
 
@@ -65,7 +66,9 @@ export default ({element, plot, config}) => {
 
     annotations = [],
 
-    tooltips = {}
+    tooltips = {
+      enable: true,
+    },
 
   } = config;
 
@@ -91,6 +94,9 @@ export default ({element, plot, config}) => {
     axisOrientation: 'horizontal',
     ...horizontalAxis
   });
+
+  const vAxisModifier = createAxisModifier(verticalAxis);
+  const hAxisModifier = createAxisModifier(horizontalAxis);
 
   const table = createChartTable({
 
@@ -124,8 +130,10 @@ export default ({element, plot, config}) => {
 
   plot.onAnchor(plot => {
     setTimeout(() => {
-      tipper(plot);
-      clickTipper.init(plot)
+      if (tooltips.enable) {
+        tipper(plot);
+        clickTipper.init(plot);
+      }
     }, 500)
   });
 
@@ -222,11 +230,11 @@ export default ({element, plot, config}) => {
     },
 
     updateHorizontalAxis: config => {
-      createNumericAxis(config, hAxis)
+      createNumericAxis(config, hAxis);
     },
 
     updateVerticalAxis: config => {
-      createNumericAxis(config, vAxis)
+      createNumericAxis(config, vAxis);
     }
   }
 }
