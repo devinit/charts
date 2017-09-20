@@ -1,4 +1,5 @@
 import Plottable from "plottable";
+import hash from "object-hash";
 import {flattenDeep, groupBy as group, keys, mapValues, uniq, values} from "lodash";
 import {createChartTable} from "../factories/createTable";
 import {createTitle} from "../factories/createTitle";
@@ -156,7 +157,15 @@ export default (element, data, config) => {
     }, 500)
   });
 
+  const hashes = {
+    data: null
+  };
+
   const update = (data = []) => {
+    const dataHash = hash(data);
+    if (hashes.data === dataHash) return;
+
+    hashes.data = dataHash;
 
     const plots = [leftPlot, rightPlot];
 
