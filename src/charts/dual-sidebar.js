@@ -171,9 +171,13 @@ export default (element, data, config) => {
 
     const sorted = orderBy ? data.sort((a, b) => a[orderBy] > b[orderBy] ? 1 : -1) : data;
 
-    values(group(sorted, d => d[splitBy]))
-      .slice(0, 2)
-      .sort((a, b) => a[0][splitBy] > a[0][splitBy] ? 1 : 1)
+    const [
+      first = [],
+      second = []
+    ] = values(group(sorted, d => d[splitBy]));
+
+    [first, second]
+      .sort((a, b) => (a[0] || a[0][splitBy]) > (b[0] && b[0][splitBy]) ? 1 : 1)
       .map(side => mapValues(group(side, d => d[groupBy]), grp => group(grp, d => d[subGroupBy])))
       .reduce(([sides = []], side) => [[...sides, side]], [])
       .map(([left, right]) => {
@@ -314,12 +318,16 @@ const drawLabels = (dualSidebar) => function () {
 
             const subCategoryEntities = categoryEntities.filter(entity => entity.datum.subCategory === subCategoryId);
 
-            const nodeYValues = subCategoryEntities.map(entity => entity.selection.node().y.baseVal.value);
+            const nodeTopValues = subCategoryEntities.map(entity => entity.selection.node().y.baseVal.value);
+            const nodeBottomValues = subCategoryEntities.map(entity =>
+              entity.selection.node().y.baseVal.value + entity.selection.node().height.baseVal.value
+            );
 
-            const top = Math.min.apply(null, nodeYValues);
-            const bottom = Math.max.apply(null, nodeYValues);
+            const top = Math.min.apply(null, nodeTopValues);
+            const bottom = Math.max.apply(null, nodeBottomValues);
 
-            const y = top + 9 + (bottom - top) / 2;
+            const y = top + (bottom - top) / 2;
+            console.log(top, bottom, y);
 
             foreground
               .append('text')
@@ -327,6 +335,7 @@ const drawLabels = (dualSidebar) => function () {
               .attr('class', 'subGroup-label')
               .attr('x', dualSidebar.gutter * -0.5)
               .attr('y', y)
+              .attr('alignment-baseline', 'middle')
               .attr('text-anchor', 'middle');
 
           });
@@ -338,15 +347,20 @@ const drawLabels = (dualSidebar) => function () {
       const datum = entity.datum;
 
       // Don't draw labels if datum has no label
+      // Maybe because it's a dummy datum
       if (datum.label) {
-        const bBox = entity.selection.node().getBBox();
+        const x = entity.selection.node().x.baseVal.value;
+        const y = entity.selection.node().y.baseVal.value;
+        const width = entity.selection.node().width.baseVal.value;
+        const height = entity.selection.node().height.baseVal.value;
 
         foreground
           .append('text')
           .text(datum.label)
           .attr('class', 'data-label')
-          .attr('x', (datum.direction > 0 ? bBox.x + bBox.width : bBox.x) + (datum.direction * 10))
-          .attr('y', bBox.y + 3 + bBox.height / 2)
+          .attr('x', (datum.direction > 0 ? x + width : x) + (datum.direction * 10))
+          .attr('y', y + height / 2)
+          .attr('alignment-baseline', 'middle')
           .attr('text-anchor', datum.direction > 0 ? 'start' : 'end');
       }
     });
