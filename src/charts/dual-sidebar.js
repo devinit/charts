@@ -327,7 +327,6 @@ const drawLabels = (dualSidebar) => function () {
             const bottom = Math.max.apply(null, nodeBottomValues);
 
             const y = top + (bottom - top) / 2;
-            console.log(top, bottom, y);
 
             foreground
               .append('text')
