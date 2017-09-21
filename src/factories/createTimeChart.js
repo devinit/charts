@@ -27,6 +27,10 @@ export default ({element, plot, config}) => {
 
     labeling,
 
+    time = {
+      interpolate: false,
+    },
+
     showLabels = true,
 
     linearAxis,
@@ -128,15 +132,17 @@ export default ({element, plot, config}) => {
             ]
           }), {});
 
-        for (let year = startYear; year <= stopYear; year++) {
-          if (!dataset[year]) {
-            dataset[year] = [{
-              group: groupId,
-              label: year,
-              value: 0,
-              color: group[0][coloring] || colors[index] || '#abc',
-              opacity: 1,
-            }]
+        if (!time.interpolate) {
+          for (let year = startYear; year <= stopYear; year++) {
+            if (!dataset[year]) {
+              dataset[year] = [{
+                group: groupId,
+                label: year,
+                value: 0,
+                color: group[0][coloring] || colors[index] || '#abc',
+                opacity: 1,
+              }]
+            }
           }
         }
 
