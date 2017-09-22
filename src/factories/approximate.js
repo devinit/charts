@@ -8,7 +8,7 @@ const TRILLION = 1e12;
 const roundNum = (num, length): string =>
   (Math.round(num * 10 ** length) / 10 ** length).toFixed(length);
 
-const format = number => roundNum(number, 1);
+const format = number => (+roundNum(number, 2)).toString();
 
 const approximate = (number: number): string => {
   const absolute = Math.abs(number);
