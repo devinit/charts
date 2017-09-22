@@ -1,5 +1,5 @@
-import Plottable from "plottable";
-import createBarChart from "../factories/createBarChart";
+import Plottable from 'plottable';
+import createBarChart from '../factories/createBarChart';
 
 /**
  * @typedef {LinearCategoryChart} Bar
@@ -8,8 +8,7 @@ import createBarChart from "../factories/createBarChart";
  *
  */
 export default (element, data, config) => {
-
-  let {orientation, ...more} = config;
+  const { orientation } = config;
 
   const plot = new Plottable.Plots.Bar(orientation);
 
@@ -19,5 +18,5 @@ export default (element, data, config) => {
 
   chart.update(data);
 
-  return chart
+  return chart;
 };

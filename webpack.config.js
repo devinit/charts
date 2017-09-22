@@ -1,111 +1,92 @@
-const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const isProductionBuild = process.env.WEBPACK_ENV === 'production';
-const jsOutputFilename = isProductionBuild ? `di-charts.min.js` : `di-charts.js`;
-const cssOutputFilename = isProductionBuild ? `di-charts.min.css` : `di-charts.css`;
+const jsOutputFilename = isProductionBuild ? 'di-charts.min.js' : 'di-charts.js';
+const cssOutputFilename = isProductionBuild ? 'di-charts.min.css' : 'di-charts.css';
 
 const extractLess = new ExtractTextPlugin(cssOutputFilename);
 
-const limitChunkCountPlugin = new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1});
+const limitChunkCountPlugin = new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 });
 
-const uglifyJsPlugin = new webpack.optimize.UglifyJsPlugin({
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+
+const uglifyJsPlugin = new UglifyJSPlugin({
   beautify: false,
   mangle: {
     screw_ie8: true,
-    keep_fnames: true
+    keep_fnames: true,
   },
   compress: {
-    screw_ie8: true
+    screw_ie8: true,
   },
-  comments: false
+  comments: false,
 });
 
 module.exports = [
-
   {
-
-    entry: [
-      __dirname + '/src/index.less',
-    ],
+    entry: [`${__dirname}/src/index.less`],
 
     output: {
       path: `${__dirname}/dist/`,
-      filename: cssOutputFilename
+      filename: cssOutputFilename,
     },
 
     module: {
       loaders: [
-
         {
           test: /\.less$/,
           use: extractLess.extract([
-            {loader: 'css-loader', options: {minimize: isProductionBuild}},
-            {loader: 'less-loader'}
-          ])
+            { loader: 'css-loader', options: { minimize: isProductionBuild } },
+            { loader: 'less-loader' },
+          ]),
         },
-
-      ]
+      ],
     },
 
-    plugins: [
-      extractLess,
-    ],
+    plugins: [extractLess],
 
-    devtool: 'source-map'
+    devtool: 'source-map',
   },
 
   {
-
-    entry: [
-      __dirname + '/src/index.js',
-    ],
+    entry: [`${__dirname}/src/index.js`],
 
     output: {
       path: `${__dirname}/dist/`,
       filename: `${jsOutputFilename}`,
       chunkFilename: `[id]-${jsOutputFilename}`,
-      library: "DiCharts",
-      libraryTarget: "window"
+      library: 'DiCharts',
+      libraryTarget: 'window',
     },
 
     module: {
       loaders: [
-
         {
           test: /\.js$/,
           exclude: /node_modules/,
           loader: 'babel-loader',
           options: {
-            presets: [['es2015', {modules: false}], "flow"],
+            presets: [['env', { modules: false }], 'flow'],
             plugins: [
               'syntax-dynamic-import',
               'transform-object-rest-spread',
               'remove-webpack',
               'dynamic-import-node',
-              'transform-runtime'
-            ]
-          }
+              'transform-runtime',
+            ],
+          },
         },
 
         {
           test: /\.less$/,
-          use: extractLess.extract(['css-loader', 'less-loader'])
+          use: extractLess.extract(['css-loader', 'less-loader']),
         },
-
-      ]
+      ],
     },
 
-    plugins: [
+    plugins: [limitChunkCountPlugin, extractLess, ...(isProductionBuild ? [uglifyJsPlugin] : [])],
 
-      limitChunkCountPlugin,
-
-      ...(isProductionBuild ? [uglifyJsPlugin] : [])
-
-    ],
-
-    devtool: 'source-map'
+    devtool: 'source-map',
   },
-
 ];

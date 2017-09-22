@@ -1,20 +1,18 @@
-import Plottable from "plottable";
-import {drag, event} from "d3";
-import {createTitle} from "./createTitle";
-import {createChartTable} from "./createTable";
-import {createColorLegend} from "./createLegend";
-import {createLinearAxisGridLines} from "./createGrid";
-import {createPlotWithGridlines} from "./createLinearChart";
-import {createNumericAxis, createTimeAxis} from "./createAxis";
-import {createLinearScale, createTimeScale} from "./createScale";
-import {makeUnique} from "./createDataset";
-import {createLineTipper} from "./createTooltipper";
-import {createScaleAnimator} from "./createAnimator";
+import Plottable from 'plottable';
+import { drag, event } from 'd3';
+import { createTitle } from './createTitle';
+import { createChartTable } from './createTable';
+import { createColorLegend } from './createLegend';
+import { createLinearAxisGridLines } from './createGrid';
+import { createPlotWithGridlines } from './createLinearChart';
+import { createNumericAxis, createTimeAxis } from './createAxis';
+import { createLinearScale, createTimeScale } from './createScale';
+import { makeUnique } from './createDataset';
+import { createLineTipper } from './createTooltipper';
+import { createScaleAnimator } from './createAnimator';
 
-export default ({element, plot, config}) => {
-
+export default ({ element, plot, config }) => {
   const {
-
     title = null,
 
     titleAlignment = 'left',
@@ -40,7 +38,6 @@ export default ({element, plot, config}) => {
     anchor,
 
     legend = {},
-
   } = config;
 
   const timeScale = createTimeScale(timeAxis);
@@ -48,26 +45,41 @@ export default ({element, plot, config}) => {
   const colorScale = new Plottable.Scales.Color();
 
   const table = createChartTable({
-
-    title: createTitle({title, titleAlignment}),
+    title: createTitle({ title, titleAlignment }),
 
     chart: createPlotAreaWithAxes({
-
       plotArea: createPlotWithGridlines({
-        plot: createTimePlot({plot, timeScale, linearScale, showLabels}),
-        grid: createLinearAxisGridLines({...linearAxis, orientation: 'vertical', scale: linearScale})
+        plot: createTimePlot({
+          plot,
+          timeScale,
+          linearScale,
+          showLabels,
+        }),
+        grid: createLinearAxisGridLines({
+          ...linearAxis,
+          orientation: 'vertical',
+          scale: linearScale,
+        }),
       }),
 
-      linearAxis: createNumericAxis({...linearAxis, axisScale: linearScale, axisOrientation: 'vertical'}),
+      linearAxis: createNumericAxis({
+        ...linearAxis,
+        axisScale: linearScale,
+        axisOrientation: 'vertical',
+      }),
 
-      categoryAxis: createTimeAxis({...timeAxis, axisScale: timeScale, axisOrientation: 'horizontal'}),
+      categoryAxis: createTimeAxis({
+        ...timeAxis,
+        axisScale: timeScale,
+        axisOrientation: 'horizontal',
+      }),
 
       anchor,
     }),
 
     legend: createColorLegend(colorScale, legend),
 
-    legendPosition: legend.position || 'bottom'
+    legendPosition: legend.position || 'bottom',
   });
 
   const animate = createScaleAnimator(500);
@@ -83,13 +95,13 @@ export default ({element, plot, config}) => {
   table.renderTo(element);
 
   if (anchor) {
-    let onTableAnchored = (table) => {
+    const onTableAnchored = table => {
       // waiting till table is setup, hopefully 500ms will
       // always be sufficient
       // TODO: Use onRender event instead
       // see https://github.com/palantir/plottable/issues/1755
       setTimeout(() => {
-        moveAnchor = createTimeAnchor(table, timeScale, anchor, legend, listeners)
+        moveAnchor = createTimeAnchor(table, timeScale, anchor, legend, listeners);
       }, 500);
     };
 
@@ -97,11 +109,9 @@ export default ({element, plot, config}) => {
   }
 
   const chart = {
-
     table,
 
     update: (data = []) => {
-
       const groupIds = makeUnique(data.map(d => d[groupBy]));
 
       if (legend.showLegend) {
@@ -110,14 +120,16 @@ export default ({element, plot, config}) => {
           .range(groupIds.map((d, i) => colors[i] || '#abc'));
       }
 
-      const startYear = timeAxis.axisMinimum || Math.min.apply(null, data.map(d => d[timeAxis.indicator]));
-      const stopYear = timeAxis.axisMaximum || Math.max.apply(null, data.map(d => d[timeAxis.indicator]));
+      const startYear =
+        timeAxis.axisMinimum || Math.min.apply(null, data.map(d => d[timeAxis.indicator]));
+      const stopYear =
+        timeAxis.axisMaximum || Math.max.apply(null, data.map(d => d[timeAxis.indicator]));
 
       const datasets = groupIds.map((groupId, index) => {
         const group = data.filter(d => d[groupBy] === groupId);
 
-        const dataset = group
-          .reduce((map, item) => ({
+        const dataset = group.reduce(
+          (map, item) => ({
             ...map,
 
             [item[timeAxis.indicator]]: [
@@ -128,38 +140,37 @@ export default ({element, plot, config}) => {
                 value: item[linearAxis.indicator],
                 color: item[coloring] || colors[index] || '#abc',
                 opacity: 1,
-              }
-            ]
-          }), {});
+              },
+            ],
+          }),
+          {},
+        );
 
         if (!time.interpolate) {
           for (let year = startYear; year <= stopYear; year++) {
             if (!dataset[year]) {
-              dataset[year] = [{
-                group: groupId,
-                label: year,
-                value: 0,
-                color: group[0][coloring] || colors[index] || '#abc',
-                opacity: 1,
-              }]
+              dataset[year] = [
+                {
+                  group: groupId,
+                  label: year,
+                  value: 0,
+                  color: group[0][coloring] || colors[index] || '#abc',
+                  opacity: 1,
+                },
+              ];
             }
           }
         }
 
-        return Object.keys(dataset)
-          .map(year =>
-            dataset[year]
-              .reduce((s, d) =>
-                ({...s, value: s.value + d.value})
-              )
-          )
+        return Object.keys(dataset).map(year =>
+          dataset[year].reduce((s, d) => ({ ...s, value: s.value + d.value })), );
       });
 
       if (plot.datasets().length) {
         const sums = [];
 
         for (let i = 0; i < Math.max.apply(null, datasets.map(d => d.length)); i++) {
-          sums[i] = datasets.reduce((sum, set) => sum + (set[i] ? set[i].value : 0), 0)
+          sums[i] = datasets.reduce((sum, set) => sum + (set[i] ? set[i].value : 0), 0);
         }
 
         const axisMaximum = Math.max.apply(null, sums);
@@ -168,12 +179,11 @@ export default ({element, plot, config}) => {
       }
 
       plot.datasets(datasets.map(d => new Plottable.Dataset(d)));
-
     },
 
     onAnchorMoved(callback = null) {
       if (callback && callback.call) {
-        listeners.push(callback)
+        listeners.push(callback);
       }
     },
 
@@ -188,16 +198,13 @@ export default ({element, plot, config}) => {
 
     destroy: () => {
       table.destroy();
-    }
-
+    },
   };
 
   return chart;
 };
 
-
-const createTimeAnchor = (table, timeScale, anchor = {start: 0}, legend = {}, listeners) => {
-
+const createTimeAnchor = (table, timeScale, anchor = { start: 0 }, legend = {}, listeners) => {
   const originDate = new Date(timeScale.domainMin());
   const startDate = anchor.start ? new Date(anchor.start.toString()) : originDate;
   let currentYear = startDate.getFullYear().toString();
@@ -210,9 +217,7 @@ const createTimeAnchor = (table, timeScale, anchor = {start: 0}, legend = {}, li
 
   const chartArea = table.componentAt(1, 0);
 
-  const plotArea = legend.showLegend ?
-    chartArea.componentAt(0, 0) :
-    chartArea;
+  const plotArea = legend.showLegend ? chartArea.componentAt(0, 0) : chartArea;
 
   const timeAxis = plotArea.componentAt(2, 1);
 
@@ -221,7 +226,10 @@ const createTimeAnchor = (table, timeScale, anchor = {start: 0}, legend = {}, li
   foreground.attr('style', 'z-index: 1');
 
   const foregroundBounds = foreground.node().getBoundingClientRect();
-  const timeAxisBounds = timeAxis.content().node().getBoundingClientRect();
+  const timeAxisBounds = timeAxis
+    .content()
+    .node()
+    .getBoundingClientRect();
 
   const leftOffset = timeAxisBounds.left - foregroundBounds.left;
 
@@ -230,7 +238,8 @@ const createTimeAnchor = (table, timeScale, anchor = {start: 0}, legend = {}, li
   // Circle radius
   const topPosition = 20;
 
-  const circle = foreground.append('circle')
+  const circle = foreground
+    .append('circle')
     .attr('class', 'symbol')
     .attr('cx', xPosition)
     .attr('cy', topPosition)
@@ -238,7 +247,8 @@ const createTimeAnchor = (table, timeScale, anchor = {start: 0}, legend = {}, li
     .attr('stroke', '#444')
     .attr('r', topPosition);
 
-  const text = foreground.append('text')
+  const text = foreground
+    .append('text')
     .text(startDate.getFullYear().toString())
     .attr('class', 'symbol-label')
     .attr('x', xPosition)
@@ -247,7 +257,8 @@ const createTimeAnchor = (table, timeScale, anchor = {start: 0}, legend = {}, li
     .attr('font-size', 13)
     .attr('text-anchor', 'middle');
 
-  const line = foreground.append('line')
+  const line = foreground
+    .append('line')
     .attr('class', 'symbol-line')
     .attr('x1', xPosition)
     .attr('x2', xPosition + 1)
@@ -256,16 +267,17 @@ const createTimeAnchor = (table, timeScale, anchor = {start: 0}, legend = {}, li
     .attr('stroke', '#444')
     .attr('stroke-width', 2);
 
-  const changeAnchorPosition = (year) => {
-
+  const changeAnchorPosition = year => {
     // Prevent duplicate movements,
     // oh and they'll be duplicate movements
     // -- remove this condition at your own risk.
     // just kidding, i think
     if (year !== currentYear && year >= minYear && year <= maxYear) {
-
       const foregroundBounds = foreground.node().getBoundingClientRect();
-      const timeAxisBounds = timeAxis.content().node().getBoundingClientRect();
+      const timeAxisBounds = timeAxis
+        .content()
+        .node()
+        .getBoundingClientRect();
 
       const leftOffset = timeAxisBounds.left - foregroundBounds.left;
 
@@ -275,30 +287,25 @@ const createTimeAnchor = (table, timeScale, anchor = {start: 0}, legend = {}, li
 
       text.attr('x', leftOffset + xPosition).text(year);
 
-      line
-        .attr('x1', leftOffset + xPosition)
-        .attr('x2', leftOffset + xPosition);
+      line.attr('x1', leftOffset + xPosition).attr('x2', leftOffset + xPosition);
 
       // ... notify movement listeners
       listeners.forEach(callback => {
         if (callback && callback.call) {
-          callback(year)
+          callback(year);
         }
       });
 
       // ... update global current year
       currentYear = year;
     }
-
   };
 
   function started() {
     // Change cursor style
     document.body.style.cursor = 'ew-resize';
 
-    event
-      .on("drag", dragged)
-      .on("end", ended);
+    event.on('drag', dragged).on('end', ended);
 
     function dragged() {
       const x = event.x;
@@ -316,27 +323,29 @@ const createTimeAnchor = (table, timeScale, anchor = {start: 0}, legend = {}, li
     }
   }
 
-  circle.call(drag().on("start", started));
-  text.call(drag().on("start", started));
-  line.call(drag().on("start", started));
+  circle.call(drag().on('start', started));
+  text.call(drag().on('start', started));
+  line.call(drag().on('start', started));
 
-  return changeAnchorPosition
+  return changeAnchorPosition;
 };
 
-export const createTimePlot = ({plot, timeScale, linearScale}) => {
+export const createTimePlot = ({ plot, timeScale, linearScale }) => {
   return plot
     .attr('stroke', d => d.color)
     .attr('fill', d => d.color)
     .attr('fill-opacity', d => d.opacity)
     .x(d => new Date(d.label.toString()), timeScale)
-    .y(d => d.value, linearScale)
+    .y(d => d.value, linearScale);
 };
 
-const createPlotAreaWithAxes = ({linearAxis, plotArea, categoryAxis, anchor}) => {
+const createPlotAreaWithAxes = ({
+  linearAxis, plotArea, categoryAxis, anchor
+}) => {
   const table = new Plottable.Components.Table([
     [null, null, null],
     [linearAxis, plotArea, null],
-    [null, categoryAxis, null]
+    [null, categoryAxis, null],
   ]);
 
   if (anchor) {

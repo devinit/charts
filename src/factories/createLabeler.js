@@ -1,5 +1,5 @@
-import approximate from "./approximate";
-import {color} from "d3"
+import approximate from './approximate';
+import { color } from 'd3';
 
 /**
  * @typedef {Object} Labeling
@@ -10,9 +10,13 @@ import {color} from "d3"
  * @property {string} suffix - Suffix
  *
  */
-export const createTreeChartLabeler =  (config, percentage = d => 100) => {
+export const createTreeChartLabeler = (config, percentage = d => 100) => {
   const {
-    showLabels = true, showValues = true, showPercents = true, prefix = '', suffix = ''
+    showLabels = true,
+    showValues = true,
+    showPercents = true,
+    prefix = '',
+    suffix = '',
   } = config;
 
   return function () {
@@ -20,15 +24,16 @@ export const createTreeChartLabeler =  (config, percentage = d => 100) => {
     const entities = this.entities();
 
     // Remove all current labels
-    foreground.selectAll("foreignObject").remove();
+    foreground.selectAll('foreignObject').remove();
 
     entities.forEach(entity => {
-
       const node = entity.selection.node();
-      const { width, height, x, y} = node.getBBox();
+      const {
+        width, height, x, y
+      } = node.getBBox();
 
       if (height > 50 && width > 40) {
-        const {r, g, b} = color(node.getAttribute('fill')).rgb();
+        const { r, g, b } = color(node.getAttribute('fill')).rgb();
         const brightness = (r + g + b) / (256 * 3);
 
         const datum = entity.datum;
@@ -37,8 +42,9 @@ export const createTreeChartLabeler =  (config, percentage = d => 100) => {
         const percent = percentage(datum);
 
         const percentageLabel = percent === 100 ? '' : showPercents ? `${percent}% | ` : '';
-        const valueLabel = showValues ? `${prefix ? prefix + ' ' : ''}${value}${suffix ?  ' ' + suffix : ''}` : '';
-
+        const valueLabel = showValues
+          ? `${prefix ? `${prefix} ` : ''}${value}${suffix ? ` ${suffix}` : ''}`
+          : '';
 
         foreground
           .append('foreignObject')
@@ -51,6 +57,6 @@ export const createTreeChartLabeler =  (config, percentage = d => 100) => {
                     <div class="plot-label-value">${percentageLabel}${valueLabel} </div>
                  </div>`);
       }
-    })
-  }
+    });
+  };
 };

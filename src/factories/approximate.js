@@ -6,31 +6,30 @@ const TRILLION = 1e12;
 
 // see: http://www.jacklmoore.com/notes/rounding-in-javascript/
 const roundNum = (num, length): string =>
-  (Math.round(num * (10 ** length)) / (10 ** length)).toFixed(length);
+  (Math.round(num * 10 ** length) / 10 ** length).toFixed(length);
 
 const format = number => roundNum(number, 1);
 
 const approximate = (number: number): string => {
-
   const absolute = Math.abs(number);
 
   if (absolute < THOUSAND) {
-    return format(number)
+    return format(number);
   }
 
   if (absolute < MILLION) {
-    return `${format(number / THOUSAND)}k`
+    return `${format(number / THOUSAND)}k`;
   }
 
   if (absolute < BILLION) {
-    return `${format(number / MILLION)}m`
+    return `${format(number / MILLION)}m`;
   }
 
   if (number < TRILLION) {
-    return `${format(number / BILLION)}bn`
+    return `${format(number / BILLION)}bn`;
   }
 
-  return `${format(number / TRILLION)}tr`
+  return `${format(number / TRILLION)}tr`;
 };
 
-export default approximate
+export default approximate;

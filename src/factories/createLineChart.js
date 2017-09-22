@@ -1,8 +1,7 @@
-import {createLinearChart} from "../factories/createLinearChart";
-import {createLineTipper} from "./createTooltipper";
+import { createLinearChart } from '../factories/createLinearChart';
+import { createLineTipper } from './createTooltipper';
 
 export const createLineChart = (element, plot, config) => {
-
   const {
     categoryAxis = {},
     tooltips = {
@@ -16,20 +15,19 @@ export const createLineChart = (element, plot, config) => {
     plot,
     config: {
       categoryAxis: {
-
         // TODO: Fix [https://github.com/palantir/plottable/issues/747](#747)
         // Temporary work around for [https://github.com/palantir/plottable/issues/747](#747)
         // Issue: AreaPlot / LinePlot should default to no padding on xScale
         innerPadding: 999,
 
-        ...categoryAxis
+        ...categoryAxis,
       },
 
-      ...more
-    }
+      ...more,
+    },
   });
 
-  const {linearScale, categoryScale} = chart;
+  const { linearScale, categoryScale } = chart;
 
   plot.onAnchor(plot => {
     if (tooltips.enable) {

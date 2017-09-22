@@ -1,9 +1,9 @@
-import Plottable from "plottable";
-import {treemap} from "d3";
-import {createTreeHierachy} from "../factories/createDataset";
-import approximate from "../factories/approximate";
-import {getTilingMethod} from "./treemap";
-import {createColorFiller} from "../factories/createTreeChart";
+import Plottable from 'plottable';
+import { treemap } from 'd3';
+import { createTreeHierachy } from '../factories/createDataset';
+import approximate from '../factories/approximate';
+import { getTilingMethod } from './treemap';
+import { createColorFiller } from '../factories/createTreeChart';
 
 /**
  * @typedef {TreeChart} CompoundTreemap
@@ -12,9 +12,7 @@ import {createColorFiller} from "../factories/createTreeChart";
  *
  */
 export default (element, data, config) => {
-
   const {
-
     title = null,
 
     orientation = 'vertical',
@@ -36,7 +34,6 @@ export default (element, data, config) => {
     treemap: {
       // Tiling algorithm: binary, dice, slice, sliceDice, squarify, resquarify
       tile = 'sliceDice',
-
     } = {},
 
     // ...
@@ -59,16 +56,17 @@ export default (element, data, config) => {
   const x = orientation === 'vertical' ? 'x' : 'y';
   const y = orientation === 'horizontal' ? 'x' : 'y';
 
-  const createPlot = (plot, xScale, yScale) => plot
-    .x(d => d[`${x}0`], xScale)
-    .y(d => d[`${y}0`], yScale)
-    .x2(d => d[`${x}1`], xScale)
-    .y2(d => d[`${y}1`], yScale)
-    .attr("fill", d => d.color)
-    .attr("stroke", d => '#fff')
-    .attr("stroke-width", () => 1)
-    .labelsEnabled(true)
-    .label(d => `${d.data.label} - ${approximate(d.value)}`);
+  const createPlot = (plot, xScale, yScale) =>
+    plot
+      .x(d => d[`${x}0`], xScale)
+      .y(d => d[`${y}0`], yScale)
+      .x2(d => d[`${x}1`], xScale)
+      .y2(d => d[`${y}1`], yScale)
+      .attr('fill', d => d.color)
+      .attr('stroke', () => '#fff')
+      .attr('stroke-width', () => 1)
+      .labelsEnabled(true)
+      .label(d => `${d.data.label} - ${approximate(d.value)}`);
 
   const plot = createPlot(new Plottable.Plots.Rectangle(), xScale, yScale);
 
@@ -78,11 +76,7 @@ export default (element, data, config) => {
     .xAlignment(titleAlignment)
     .yAlignment('top');
 
-  const table = new Plottable.Components.Table([
-    [titleLabel],
-    [summaryPlot],
-    [plot],
-  ]);
+  const table = new Plottable.Components.Table([[titleLabel], [summaryPlot], [plot]]);
 
   table.rowPadding(20);
   table.rowWeight(1, 1);
@@ -97,13 +91,11 @@ export default (element, data, config) => {
   const colorize = createColorFiller(colors, [], coloring);
 
   const update = data => {
-
     const root = colorize(createTreeHierachy(data, tree));
 
     const rectangles = layout(root).descendants();
 
-    const all = rectangles
-      .filter(d => d.depth <= 2);
+    const all = rectangles.filter(d => d.depth <= 2);
 
     plot.datasets([new Plottable.Dataset(all)]);
 
@@ -112,18 +104,16 @@ export default (element, data, config) => {
     summaryPlot.datasets([new Plottable.Dataset(summary)]);
   };
   const chart = {
-
     table,
 
     update,
 
     destroy: () => {
       table.destroy();
-    }
-
+    },
   };
 
   chart.update(data, tree);
 
-  return chart
+  return chart;
 };

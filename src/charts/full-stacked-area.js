@@ -1,6 +1,6 @@
-import Plottable from "plottable";
-import {createLineChart} from "../factories/createLineChart";
-import {createFullStackedDataset} from "../factories/createDataset";
+import Plottable from 'plottable';
+import { createLineChart } from '../factories/createLineChart';
+import { createFullStackedDataset } from '../factories/createDataset';
 
 /**
  * @typedef {LinearCategoryChart} FullStackedArea
@@ -9,33 +9,24 @@ import {createFullStackedDataset} from "../factories/createDataset";
  *
  */
 export default (element, data, config) => {
-
-  const {linearAxis = {}, ...more} = config;
+  const { linearAxis = {}, ...more } = config;
 
   const plot = new Plottable.Plots.StackedArea();
 
-  const linearChart = createLineChart(
-    element,
-    plot,
-    {
-      linearAxis: {
-        axisMaximum: 100,
-        axisMinimum: 0,
+  const linearChart = createLineChart(element, plot, {
+    linearAxis: {
+      axisMaximum: 100,
+      axisMinimum: 0,
 
-        ...linearAxis,
-      },
-      ...more
-    }
-  );
+      ...linearAxis,
+    },
+    ...more,
+  });
 
-  const update = data => linearChart.update(createFullStackedDataset(
-    data,
-    config.linearAxis.indicator,
-    config.categoryAxis.indicator,
-  ));
+  const update = data =>
+    linearChart.update(createFullStackedDataset(data, config.linearAxis.indicator, config.categoryAxis.indicator), );
 
   const chart = {
-
     ...linearChart,
 
     update,

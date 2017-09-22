@@ -5,18 +5,16 @@
  * @property {('vertical'|'horizontal')} orientation=horizontal - Orientation
  *
  */
-import Plottable from "plottable";
-import hash from "object-hash";
-import createTreeChart, {createColorFiller} from "../factories/createTreeChart";
-import {createTreeHierachy} from "../factories/createDataset";
-import {createScaleAnimator} from "../factories/createAnimator";
-import {createTreeChartLabeler} from "../factories/createLabeler";
-import {createTreeTipper} from "../factories/createTooltipper";
+import Plottable from 'plottable';
+import hash from 'object-hash';
+import createTreeChart, { createColorFiller } from '../factories/createTreeChart';
+import { createTreeHierachy } from '../factories/createDataset';
+import { createScaleAnimator } from '../factories/createAnimator';
+import { createTreeChartLabeler } from '../factories/createLabeler';
+import { createTreeTipper } from '../factories/createTooltipper';
 
 export default (element, data = [], config) => {
-
   const {
-
     orientation = 'horizontal',
 
     colors = [],
@@ -32,20 +30,23 @@ export default (element, data = [], config) => {
     },
 
     ...moreConfig
-
   } = config;
 
   const plot = new Plottable.Plots.Rectangle();
 
   plot.onAnchor(plot => {
     if (tooltips.enable) {
-      createTreeTipper(element, labeling, getDatumPercentage(orientation))
+      createTreeTipper(element, labeling, getDatumPercentage(orientation));
     }
   });
 
   plot._drawLabels = createTreeChartLabeler(labeling, getDatumPercentage(orientation));
 
-  const treeChart = createTreeChart({element, plot, config: {orientation, labeling, ...moreConfig},});
+  const treeChart = createTreeChart({
+    element,
+    plot,
+    config: { orientation, labeling, ...moreConfig },
+  });
 
   const layout = partition().size([1, 1]);
 
@@ -58,12 +59,11 @@ export default (element, data = [], config) => {
       .filter(d => d.depth <= tree.depth || Infinity);
   };
 
-  let listeners = [];
+  const listeners = [];
 
   const animate = createScaleAnimator(500);
 
   treeChart.onClick((entities, xScale, yScale) => {
-
     const entity = entities.pop();
     const datum = entity.datum;
 
@@ -72,22 +72,27 @@ export default (element, data = [], config) => {
     //
     const x = orientation === 'vertical' ? 'x' : 'y';
     const y = orientation === 'horizontal' ? 'x' : 'y';
-    const x0 = x + '0';
-    const y0 = y + '0';
-    const x1 = x + '1';
-    const y1 = y + '1';
+    const x0 = `${x}0`;
+    const y0 = `${y}0`;
+    const x1 = `${x}1`;
+    const y1 = `${y}1`;
 
     const max = (list, key) => Math.max.apply(null, list.map(d => d[key]));
 
     const xMax = orientation === 'horizontal' ? max(datum.descendants(), x1) : datum[x1];
-    const xMin = orientation === 'horizontal' && datum.parent ? datum[x0] - (xMax - datum[x0]) * 0.05 : datum[x0];
+    const xMin =
+      orientation === 'horizontal' && datum.parent
+        ? datum[x0] - (xMax - datum[x0]) * 0.05
+        : datum[x0];
     const yMax = orientation === 'vertical' ? max(datum.descendants(), y1) : datum[y1];
-    const yMin = orientation === 'vertical' && datum.parent ? datum[y0] - (yMax - datum[y0]) * 0.05 : datum[y0];
+    const yMin =
+      orientation === 'vertical' && datum.parent
+        ? datum[y0] - (yMax - datum[y0]) * 0.05
+        : datum[y0];
 
-    animate([xScale, yScale], [xMin, xMax], [yMin, yMax])
-      .then(() => {
-        listeners.forEach(callback => callback(datum))
-      })
+    animate([xScale, yScale], [xMin, xMax], [yMin, yMax]).then(() => {
+      listeners.forEach(callback => callback(datum));
+    });
   });
 
   const update = data => treeChart.update(transform(data));
@@ -97,10 +102,9 @@ export default (element, data = [], config) => {
   };
 
   const chart = {
-
     ...treeChart,
 
-    onClick: (callback) => {
+    onClick: callback => {
       listeners.push(callback);
     },
 
@@ -111,7 +115,7 @@ export default (element, data = [], config) => {
         plot._drawLabels = createTreeChartLabeler(labeling, getDatumPercentage(orientation));
         // delay label redraw like plottable does
         setTimeout(() => plot._drawLabels(), 200);
-        hashes.labeling = labelingHash
+        hashes.labeling = labelingHash;
       }
     },
 
@@ -120,14 +124,11 @@ export default (element, data = [], config) => {
 
   chart.update(data);
 
-  return chart
+  return chart;
 };
 
 const getDatumPercentage = orientation => datum => {
-  return Math.round(orientation === 'horizontal' ?
-    (datum.x1 - datum.x0) * 100 :
-    (datum.y1 - datum.y0) * 100
-  );
+  return Math.round(orientation === 'horizontal' ? (datum.x1 - datum.x0) * 100 : (datum.y1 - datum.y0) * 100, );
 };
 
 const partition = function () {
@@ -165,18 +166,18 @@ const partition = function () {
   }
 
   partition.round = function (x) {
-    //noinspection CommaExpressionJS
-    return arguments.length ? (round = !!x, partition) : round;
+    // noinspection CommaExpressionJS
+    return arguments.length ? ((round = !!x), partition) : round;
   };
 
   partition.size = function (x) {
-    //noinspection CommaExpressionJS
-    return arguments.length ? (dx = +x[0], dy = +x[1], partition) : [dx, dy];
+    // noinspection CommaExpressionJS
+    return arguments.length ? ((dx = +x[0]), (dy = +x[1]), partition) : [dx, dy];
   };
 
   partition.padding = function (x) {
-    //noinspection CommaExpressionJS
-    return arguments.length ? (padding = +x, partition) : padding;
+    // noinspection CommaExpressionJS
+    return arguments.length ? ((padding = +x), partition) : padding;
   };
 
   return partition;

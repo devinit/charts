@@ -1,6 +1,5 @@
 import Plottable from 'plottable';
 
-
 /**
  *
  * @typedef {Object} ColorLegend
@@ -25,12 +24,8 @@ import Plottable from 'plottable';
  * @returns {*}
  */
 export const createColorLegend = (colorScale, config = {}) => {
-
   const {
-    showLegend = false,
-    symbol = 'square',
-    alignment = 'left',
-    rowSpan = Infinity
+    showLegend = false, symbol = 'square', alignment = 'left', rowSpan = Infinity
   } = config;
 
   if (!showLegend || !colorScale) return null;
@@ -39,5 +34,4 @@ export const createColorLegend = (colorScale, config = {}) => {
     .symbol(d => size => Plottable.SymbolFactories[symbol]()(size))
     .xAlignment(alignment)
     .maxEntriesPerRow(rowSpan);
-
 };

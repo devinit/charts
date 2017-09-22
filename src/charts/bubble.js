@@ -1,5 +1,5 @@
-import Plottable from "plottable";
-import createScatterChart  from '../factories/createScatterChart'
+import Plottable from 'plottable';
+import createScatterChart from '../factories/createScatterChart';
 
 /**
  * @typedef {ScatterChart} Bubble
@@ -8,14 +8,13 @@ import createScatterChart  from '../factories/createScatterChart'
  *
  */
 export default (element, data, config) => {
-
   const plot = new Plottable.Plots.Scatter();
 
   // ... apply scatter configuration
 
-  const chart = createScatterChart({element, plot, config});
+  const chart = createScatterChart({ element, plot, config });
 
   chart.update(data);
 
-  return chart
+  return chart;
 };

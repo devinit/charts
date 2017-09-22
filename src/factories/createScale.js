@@ -1,4 +1,4 @@
-import Plottable from 'plottable'
+import Plottable from 'plottable';
 
 /**
  * Creates linear scale
@@ -6,7 +6,7 @@ import Plottable from 'plottable'
  * @returns {Linear}
  */
 export const createLinearScale = (config = {}) => {
-  const {axisMinimum = null, axisMaximum = null} = config;
+  const { axisMinimum = null, axisMaximum = null } = config;
 
   const scale = new Plottable.Scales.Linear();
   scale.domainMin(axisMinimum);
@@ -23,7 +23,7 @@ export const createLinearScale = (config = {}) => {
  * @returns {Time}
  */
 export const createTimeScale = (config = {}) => {
-  const {axisMinimum = null, axisMaximum = null} = config;
+  const { axisMinimum = null, axisMaximum = null } = config;
 
   const scale = new Plottable.Scales.Time();
   axisMaximum && scale.domainMin(new Date(axisMinimum.toString()));
@@ -39,8 +39,8 @@ export const createTimeScale = (config = {}) => {
  * @param {CategoryAxis} config
  * @returns {Category}
  */
-export const createCategoryScale = (config) => {
-  const {innerPadding = 0, outerPadding = 0} = config;
+export const createCategoryScale = config => {
+  const { innerPadding = 0, outerPadding = 0 } = config;
   const scale = new Plottable.Scales.Category();
   scale.outerPadding(outerPadding);
   scale.innerPadding(innerPadding);

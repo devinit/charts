@@ -1,6 +1,6 @@
-import Plottable from "plottable";
-import approximate from "./approximate";
-import {configureAxisTicking, configureTimeAxisTicking} from "./configureTicking";
+import Plottable from 'plottable';
+import approximate from './approximate';
+import { configureAxisTicking, configureTimeAxisTicking } from './configureTicking';
 
 /**
  * @typedef {Object} NumericAxis - Numeric Axis configuration
@@ -25,11 +25,10 @@ import {configureAxisTicking, configureTimeAxisTicking} from "./configureTicking
  * @returns {Plottable.Axes.Numeric}
  */
 export const createNumericAxis = (config, format = d => d, axis) => {
-
   const {
     showAxis = true,
     axisOrientation,
-    axisScale, 
+    axisScale,
     axisLabel = null,
     axisMargin = 10,
     ticking = 'all',
@@ -49,14 +48,14 @@ export const createNumericAxis = (config, format = d => d, axis) => {
 
   if (axisLabel) {
     axis.margin(axisMargin);
-    label = axisLabel && new Plottable.Components.AxisLabel(axisLabel, getAxisLabelRotation(alignment));
+    label =
+      axisLabel && new Plottable.Components.AxisLabel(axisLabel, getAxisLabelRotation(alignment));
   }
 
   // Add ticking classes
   configureAxisTicking(axis, ticking);
 
-  return createAxisTable(alignment, axis, label)
-
+  return createAxisTable(alignment, axis, label);
 };
 
 /**
@@ -78,14 +77,14 @@ export const createNumericAxis = (config, format = d => d, axis) => {
  * @returns {Plottable.Axes.Time}
  */
 export const createTimeAxis = (config, axis) => {
-
   const {
     showAxis = false,
     axisOrientation = 'horizontal',
-    axisScale, axisLabel = null,
+    axisScale,
+    axisLabel = null,
     axisMargin = 10,
     ticking,
-    tickingStep = 1
+    tickingStep = 1,
   } = config;
 
   if (!showAxis) return null;
@@ -99,17 +98,15 @@ export const createTimeAxis = (config, axis) => {
 
   if (axisLabel) {
     axis.margin(axisMargin);
-    label = axisLabel && new Plottable.Components.AxisLabel(axisLabel, getAxisLabelRotation('bottom'));
+    label =
+      axisLabel && new Plottable.Components.AxisLabel(axisLabel, getAxisLabelRotation('bottom'));
   }
 
   // Add ticking classes
   configureTimeAxisTicking(axis, ticking, tickingStep);
 
-  return createAxisTable('bottom', axis, label)
-
+  return createAxisTable('bottom', axis, label);
 };
-
-
 
 /**
  *
@@ -131,14 +128,14 @@ export const createTimeAxis = (config, axis) => {
  * @returns {Plottable.Axes.Category}
  */
 export const createCategoryAxis = (config = {}, axis) => {
-  let {
+  const {
     showAxis = false,
     axisOrientation,
     axisDirection,
     axisScale,
     axisLabel = null,
     axisMargin = 10,
-    ticking = 'all'
+    ticking = 'all',
   } = config;
 
   if (!showAxis) return null;
@@ -153,13 +150,14 @@ export const createCategoryAxis = (config = {}, axis) => {
 
   if (axisLabel) {
     axis.margin(axisMargin);
-    label = axisLabel && new Plottable.Components.AxisLabel(axisLabel, getAxisLabelRotation(alignment));
+    label =
+      axisLabel && new Plottable.Components.AxisLabel(axisLabel, getAxisLabelRotation(alignment));
   }
 
   // Add ticking classes
   configureAxisTicking(axis, ticking);
 
-  return createAxisTable(alignment, axis, label)
+  return createAxisTable(alignment, axis, label);
 };
 
 /**
@@ -167,12 +165,8 @@ export const createCategoryAxis = (config = {}, axis) => {
  * @param {NumericAxis} config
  * @returns {{format: (function(*=)), modify: (function(*=))}}
  */
-export const createAxisModifier = (config) => {
-  const {
-    modifier = 'multiply',
-    modifierParam = 1,
-    absolute = false
-  } = config;
+export const createAxisModifier = config => {
+  const { modifier = 'multiply', modifierParam = 1, absolute = false } = config;
 
   const absoluteFn = absolutify(absolute);
   let modifierFn = d => d;
@@ -195,18 +189,17 @@ export const createAxisModifier = (config) => {
 
   return {
     format: number => absoluteFn(formatterFn(number)),
-    modify: number => modifierFn(number)
-  }
+    modify: number => modifierFn(number),
+  };
 };
 
 export const createAxisTable = (alignment, axis, label) => {
-
   if (alignment === 'top') {
-    return new Plottable.Components.Table([[label], [axis],]);
+    return new Plottable.Components.Table([[label], [axis]]);
   }
 
   if (alignment === 'bottom') {
-    return new Plottable.Components.Table([[axis], [label],]);
+    return new Plottable.Components.Table([[axis], [label]]);
   }
 
   if (alignment === 'left') {
@@ -216,18 +209,17 @@ export const createAxisTable = (alignment, axis, label) => {
   if (alignment === 'right') {
     return new Plottable.Components.Table([[axis, label]]);
   }
-
 };
 
-export const getAxisLabelRotation = (alignment) => {
-  return labelRotationAngles[alignment]
+export const getAxisLabelRotation = alignment => {
+  return labelRotationAngles[alignment];
 };
 
 export const labelRotationAngles = {
   top: 0,
   bottom: 0,
   left: -90,
-  right: 90
+  right: 90,
 };
 
 export const log = base => number => Math.round(Math.log(number) / Math.log(base));
@@ -238,4 +230,5 @@ export const divide = divisor => number => number / divisor;
 
 export const power = base => exponent => Math.pow(base, exponent);
 
-export const absolutify = shouldAbsolutify => number => shouldAbsolutify ? Math.abs(number) : number;
+export const absolutify = shouldAbsolutify => number =>
+  shouldAbsolutify ? Math.abs(number) : number;

@@ -1,6 +1,6 @@
-import Plottable from "plottable";
-import createBarChart from "../factories/createBarChart";
-import {createFullStackedDataset} from "../factories/createDataset";
+import Plottable from 'plottable';
+import createBarChart from '../factories/createBarChart';
+import { createFullStackedDataset } from '../factories/createDataset';
 
 /**
  * @typedef {LinearCategoryChart} FullStackedBar
@@ -9,33 +9,24 @@ import {createFullStackedDataset} from "../factories/createDataset";
  *
  */
 export default (element, data, config) => {
-
   const { orientation, linearAxis } = config;
 
   const plot = new Plottable.Plots.StackedBar(orientation);
 
-  const linearChart = createBarChart(
-    element,
-    plot,
-    {
-      ...config,
-      linearAxis: {
-        ...linearAxis,
+  const linearChart = createBarChart(element, plot, {
+    ...config,
+    linearAxis: {
+      ...linearAxis,
 
-        axisMaximum: 100,
-        axisMinimum: 0,
-      }
-    }
-  );
+      axisMaximum: 100,
+      axisMinimum: 0,
+    },
+  });
 
-  const update = data => linearChart.update(createFullStackedDataset(
-    data,
-    config.linearAxis.indicator,
-    config.categoryAxis.indicator,
-  ));
+  const update = data =>
+    linearChart.update(createFullStackedDataset(data, config.linearAxis.indicator, config.categoryAxis.indicator), );
 
   const chart = {
-
     ...linearChart,
 
     update,
@@ -43,5 +34,5 @@ export default (element, data, config) => {
 
   chart.update(data);
 
-  return chart
+  return chart;
 };

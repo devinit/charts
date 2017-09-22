@@ -1,16 +1,16 @@
-import Plottable from "plottable";
-import {createLinearScale} from "./createScale";
-import {createAxisModifier, createNumericAxis} from "./createAxis";
-import {createScatterGridLines} from "./createGrid";
-import {createChartTable} from "./createTable";
-import {createTitle} from "./createTitle";
-import {createColorLegend} from "./createLegend";
-//noinspection JSFileReferences
-import Tooltip from "tooltip.js";
-import {color} from "d3";
-import {createDataAnimator} from "./createAnimator";
-import approximate from './approximate'
-import {createScatterClickTipper, createScatterTipper} from "./createTooltipper";
+import Plottable from 'plottable';
+import { createLinearScale } from './createScale';
+import { createAxisModifier, createNumericAxis } from './createAxis';
+import { createScatterGridLines } from './createGrid';
+import { createChartTable } from './createTable';
+import { createTitle } from './createTitle';
+import { createColorLegend } from './createLegend';
+// noinspection JSFileReferences
+import Tooltip from 'tooltip.js';
+import { color } from 'd3';
+import { createDataAnimator } from './createAnimator';
+import approximate from './approximate';
+import { createScatterClickTipper, createScatterTipper } from './createTooltipper';
 
 /**
  * @typedef {Object} ScatterChart - Scatter chart configuration
@@ -40,10 +40,8 @@ import {createScatterClickTipper, createScatterTipper} from "./createTooltipper"
  * @param plot
  * @param {ScatterChart} config
  */
-export default ({element, plot, config}) => {
-
+export default ({ element, plot, config }) => {
   const {
-
     title,
 
     titleAlignment = 'left',
@@ -69,7 +67,6 @@ export default ({element, plot, config}) => {
     tooltips = {
       enable: true,
     },
-
   } = config;
 
   const horizontalScale = createLinearScale(horizontalAxis);
@@ -78,41 +75,46 @@ export default ({element, plot, config}) => {
   const bubbleScale = createLinearScale({});
   const colorScale = new Plottable.Scales.Color();
 
-  const scatterPlot = createScatterPlot({plot, horizontalScale, verticalScale, bubbleScale, idIndicator});
-  const scatterGridLines = createScatterGridLines({horizontalScale, verticalScale, horizontalAxis, verticalAxis});
+  const scatterPlot = createScatterPlot({
+    plot,
+    horizontalScale,
+    verticalScale,
+    bubbleScale,
+    idIndicator,
+  });
+  const scatterGridLines = createScatterGridLines({
+    horizontalScale,
+    verticalScale,
+    horizontalAxis,
+    verticalAxis,
+  });
 
   // TODO: Add bubble scale legend
 
   const vAxis = createNumericAxis({
     axisScale: verticalScale,
     axisOrientation: 'vertical',
-    ...verticalAxis
+    ...verticalAxis,
   });
 
   const hAxis = createNumericAxis({
     axisScale: horizontalScale,
     axisOrientation: 'horizontal',
-    ...horizontalAxis
+    ...horizontalAxis,
   });
 
   const vAxisModifier = createAxisModifier(verticalAxis);
   const hAxisModifier = createAxisModifier(horizontalAxis);
 
   const table = createChartTable({
-
-    title: createTitle({title, titleAlignment}),
+    title: createTitle({ title, titleAlignment }),
 
     chart: createPlotAreaWithAxes({
-
       verticalAxis: vAxis,
 
       horizontalAxis: hAxis,
 
-      plotArea: new Plottable.Components.Group([
-        scatterGridLines,
-        scatterPlot
-      ]),
-
+      plotArea: new Plottable.Components.Group([scatterGridLines, scatterPlot]),
     }),
 
     legend: createColorLegend(colorScale, legend),
@@ -134,50 +136,40 @@ export default ({element, plot, config}) => {
         tipper(plot);
         clickTipper.init(plot);
       }
-    }, 500)
+    }, 500);
   });
 
-
   const update = data => {
-    bubbleScale
-      .domain([0, 3e2])
-      .range([12, 50]);
+    bubbleScale.domain([0, 3e2]).range([12, 50]);
 
     const callback = data => {
       // const rangeMinimum = Math.min.apply(null, data.map(d => d.z));
       // const rangeMaximum = Math.max.apply(null, data.map(d => d.z));
-      clickTipper.update(plot)
+      clickTipper.update(plot);
     };
 
-    const mapping = data
-      .reduce((groups, datum) => {
+    const mapping = data.reduce((groups, datum) => {
+      return {
+        ...groups,
 
-        return {
+        [datum[groupBy]]: [
+          ...(groups[datum[groupBy]] || []),
 
-          ...groups,
+          {
+            ...datum,
+            x: datum[horizontalAxis.indicator],
+            y: datum[verticalAxis.indicator],
+            z: datum[bubble.indicator] || 12,
+          },
+        ],
+      };
+    }, {});
 
-          [datum[groupBy]]: [
-
-            ...(groups[datum[groupBy]] || []),
-
-            {
-              ...datum,
-              x: datum[horizontalAxis.indicator],
-              y: datum[verticalAxis.indicator],
-              z: datum[bubble.indicator] || 12
-            }
-
-          ]
-        };
-
-      }, {});
-
-    const datasets = Object.keys(mapping)
-      .map((group, index) => mapping[group]
-        .map(d => ({
-          ...d,
-          color: d[coloring] || colors[index] || '#abc'
-        })));
+    const datasets = Object.keys(mapping).map((group, index) =>
+      mapping[group].map(d => ({
+        ...d,
+        color: d[coloring] || colors[index] || '#abc',
+      })), );
 
     colorScale
       .domain(Object.keys(mapping))
@@ -199,12 +191,11 @@ export default ({element, plot, config}) => {
       annotations,
       verticalScale,
       horizontalScale,
-      plot
-    })
+      plot,
+    });
   };
 
   return {
-
     _config: config,
 
     table,
@@ -225,7 +216,7 @@ export default ({element, plot, config}) => {
       table.destroy();
     },
 
-    onSelect: (callback) => {
+    onSelect: callback => {
       selectionListeners.push(callback);
     },
 
@@ -235,43 +226,45 @@ export default ({element, plot, config}) => {
 
     updateVerticalAxis: config => {
       createNumericAxis(config, vAxis);
-    }
-  }
-}
+    },
+  };
+};
 
-const createScatterAnnotations = ({annotations, verticalScale, horizontalScale, plot}) => {
+const createScatterAnnotations = ({
+  annotations, verticalScale, horizontalScale, plot
+}) => {
+  plot
+    .background()
+    .selectAll('.annotation-background')
+    .remove();
 
-  plot.background().selectAll('.annotation-background').remove();
+  plot
+    .foreground()
+    .selectAll('.annotation-text')
+    .remove();
 
-  plot.foreground().selectAll('.annotation-text').remove();
+  annotations.forEach(({
+    title, body, fill, horizontalAxis = {}, verticalAxis = {}
+  }) => {
+    const x0 = horizontalScale.scale(typeof horizontalAxis.minimum !== 'number' ||
+      horizontalAxis.minimum < horizontalScale.domainMin()
+      ? horizontalScale.domainMin()
+      : horizontalAxis.minimum, );
 
-  annotations.forEach(({title, body, fill, horizontalAxis = {}, verticalAxis = {}}) => {
-    const x0 = horizontalScale.scale(
-      typeof horizontalAxis.minimum !== 'number' || horizontalAxis.minimum < horizontalScale.domainMin() ?
-        horizontalScale.domainMin() :
-        horizontalAxis.minimum
-    );
+    const x1 = horizontalScale.scale(!horizontalAxis.maximum || horizontalAxis.maximum > horizontalScale.domainMax()
+      ? horizontalScale.domainMax()
+      : horizontalAxis.maximum, );
 
-    const x1 = horizontalScale.scale(
-      !horizontalAxis.maximum || horizontalAxis.maximum > horizontalScale.domainMax() ?
-        horizontalScale.domainMax() :
-        horizontalAxis.maximum
-    );
+    const y0 = verticalScale.scale(!verticalAxis.maximum || verticalAxis.maximum > verticalScale.domainMax()
+      ? verticalScale.domainMax()
+      : verticalAxis.maximum, );
 
-    const y0 = verticalScale.scale(
-      !verticalAxis.maximum || verticalAxis.maximum > verticalScale.domainMax() ?
-        verticalScale.domainMax() :
-        verticalAxis.maximum
-    );
-
-    const y1 = verticalScale.scale(
-      !verticalAxis.minimum || verticalAxis.minimum < verticalScale.domainMin() ?
-        verticalScale.domainMin() :
-        verticalAxis.minimum
-    );
+    const y1 = verticalScale.scale(!verticalAxis.minimum || verticalAxis.minimum < verticalScale.domainMin()
+      ? verticalScale.domainMin()
+      : verticalAxis.minimum, );
 
     const colorFill = fill || '#ccc';
-    const {r, g, b} = color(colorFill).rgb();
+    const { r, g, b } = color(colorFill).rgb();
     const brightness = (r + g + b) / (256 * 3);
 
     plot
@@ -294,16 +287,19 @@ const createScatterAnnotations = ({annotations, verticalScale, horizontalScale, 
       .attr('x', x0)
       .attr('y', y0)
       .html(`
-            <div class="${brightness > 0.5 ? 'dark' : 'light'}-label plot-label" style="text-align: left">
+            <div class="${brightness > 0.5
+    ? 'dark'
+    : 'light'}-label plot-label" style="text-align: left">
               <div class="plot-label-header">${title}</div>
               <div class="plot-label-value">${body || ''}</div>
             </div>
           `);
-
-  })
+  });
 };
 
-const createScatterPlot = ({plot, horizontalScale, verticalScale, bubbleScale, idIndicator}) => {
+const createScatterPlot = ({
+  plot, horizontalScale, verticalScale, bubbleScale, idIndicator
+}) => {
   plot
     .attr('name', d => d.z)
     .attr('fill', d => d.color)
@@ -315,13 +311,13 @@ const createScatterPlot = ({plot, horizontalScale, verticalScale, bubbleScale, i
     .size(d => d.z, bubbleScale);
 
   if (idIndicator) {
-    plot.attr('id', d => `bubble-${d[idIndicator]}`)
+    plot.attr('id', d => `bubble-${d[idIndicator]}`);
   }
 
-  return plot
+  return plot;
 };
 
-const createPlotAreaWithAxes = ({horizontalAxis, plotArea, verticalAxis}) => {
+const createPlotAreaWithAxes = ({ horizontalAxis, plotArea, verticalAxis }) => {
   const plotAreaWithAxes = [[verticalAxis, plotArea], [null, horizontalAxis]];
 
   return new Plottable.Components.Table(plotAreaWithAxes);

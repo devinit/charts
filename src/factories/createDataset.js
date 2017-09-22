@@ -1,5 +1,5 @@
-import {stratify} from "d3";
-import Plottable from "plottable";
+import { stratify } from 'd3';
+import Plottable from 'plottable';
 
 export const makeUnique = list => Array.from(new Set(list));
 
@@ -11,7 +11,6 @@ export const makeUnique = list => Array.from(new Set(list));
  * @returns {Array}
  */
 export const createFullStackedDataset = (data = [], linearAxisIndicator, categoryAxisIndicator) => {
-
   const labels = makeUnique(data.map(d => d[categoryAxisIndicator]));
 
   const sums = labels
@@ -19,15 +18,15 @@ export const createFullStackedDataset = (data = [], linearAxisIndicator, categor
       [label]: data
         .filter(d => d[categoryAxisIndicator] === label)
         .map(d => d[linearAxisIndicator])
-        .reduce((sum, value) => sum + value, 0)
+        .reduce((sum, value) => sum + value, 0),
     }))
-    .reduce((sums, sum) => ({...sums, ...sum}), {});
+    .reduce((sums, sum) => ({ ...sums, ...sum }), {});
 
   return data.map(d => ({
     ...d,
 
-    [linearAxisIndicator]: d[linearAxisIndicator] * 100 / sums[d[categoryAxisIndicator]]
-  }))
+    [linearAxisIndicator]: d[linearAxisIndicator] * 100 / sums[d[categoryAxisIndicator]],
+  }));
 };
 
 /**
@@ -37,59 +36,47 @@ export const createFullStackedDataset = (data = [], linearAxisIndicator, categor
  * @param {String[]} levels
  */
 export const createTreeHierachy = (data, tree) => {
-
   let series = [];
 
   if (tree.id && tree.parent && tree.value) {
     series = data.map(datum => ({
-
       ...datum,
 
       label: datum[tree.id],
 
       parent: datum[tree.parent],
 
-      value: datum[tree.value]
-
+      value: datum[tree.value],
     }));
-  }
-
-  else if (tree.value && tree.levels && tree.levels.length > 1) {
+  } else if (tree.value && tree.levels && tree.levels.length > 1) {
     series = data.map(datum => {
-
       const categories = tree.levels.map(l => datum[l]).filter(l => l);
 
       return {
-
         ...datum,
 
         label: categories.pop(),
 
         parent: categories.pop(),
 
-        value: datum[tree.value]
-      }
+        value: datum[tree.value],
+      };
     });
-  }
-
-  else if (tree.id && tree.value) {
+  } else if (tree.id && tree.value) {
     series = [
-
       {
-        label: 'All'
+        label: 'All',
       },
 
       ...data.map(datum => ({
-
         ...datum,
 
         label: datum[tree.id],
 
         parent: 'All',
 
-        value: datum[tree.value]
-      }))
-
+        value: datum[tree.value],
+      })),
     ];
   }
 
@@ -100,7 +87,7 @@ export const createTreeHierachy = (data, tree) => {
   const root = stratifyFactory(series);
 
   root.sum = function (value) {
-    return this.eachAfter(function (node) {
+    return this.eachAfter(node => {
       let sum = +value(node) || 0,
         children = node.children,
         i = children && children.length;
@@ -114,9 +101,8 @@ export const createTreeHierachy = (data, tree) => {
       return node.children ? 0 : node.data.value;
     })
     .sort((a, b) => b.value - a.value);
-
 };
 
-export const createTreeDataset = (rects) => {
+export const createTreeDataset = rects => {
   return [new Plottable.Dataset(rects)];
 };

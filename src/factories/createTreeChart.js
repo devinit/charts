@@ -1,8 +1,8 @@
-import Plottable from "plottable";
-import {createTitle} from "./createTitle";
-import {createChartTable} from "./createTable";
-import {createTreeDataset} from "./createDataset";
-import {createColorLegend} from "./createLegend";
+import Plottable from 'plottable';
+import { createTitle } from './createTitle';
+import { createChartTable } from './createTable';
+import { createTreeDataset } from './createDataset';
+import { createColorLegend } from './createLegend';
 
 /**
  * @typedef {Object} TreeChart
@@ -26,10 +26,8 @@ import {createColorLegend} from "./createLegend";
  * @property {indicator} value - Value Indicator
  */
 
-export default ({element, plot, config}) => {
-
+export default ({ element, plot, config }) => {
   const {
-
     title = null,
 
     titleAlignment = 'left',
@@ -37,9 +35,8 @@ export default ({element, plot, config}) => {
     orientation = 'vertical',
 
     labeling = {},
-    
-    legend = {},
 
+    legend = {},
   } = config;
 
   const xScale = new Plottable.Scales.Linear();
@@ -49,7 +46,7 @@ export default ({element, plot, config}) => {
   const yScale = new Plottable.Scales.Linear();
   yScale.domainMin(0);
   yScale.domainMax(1);
-  
+
   const colorScale = new Plottable.Scales.Color();
 
   const x = orientation === 'vertical' ? 'x' : 'y';
@@ -60,22 +57,22 @@ export default ({element, plot, config}) => {
     .y(d => d[`${y}0`], yScale)
     .x2(d => d[`${x}1`], xScale)
     .y2(d => d[`${y}1`], yScale)
-    .attr("fill", d => d.color || '#abc')
-    .attr("stroke", '#fff')
-    .attr("stroke-width", 1)
+    .attr('fill', d => d.color || '#abc')
+    .attr('stroke', '#fff')
+    .attr('stroke-width', 1)
     .labelsEnabled(labeling.showLabels || true)
     .label(d => d.data.label);
 
   const colorLegend = createColorLegend(colorScale, legend);
 
   const table = createChartTable({
-    title: createTitle({title, titleAlignment}),
-    
+    title: createTitle({ title, titleAlignment }),
+
     chart: plot,
 
     legend: colorLegend,
 
-    legendPosition: legend.position || 'bottom'
+    legendPosition: legend.position || 'bottom',
   });
 
   table.renderTo(element);
@@ -87,23 +84,18 @@ export default ({element, plot, config}) => {
 
     if (legend.showLegend) {
       const leveled = data.filter(d => d.depth === legend.depth);
-      colorScale
-       .domain(leveled.map(d => d.id))
-       .range(leveled.map(d => d.color));
+      colorScale.domain(leveled.map(d => d.id)).range(leveled.map(d => d.color));
     }
   };
 
   const onClick = (callback = d => d) => {
-
     const interaction = new Plottable.Interactions.Click()
       .onClick(point => {
-
         const entities = plot.entitiesAt(point);
 
         if (entities.length) {
-          callback(entities, xScale, yScale)
+          callback(entities, xScale, yScale);
         }
-
       })
       .attachTo(plot);
 
@@ -113,28 +105,25 @@ export default ({element, plot, config}) => {
           const [clicked] = colorLegend.entitiesAt(point);
 
           if (clicked) {
-            const entities = plot.entities()
-              .filter(d => d.datum.id === clicked.datum);
+            const entities = plot.entities().filter(d => d.datum.id === clicked.datum);
 
-            callback(entities, xScale, yScale)
+            callback(entities, xScale, yScale);
           }
         })
         .attachTo(colorLegend);
 
       colorLegend.onDetach(legend => {
         legendInteraction.detachFrom(legend);
-      })
+      });
     }
 
     plot.onDetach(plot => {
       interaction.detachFrom(plot);
-      tip.dispose()
+      tip.dispose();
     });
-
   };
 
   return {
-
     table,
 
     update,
@@ -143,23 +132,19 @@ export default ({element, plot, config}) => {
 
     destroy: () => {
       table.destroy();
-    }
+    },
   };
 };
 
 export const createColorFiller = (colors = [], rules, indicator) => d => {
-
-  d.eachBefore((node) => {
+  d.eachBefore(node => {
     if (node.depth === 0) {
-      node.color = node.data[indicator] || colors[0] || '#abc'
-    }
-
-    else if (node.depth === 1) {
-      node.color = node.data[indicator] || colors[node.parent.children.indexOf(node) % colors.length]
-    }
-
-    else {
-      node.color = node.data[indicator] || node.parent.color
+      node.color = node.data[indicator] || colors[0] || '#abc';
+    } else if (node.depth === 1) {
+      node.color =
+        node.data[indicator] || colors[node.parent.children.indexOf(node) % colors.length];
+    } else {
+      node.color = node.data[indicator] || node.parent.color;
     }
   });
 

@@ -1,73 +1,70 @@
-import Plottable from "plottable";
-import {color} from "d3";
-import approximate from "./approximate";
-import {createLinearChart} from "./createLinearChart";
-import {createBarTipper} from "./createTooltipper";
+import Plottable from 'plottable';
+import { color } from 'd3';
+import approximate from './approximate';
+import { createLinearChart } from './createLinearChart';
+import { createBarTipper } from './createTooltipper';
 
 export default (element, plot, config) => {
-  const {
-    interactions = { enable: false },
-    tooltips = { enable: true },
-  } = config;
-  const chart = createLinearChart({element, plot, config});
+  const { interactions = { enable: false }, tooltips = { enable: true } } = config;
+  const chart = createLinearChart({ element, plot, config });
 
   plot.onAnchor(plot => {
     setTimeout(() => {
       if (interactions.enable) {
-        createBarInteraction(config.orientation, config.labeling, config.highlight)(plot)
+        createBarInteraction(config.orientation, config.labeling, config.highlight)(plot);
       }
 
       if (tooltips.enable) {
         createBarTipper(element, config.labeling, chart.categoryScale, config.orientation)(plot);
       }
-    }, 500)
+    }, 500);
   });
 
   return chart;
-}
+};
 
 const createBarInteraction = (orientation = 'vertical', labeling = {}, highlight = []) => {
-
-  const {
-    prefix = '',
-    suffix = ''
-  } = labeling;
+  const { prefix = '', suffix = '' } = labeling;
 
   let currentId = null;
 
   const reset = plot => {
-    plot.entities()
-      .forEach(entity => {
-        if (!entity.selection.attr('initial-fill')) {
-          entity.selection.attr("initial-fill", entity.selection.attr('fill'));
-        } else {
-          entity.selection.attr("fill", entity.selection.attr('initial-fill'));
-        }
-      });
+    plot.entities().forEach(entity => {
+      if (!entity.selection.attr('initial-fill')) {
+        entity.selection.attr('initial-fill', entity.selection.attr('fill'));
+      } else {
+        entity.selection.attr('fill', entity.selection.attr('initial-fill'));
+      }
+    });
 
-    plot.foreground().select('text').remove()
+    plot
+      .foreground()
+      .select('text')
+      .remove();
   };
 
   return plot => {
     // QUICKFIX: Highlight some bars in a bar chart
     if (highlight.length) {
-      plot.entities()
+      plot
+        .entities()
         .filter(entity => highlight.indexOf(entity.datum.label) > -1)
         .forEach(entity => {
-          const { x, y, width, height } = entity.selection.node().getBBox();
+          const {
+            x, y, width, height
+          } = entity.selection.node().getBBox();
 
           plot
             .background()
             .append('text')
             .attr('class', 'plot-label hover-label')
-            .attr('x', orientation === 'vertical' ? x + ( width / 2 ) : width + x + 5)
-            .attr('y', orientation === 'horizontal' ? y + ( height / 2 ) : y - 10)
+            .attr('x', orientation === 'vertical' ? x + width / 2 : width + x + 5)
+            .attr('y', orientation === 'horizontal' ? y + height / 2 : y - 10)
             .attr('text-anchor', orientation === 'vertical' ? 'middle' : 'start')
-            .attr('style', `fill: ${entity.selection.attr("fill")}`)
+            .attr('style', `fill: ${entity.selection.attr('fill')}`)
             .text(`${prefix}${approximate(entity.datum.value)}${suffix}`);
-        })
+        });
     }
-
 
     const interaction = new Plottable.Interactions.Pointer()
       .onPointerExit(() => {
@@ -79,24 +76,25 @@ const createBarInteraction = (orientation = 'vertical', labeling = {}, highlight
         const id = entity && `${entity.position.x.toFixed(3)}-${entity.position.y.toFixed(3)}`;
 
         if (id && id !== currentId) {
-
           reset(plot);
 
-          const { x, y, width, height } = entity.selection.node().getBBox();
+          const {
+            x, y, width, height
+          } = entity.selection.node().getBBox();
 
           plot
             .foreground()
             .append('text')
             .attr('class', 'plot-label hover-label')
-            .attr('x', orientation === 'vertical' ? x + ( width / 2 ) : width + x + 5)
-            .attr('y', orientation === 'horizontal' ? y + ( height / 2 ) : y - 10)
+            .attr('x', orientation === 'vertical' ? x + width / 2 : width + x + 5)
+            .attr('y', orientation === 'horizontal' ? y + height / 2 : y - 10)
             .attr('text-anchor', orientation === 'vertical' ? 'middle' : 'start')
-            .attr('style', `fill: ${entity.selection.attr("fill")}`)
+            .attr('style', `fill: ${entity.selection.attr('fill')}`)
             .text(`${prefix}${approximate(entity.datum.value)}${suffix}`);
 
           const fill = color(entity.selection.attr('initial-fill')).darker(0.7);
 
-          entity.selection.attr("fill", fill);
+          entity.selection.attr('fill', fill);
 
           currentId = id;
         }
@@ -106,6 +104,6 @@ const createBarInteraction = (orientation = 'vertical', labeling = {}, highlight
 
     plot.onDetach(plot => {
       interaction.detachFrom(plot);
-    })
-  }
+    });
+  };
 };

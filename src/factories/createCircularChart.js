@@ -1,8 +1,7 @@
-import Plottable from "plottable";
-import {createTitle} from './createTitle';
-import {createColorLegend} from './createLegend';
-import {createChartTable} from './createTable';
-
+import Plottable from 'plottable';
+import { createTitle } from './createTitle';
+import { createColorLegend } from './createLegend';
+import { createChartTable } from './createTable';
 
 /**
  * @typedef {Object} CircularChart - Circular chart configuration
@@ -23,10 +22,8 @@ import {createChartTable} from './createTable';
  * @property {string} strokeColor - Stroke Color
  */
 
-export default ({element, plot, config}) => {
-
+export default ({ element, plot, config }) => {
   const {
-
     title = null,
 
     titleAlignment = 'left',
@@ -40,7 +37,7 @@ export default ({element, plot, config}) => {
       value: 'value',
       innerRadius: 0,
       strokeWidth: 0,
-      strokeColor: '#fff'
+      strokeColor: '#fff',
     },
 
     legend = {
@@ -48,22 +45,20 @@ export default ({element, plot, config}) => {
       position: 'bottom',
       alignment: 'center',
     },
-
   } = config;
 
   const colorScale = new Plottable.Scales.Color();
 
   const table = createChartTable({
-    title: createTitle({title, titleAlignment}),
-    chart: createCircularPlot({plot, ...circular}),
+    title: createTitle({ title, titleAlignment }),
+    chart: createCircularPlot({ plot, ...circular }),
     legend: createColorLegend(colorScale, legend),
-    legendPosition: legend.position
+    legendPosition: legend.position,
   });
 
   table.renderTo(element);
 
   const update = (data = []) => {
-
     const series = data.map((d, i) => ({
       label: d[circular.label],
       value: parseFloat(d[circular.value]),
@@ -72,7 +67,6 @@ export default ({element, plot, config}) => {
 
     // TODO: Efficiently update legend
     if (legend.showLegend) {
-
       const domain = series.map(d => d.label);
       const range = series.map(d => d.color);
       colorScale.domain(domain).range(range);
@@ -82,19 +76,22 @@ export default ({element, plot, config}) => {
   };
 
   return {
-
     table,
 
     update,
 
     destroy: () => {
       table.destroy();
-    }
+    },
   };
-
 };
 
-export const createCircularPlot = ({plot, innerRadius = 0, strokeColor = '#fff', strokeWidth = 0}) => {
+export const createCircularPlot = ({
+  plot,
+  innerRadius = 0,
+  strokeColor = '#fff',
+  strokeWidth = 0,
+}) => {
   const innerRadiusScale = new Plottable.Scales.Linear();
 
   innerRadiusScale.domain([0, 100]);

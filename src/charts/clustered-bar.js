@@ -1,5 +1,5 @@
-import Plottable from "plottable";
-import createBarChart from "../factories/createBarChart";
+import Plottable from 'plottable';
+import createBarChart from '../factories/createBarChart';
 
 /**
  * @typedef {LinearCategoryChart} ClusteredBar
@@ -8,12 +8,11 @@ import createBarChart from "../factories/createBarChart";
  *
  */
 export default (element, data, config) => {
-
   const plot = new Plottable.Plots.ClusteredBar(config.orientation);
 
   const chart = createBarChart(element, plot, config);
 
   chart.update(data);
 
-  return chart
+  return chart;
 };

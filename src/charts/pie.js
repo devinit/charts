@@ -1,5 +1,5 @@
-import Plottable from "plottable";
-import createCircularChart from '../factories/createCircularChart'
+import Plottable from 'plottable';
+import createCircularChart from '../factories/createCircularChart';
 
 /**
  * @typedef {CircularChart} Pie
@@ -8,13 +8,11 @@ import createCircularChart from '../factories/createCircularChart'
  *
  */
 export default (element, data, config) => {
-
   const plot = new Plottable.Plots.Pie();
 
-  const chart  = createCircularChart({element, plot, config});
+  const chart = createCircularChart({ element, plot, config });
 
   chart.update(data);
 
   return chart;
-
 };

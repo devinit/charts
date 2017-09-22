@@ -1,7 +1,7 @@
-import Plottable from "plottable";
-import createRectangleChart, {createColorFiller} from "../factories/createTreeChart";
-import {createTreeHierachy} from "../factories/createDataset";
-import {createScaleAnimator} from '../factories/createAnimator'
+import Plottable from 'plottable';
+import createRectangleChart, { createColorFiller } from '../factories/createTreeChart';
+import { createTreeHierachy } from '../factories/createDataset';
+import { createScaleAnimator } from '../factories/createAnimator';
 import {
   treemap,
   treemapBinary,
@@ -9,10 +9,10 @@ import {
   treemapResquarify,
   treemapSlice,
   treemapSliceDice,
-  treemapSquarify
-} from "d3";
-import {createTreeChartLabeler} from "../factories/createLabeler";
-import {createTreeTipper} from "../factories/createTooltipper";
+  treemapSquarify,
+} from 'd3';
+import { createTreeChartLabeler } from '../factories/createLabeler';
+import { createTreeTipper } from '../factories/createTooltipper';
 
 /**
  * @typedef {TreeChart} Treemap
@@ -29,9 +29,7 @@ import {createTreeTipper} from "../factories/createTooltipper";
  */
 
 export default (element, data = [], config) => {
-
   const {
-
     orientation = 'vertical',
 
     colors = [],
@@ -44,24 +42,22 @@ export default (element, data = [], config) => {
     treemap: {
       // Tiling algorithm: binary, dice, slice, sliceDice, squarify, resquarify
       tile = 'sliceDice',
-
     } = {},
 
     labeling = {},
 
     tooltips = {
-      enable: true
+      enable: true,
     },
 
     ...more
-
   } = config;
 
   const plot = new Plottable.Plots.Rectangle();
 
-  plot.onAnchor((plot) => {
+  plot.onAnchor(plot => {
     if (tooltips.enable) {
-      createTreeTipper(element, labeling, getDatumPercentage)(plot)
+      createTreeTipper(element, labeling, getDatumPercentage)(plot);
     }
   });
 
@@ -69,7 +65,11 @@ export default (element, data = [], config) => {
 
   // ... apply rectangle configuration
 
-  const treeChart = createRectangleChart({element, plot, config: {orientation, labeling, ...more}});
+  const treeChart = createRectangleChart({
+    element,
+    plot,
+    config: { orientation, labeling, ...more },
+  });
 
   const tilingMethod = getTilingMethod(tile);
 
@@ -79,21 +79,20 @@ export default (element, data = [], config) => {
 
   const transform = root => layout(root).leaves();
 
-  let listeners = [];
+  const listeners = [];
 
   treeChart.onClick(createTreemapOnClickListener(orientation, listeners));
 
   const update = data => {
     const root = colorize(createTreeHierachy(data, tree));
-    treeChart.update(transform(root))
+    treeChart.update(transform(root));
   };
 
   const chart = {
-
     ...treeChart,
 
-    onClick: (callback) => {
-      listeners.push(callback)
+    onClick: callback => {
+      listeners.push(callback);
     },
 
     setLabeling(labeling) {
@@ -106,12 +105,12 @@ export default (element, data = [], config) => {
 
   chart.update(data);
 
-  return chart
+  return chart;
 };
 
 const getDatumPercentage = datum => Math.round((datum.x1 - datum.x0) * (datum.y1 - datum.y0) * 100);
 
-export const getTilingMethod = (method) => {
+export const getTilingMethod = method => {
   const tilingMethods = {
     binary: treemapBinary,
     dice: treemapDice,
@@ -121,15 +120,13 @@ export const getTilingMethod = (method) => {
     resquarify: treemapResquarify,
   };
 
-  return tilingMethods[method]
+  return tilingMethods[method];
 };
 
 const createTreemapOnClickListener = (orientation, listeners) => {
-
   const animate = createScaleAnimator(500);
 
-  return (entities, xScale, yScale) =>{
-
+  return (entities, xScale, yScale) => {
     const entity = entities.pop();
 
     const datum = entity.datum;
@@ -139,25 +136,21 @@ const createTreemapOnClickListener = (orientation, listeners) => {
       orientation === 'horizontal' ? ['x0', 'x1'] : ['y0', 'y1'],
     ];
 
-    const nextDomain = orientationAwareness
-      .map(([min, max]) => [datum[min], datum[max]]);
+    const nextDomain = orientationAwareness.map(([min, max]) => [datum[min], datum[max]]);
 
     const previousDomain = [xScale.domain(), yScale.domain()];
 
-    const shouldReset = [[nextDomain, previousDomain]]
-      .every(([[[a, b], [c, d]], [[w, x], [y, z]]]) => {
-        const diff = (a + b + c + d) - (w + x + y + z);
+    const shouldReset = [
+      [nextDomain, previousDomain],
+    ].every(([[[a, b], [c, d]], [[w, x], [y, z]]]) => {
+      const diff = a + b + c + d - (w + x + y + z);
 
-        return +(diff.toFixed(2)) === 0
-      });
+      return +diff.toFixed(2) === 0;
+    });
 
     const onAnimated = () => listeners.forEach(callback => callback(datum.data));
 
-    if (shouldReset)
-      animate([xScale, yScale], [0, 1], [0, 1]).then(onAnimated);
-    else
-      animate([xScale, yScale], ...nextDomain).then(onAnimated);
-
+    if (shouldReset) animate([xScale, yScale], [0, 1], [0, 1]).then(onAnimated);
+    else animate([xScale, yScale], ...nextDomain).then(onAnimated);
   };
-
 };
