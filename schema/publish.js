@@ -48,7 +48,8 @@ exports.publish = data => {
 
       if (parent) {
         const matchAlreadySet = `(${properties.map(p => p.name).join('|')})`;
-        allProperties = allProperties.concat(parent.properties.filter(p => !p.name.match(matchAlreadySet)), );
+        allProperties = allProperties
+          .concat(parent.properties.filter(p => !p.name.match(matchAlreadySet)));
       }
 
       return {
@@ -64,7 +65,7 @@ exports.publish = data => {
               name,
               key: `config.${name}`,
               properties: parent.properties.map(p =>
-                Object.assign(p, { key: `config.${name}.${p.name}` }), ),
+                Object.assign(p, { key: `config.${name}.${p.name}` })),
               description,
               defaultValue,
             };
@@ -79,7 +80,7 @@ exports.publish = data => {
             options,
             defaultValue,
           };
-        }, ),
+        }),
       };
     });
 
