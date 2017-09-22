@@ -8,7 +8,7 @@
     "test:dev": "mocha --reporter spec -r jsdom-global/register",
     "start": "webpack-dev-server",
     "compile": "babel -d lib/ src/",
-    "lint": "eslint src test --ext .js && npm run flow",
+    "lint": "eslint schema src test --ext .js && npm run flow",
     "format": "prettier-eslint --write \"src/**/*.js\" \"test/**/*.js\" \"schema/**/*.js\"",
     "build": "webpack  --env=dev --profile --colors",
     "build:production": "WEBPACK_ENV=production webpack --env=prod --profile --colors",
