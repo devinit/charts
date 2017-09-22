@@ -349,7 +349,7 @@ const createPlotAreaWithAxes = ({
   ]);
 
   if (anchor) {
-    table.rowWeight(0, 2);
+    table.rowWeight(0, 1);
   }
 
   table.rowWeight(1, 3);
