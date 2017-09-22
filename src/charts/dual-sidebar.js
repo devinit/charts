@@ -281,7 +281,7 @@ export default (element, data, config) => {
   return chart;
 };
 
-const drawLabels = dualSidebar => () => {
+const drawLabels = dualSidebar => function innerDrawLabels() {
   const entities = this.entities();
   const foreground = this.foreground();
   const data = entities.map(entity => entity.datum);

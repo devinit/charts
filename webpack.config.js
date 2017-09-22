@@ -65,17 +65,13 @@ module.exports = [
         {
           test: /\.js$/,
           exclude: /node_modules/,
-          loader: 'babel-loader',
-          options: {
-            presets: [['env', { modules: false }], 'flow'],
-            plugins: [
-              'syntax-dynamic-import',
-              'transform-object-rest-spread',
-              'remove-webpack',
-              'dynamic-import-node',
-              'transform-runtime',
-            ],
-          },
+          use: {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+              presets: [['env', { modules: false }], 'flow'],
+            },
+          }
         },
 
         {
