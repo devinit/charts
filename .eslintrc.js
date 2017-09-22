@@ -16,6 +16,7 @@ module.exports = {
         'object-curly-spacing': 0,
         'no-unused-expressions': 0,
         'no-confusing-arrow': 0,
+        'consistent-return': 0,
         'no-constant-condition': 0,
         'import/no-dynamic-require': 0,
         'import/no-extraneous-dependencies': 0,
