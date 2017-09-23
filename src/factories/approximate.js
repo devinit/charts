@@ -5,10 +5,12 @@ const BILLION = 1e9;
 const TRILLION = 1e12;
 
 // see: http://www.jacklmoore.com/notes/rounding-in-javascript/
-const roundNum = (num, length): string =>
-  (Math.round(num * 10 ** length) / 10 ** length).toFixed(length);
+const roundNum = (num, length) => {
+  const divisor = 10 ** length;
+  return (Math.round(num * divisor) / divisor).toFixed(length);
+};
 
-const format = number => (+roundNum(number, 2)).toString();
+const format = number => `${+roundNum(number, 1)}`;
 
 const approximate = (number: number): string => {
   const absolute = Math.abs(number);
