@@ -1,6 +1,6 @@
 {
   "name": "@devinit/charts",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "description": "Modular D3 charts for DevInit DataHub",
   "main": "lib/index.js",
   "scripts": {
