@@ -453,6 +453,7 @@
             showGridlines: true,
             axisLabel: 'Rainfall (mm)',
             indicator: 'Rainfall',
+            suffix: 'mm'
           },
           categoryAxis: {
             showAxis: true,
@@ -461,10 +462,9 @@
             innerPadding: 0.1,
             outerPadding: 0
           },
-          interactions: {
-            enable: true,
-          },
-          highlight: ['Jan']
+          labeling: {
+            suffix: 'mm'
+          }
         },
         data: [
           {"Rainfall": 100, "Months": "Jan", color: 'red1'},
@@ -583,6 +583,7 @@
             showGridlines: true,
             axisLabel: 'Rainfall (mm)',
             indicator: 'Rainfall',
+            suffix: '%',
           },
           categoryAxis: {
             showAxis: true,
@@ -669,7 +670,6 @@
           groupBy: 'flow_type',
           subGroupBy: 'flow_category',
           splitBy: 'direction',
-          orderBy: 'position',
           colors: [
             'rgb(186, 12, 47)',
             'rgb(0, 149, 200)',
