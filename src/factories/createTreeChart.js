@@ -43,8 +43,6 @@ export default ({ element, plot, config }) => {
     legend = {},
   } = config;
 
-  console.log(width, height);
-
   const xScale = new Plottable.Scales.Linear();
   xScale.domainMin(0);
   xScale.domainMax(width);

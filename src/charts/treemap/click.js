@@ -34,7 +34,8 @@ export default (config = {}) => {
       animate([xScale, yScale], [0, width], [0, height])
         .then(() => onAnimated(datum));
     } else {
-      animate([xScale, yScale], ...nextDomain).then(onAnimated);
+      animate([xScale, yScale], ...nextDomain)
+        .then(() => onAnimated(datum));
     }
   };
 };
