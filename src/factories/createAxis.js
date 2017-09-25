@@ -1,6 +1,6 @@
 import Plottable from 'plottable';
 import approximate from './approximate';
-import { configureAxisTicking, configureTimeAxisTicking } from './configureTicking';
+import {configureAxisTicking, configureTimeAxisTicking} from './configureTicking';
 
 /**
  * @typedef {Object} NumericAxis - Numeric Axis configuration
@@ -9,22 +9,24 @@ import { configureAxisTicking, configureTimeAxisTicking } from './configureTicki
  * @property {boolean} showAxis - Show Axis
  * @property {boolean} showGridlines - Show Grid lines
  * @property {'all'|'even'|'odd'|'sparse'} ticking=all - Ticking method
- * @property {'log'|'multiply'|'power'} modifier - Axis Modifiers
- * @property {number} modifierParam - Axis Modifier arguments
+ * @property {'log'|'multiply'|'power'} modifier=multiply - Axis Modifiers
+ * @property {number} modifierParam=1 - Axis Modifier Parameter
  * @property {string} axisLabel - Label
  * @property {number} axisMargin - Margin
- * @property {number} axisMinimum - Minimum
- * @property {number} axisMaximum - Maximum
+ * @property {number} axisMinimum - Axis Minimum
+ * @property {number} axisMaximum - Axis Maximum
+ * @property {string} prefix - Tick Label Prefix
+ * @property {string} suffix - Tick Label Suffix
  */
 
 /**
  *
- * @param {NumericAxis} config
+ * @param {NumericAxis} axisConfig
  * @param {Plottable.Axes.Numeric} axis
  * @param {function} format
  * @returns {Plottable.Axes.Numeric}
  */
-export const createNumericAxis = (config, format = d => d, axis) => {
+export const createNumericAxis = (axisConfig, format = d => d, axis) => {
   const {
     showAxis = true,
     axisOrientation,
@@ -32,7 +34,9 @@ export const createNumericAxis = (config, format = d => d, axis) => {
     axisLabel = null,
     axisMargin = 10,
     ticking = 'all',
-  } = config;
+    prefix = '',
+    suffix = ''
+  } = axisConfig;
 
   if (!showAxis) return null;
 
@@ -40,7 +44,7 @@ export const createNumericAxis = (config, format = d => d, axis) => {
 
   if (!axis) axis = new Plottable.Axes.Numeric(axisScale, alignment);
 
-  axis.formatter(d => approximate(format(d)));
+  axis.formatter(d => `${prefix}${approximate(format(d))}${suffix}`);
   axis.showEndTickLabels(true);
   axis.margin(0);
 
@@ -48,8 +52,8 @@ export const createNumericAxis = (config, format = d => d, axis) => {
 
   if (axisLabel) {
     axis.margin(axisMargin);
-    label =
-      axisLabel && new Plottable.Components.AxisLabel(axisLabel, getAxisLabelRotation(alignment));
+    label = axisLabel &&
+      new Plottable.Components.AxisLabel(axisLabel, getAxisLabelRotation(alignment));
   }
 
   // Add ticking classes
@@ -79,7 +83,6 @@ export const createNumericAxis = (config, format = d => d, axis) => {
 export const createTimeAxis = (config, axis) => {
   const {
     showAxis = false,
-    axisOrientation = 'horizontal',
     axisScale,
     axisLabel = null,
     axisMargin = 10,
@@ -166,7 +169,7 @@ export const createCategoryAxis = (config = {}, axis) => {
  * @returns {{format: (function(*=)), modify: (function(*=))}}
  */
 export const createAxisModifier = config => {
-  const { modifier = 'multiply', modifierParam = 1, absolute = false } = config;
+  const {modifier = 'multiply', modifierParam = 1, absolute = false} = config;
 
   const absoluteFn = absolutify(absolute);
   let modifierFn = d => d;
@@ -212,14 +215,13 @@ export const createAxisTable = (alignment, axis, label) => {
 };
 
 export const getAxisLabelRotation = alignment => {
-  return labelRotationAngles[alignment];
-};
-
-export const labelRotationAngles = {
-  top: 0,
-  bottom: 0,
-  left: -90,
-  right: 90,
+  switch (alignment) {
+    case 'top': return 0;
+    case 'bottom': return 0;
+    case 'left': return -90;
+    case 'right': return 90;
+    default: return 0;
+  }
 };
 
 export const log = base => number => Math.round(Math.log(number) / Math.log(base));
