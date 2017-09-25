@@ -26,5 +26,11 @@ module.exports = {
         'comma-dangle': 0,
         'no-underscore-dangle': 0,
         'no-unused-vars': 2,
+        'no-param-reassign': 0,
+        'no-plusplus': 0,
+        'function-paren-newline': 0,
+        'no-multi-assign':0,
+        'one-var': 0,
+        'prefer-destructuring': 0,
     }
 };
