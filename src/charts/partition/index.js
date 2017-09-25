@@ -1,3 +1,13 @@
+import Plottable from 'plottable';
+import hash from 'object-hash';
+import createTreeChart, { createColorFiller } from '../../factories/createTreeChart';
+import { createTreeHierachy } from '../../factories/createDataset';
+import { createScaleAnimator } from '../../factories/createAnimator';
+import { createTreeChartLabeler } from '../../factories/createLabeler';
+import { createTreeTipper } from '../../factories/tooltips';
+import partition from './layout';
+import getDatumPercentage from './percentage';
+
 /**
  * @typedef {TreeChart} Partition
  * @public
@@ -5,13 +15,6 @@
  * @property {('vertical'|'horizontal')} orientation=horizontal - Orientation
  *
  */
-import Plottable from 'plottable';
-import hash from 'object-hash';
-import createTreeChart, { createColorFiller } from '../factories/createTreeChart';
-import { createTreeHierachy } from '../factories/createDataset';
-import { createScaleAnimator } from '../factories/createAnimator';
-import { createTreeChartLabeler } from '../factories/createLabeler';
-import { createTreeTipper } from '../factories/createTooltipper';
 
 export default (element, data = [], config) => {
   const {
@@ -36,7 +39,7 @@ export default (element, data = [], config) => {
 
   plot.onAnchor(plot => {
     if (tooltips.enable) {
-      createTreeTipper(element, labeling, getDatumPercentage(orientation));
+      createTreeTipper(element, labeling, getDatumPercentage(orientation))(plot);
     }
   });
 
@@ -82,12 +85,12 @@ export default (element, data = [], config) => {
     const xMax = orientation === 'horizontal' ? max(datum.descendants(), x1) : datum[x1];
     const xMin =
       orientation === 'horizontal' && datum.parent
-        ? datum[x0] - (xMax - datum[x0]) * 0.05
+        ? datum[x0] - ((xMax - datum[x0]) * 0.05)
         : datum[x0];
     const yMax = orientation === 'vertical' ? max(datum.descendants(), y1) : datum[y1];
     const yMin =
       orientation === 'vertical' && datum.parent
-        ? datum[y0] - (yMax - datum[y0]) * 0.05
+        ? datum[y0] - ((yMax - datum[y0]) * 0.05)
         : datum[y0];
 
     animate([xScale, yScale], [xMin, xMax], [yMin, yMax]).then(() => {
@@ -125,84 +128,4 @@ export default (element, data = [], config) => {
   chart.update(data);
 
   return chart;
-};
-
-const getDatumPercentage = orientation => datum => {
-  return Math.round(orientation === 'horizontal' ? (datum.x1 - datum.x0) * 100 : (datum.y1 - datum.y0) * 100, );
-};
-
-const partition = function () {
-  let dx = 1,
-    dy = 1,
-    padding = 0,
-    round = false;
-
-  function partition(root) {
-    const n = root.height + 1;
-    root.x0 = root.y0 = padding;
-    root.x1 = dx;
-    root.y1 = dy / n;
-    root.eachBefore(positionNode(dy, n));
-    if (round) root.eachBefore(roundNode);
-    return root;
-  }
-
-  function positionNode(dy, n) {
-    return function (node) {
-      if (node.children) {
-        treemapDice(node, node.x0, dy * (node.depth + 1) / n, node.x1, dy * (node.depth + 2) / n);
-      }
-      let x0 = node.x0,
-        y0 = node.y0,
-        x1 = node.x1 - padding,
-        y1 = node.y1 - padding;
-      if (x1 < x0) x0 = x1 = (x0 + x1) / 2;
-      if (y1 < y0) y0 = y1 = (y0 + y1) / 2;
-      node.x0 = x0;
-      node.y0 = y0;
-      node.x1 = x1;
-      node.y1 = y1;
-    };
-  }
-
-  partition.round = function (x) {
-    // noinspection CommaExpressionJS
-    return arguments.length ? ((round = !!x), partition) : round;
-  };
-
-  partition.size = function (x) {
-    // noinspection CommaExpressionJS
-    return arguments.length ? ((dx = +x[0]), (dy = +x[1]), partition) : [dx, dy];
-  };
-
-  partition.padding = function (x) {
-    // noinspection CommaExpressionJS
-    return arguments.length ? ((padding = +x), partition) : padding;
-  };
-
-  return partition;
-};
-
-const treemapDice = function (parent, x0, y0, x1, y1) {
-  let nodes = parent.children,
-    node,
-    i = -1,
-    n = nodes.length,
-    sum = nodes.reduce((sum, n) => sum + Math.abs(n.value), 0),
-    k = (x1 - x0) / sum;
-
-  while (++i < n) {
-    node = nodes[i];
-    node.y0 = y0;
-    node.y1 = y1;
-    node.x0 = x0;
-    node.x1 = x0 += Math.abs(node.value) * k;
-  }
-};
-
-const roundNode = node => {
-  node.x0 = Math.round(node.x0);
-  node.y0 = Math.round(node.y0);
-  node.x1 = Math.round(node.x1);
-  node.y1 = Math.round(node.y1);
 };
