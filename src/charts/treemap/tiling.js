@@ -10,7 +10,7 @@ import {
 /**
  * @typedef {Object} Tiling
  * @property {'binary'|'dice'|'slice'|'sliceDice'|'squarify'|'resquarify'} tile=squarify - Tiling Method
- * @property {number} squarifyRatio - Squarify Ratio
+ * @property {number} ratio - Squarify Ratio
  */
 
 const tilingMethods = {
@@ -22,9 +22,9 @@ const tilingMethods = {
   resquarify: treemapResquarify,
 };
 
-const tile = ({method = 'squarify', squarifyRatio = 0.5}) => {
-  if (method === 'squarify') {
-    return tilingMethods[method].ratio(squarifyRatio);
+const tile = ({method = 'resquarify', ratio = 0.5}) => {
+  if (/(squarify|resquarify)/.test(method)) {
+    return tilingMethods[method].ratio(ratio);
   }
 
   return tilingMethods[method];
