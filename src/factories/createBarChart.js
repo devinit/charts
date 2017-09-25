@@ -2,26 +2,7 @@ import Plottable from 'plottable';
 import { color } from 'd3';
 import approximate from './approximate';
 import { createLinearChart } from './createLinearChart';
-import { createBarTipper } from './createTooltipper';
-
-export default (element, plot, config) => {
-  const { interactions = { enable: false }, tooltips = { enable: true } } = config;
-  const chart = createLinearChart({ element, plot, config });
-
-  plot.onAnchor(plot => {
-    setTimeout(() => {
-      if (interactions.enable) {
-        createBarInteraction(config.orientation, config.labeling, config.highlight)(plot);
-      }
-
-      if (tooltips.enable) {
-        createBarTipper(element, config.labeling, chart.categoryScale, config.orientation)(plot);
-      }
-    }, 500);
-  });
-
-  return chart;
-};
+import { createBarTipper } from './tooltips';
 
 const createBarInteraction = (orientation = 'vertical', labeling = {}, highlight = []) => {
   const { prefix = '', suffix = '' } = labeling;
@@ -106,4 +87,23 @@ const createBarInteraction = (orientation = 'vertical', labeling = {}, highlight
       interaction.detachFrom(plot);
     });
   };
+};
+
+export default (element, plot, config) => {
+  const { interactions = { enable: false }, tooltips = { enable: true } } = config;
+  const chart = createLinearChart({ element, plot, config });
+
+  plot.onAnchor(plot => {
+    setTimeout(() => {
+      if (interactions.enable) {
+        createBarInteraction(config.orientation, config.labeling, config.highlight)(plot);
+      }
+
+      if (tooltips.enable) {
+        createBarTipper(element, config.labeling, chart.categoryScale, config.orientation)(plot);
+      }
+    }, 500);
+  });
+
+  return chart;
 };

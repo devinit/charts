@@ -1,5 +1,5 @@
-import approximate from './approximate';
 import { color } from 'd3';
+import approximate from './approximate';
 
 /**
  * @typedef {Object} Labeling
@@ -19,6 +19,7 @@ export const createTreeChartLabeler = (config, percentage = d => 100) => {
     suffix = '',
   } = config;
 
+  // eslint-disable-next-line func-names
   return function () {
     const foreground = this.foreground();
     const entities = this.entities();
@@ -36,12 +37,12 @@ export const createTreeChartLabeler = (config, percentage = d => 100) => {
         const { r, g, b } = color(node.getAttribute('fill')).rgb();
         const brightness = (r + g + b) / (256 * 3);
 
-        const datum = entity.datum;
+        const { datum } = entity;
         const value = approximate(datum.value);
         const label = showLabels ? this._label(datum) : '';
         const percent = percentage(datum);
 
-        const percentageLabel = percent === 100 ? '' : showPercents ? `${percent}% | ` : '';
+        const percentageLabel = percent === 100 || !showPercents ? '' : `${percent}% | `;
         const valueLabel = showValues
           ? `${prefix ? `${prefix} ` : ''}${value}${suffix ? ` ${suffix}` : ''}`
           : '';

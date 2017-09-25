@@ -1,5 +1,5 @@
 import { createLinearChart } from '../factories/createLinearChart';
-import { createLineTipper } from './createTooltipper';
+import { createLineTipper } from './tooltips';
 
 export const createLineChart = (element, plot, config) => {
   const {

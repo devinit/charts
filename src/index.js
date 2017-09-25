@@ -32,7 +32,7 @@ export const draw = (args: DrawArguments) => {
     if (!config.type) return reject(new Error('No chart type specified'));
 
     // $FlowFixMe
-    import(`./charts/${config.type}.js`)
+    import(`./charts/${config.type}`)
       .then((factory) => {
         const chart: Chart = factory.default(
           element,

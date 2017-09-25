@@ -1,5 +1,5 @@
 import Plottable from 'plottable';
-import createScatterChart from '../factories/createScatterChart';
+import createScatterChart from '../factories/scatter';
 
 /**
  * @typedef {ScatterChart} Bubble

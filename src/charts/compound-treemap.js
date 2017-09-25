@@ -2,7 +2,7 @@ import Plottable from 'plottable';
 import { treemap } from 'd3';
 import { createTreeHierachy } from '../factories/createDataset';
 import approximate from '../factories/approximate';
-import { getTilingMethod } from './treemap';
+import getTilingMethod from './treemap/tiling';
 import { createColorFiller } from '../factories/createTreeChart';
 
 /**
@@ -29,12 +29,6 @@ export default (element, data, config) => {
       value: 'value',
       depth: Infinity,
     },
-
-    // Treemap configuration
-    treemap: {
-      // Tiling algorithm: binary, dice, slice, sliceDice, squarify, resquarify
-      tile = 'sliceDice',
-    } = {},
 
     // ...
   } = config;
@@ -84,7 +78,7 @@ export default (element, data, config) => {
 
   table.renderTo(element);
 
-  const tilingMethod = getTilingMethod(tile);
+  const tilingMethod = getTilingMethod({method: 'sliceDice'});
 
   const layout = treemap().tile(tilingMethod);
 

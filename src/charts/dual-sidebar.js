@@ -7,7 +7,7 @@ import { makeUnique } from '../factories/createDataset';
 import { createCategoryScale, createLinearScale } from '../factories/createScale';
 import { createAxisModifier, createCategoryAxis, createNumericAxis } from '../factories/createAxis';
 import { createLinearAxisGridLines } from '../factories/createGrid';
-import { createBarTipper } from '../factories/createTooltipper';
+import { createBarTipper } from '../factories/tooltips';
 
 /**
  * @typedef {LinearCategoryChart} DualSidebar
@@ -175,12 +175,17 @@ export default (element, data, config) => {
 
     const plots = [leftPlot, rightPlot];
 
-    const sorted = orderBy ? data.sort((a, b) => (a[orderBy] > b[orderBy] ? 1 : -1)) : data;
+    const sorted = orderBy ?
+      data.sort((a, b) => ((a || a[orderBy]) > (b && b[orderBy]) ? 1 : -1)) :
+      data;
 
-    const [first = [], second = []] = values(group(sorted, d => d[splitBy]));
+    const [
+      first = [],
+      second = []
+    ] = values(group(sorted, d => d[splitBy]));
 
     [first, second]
-      .sort((a, b) => ((a[0] || a[0][splitBy]) > (b[0] && b[0][splitBy]) ? 1 : 1))
+      .sort((a, b) => (a[0] || a[0][splitBy]) > (b[0] && b[0][splitBy]) ? -1 : 1)
       .map(side => mapValues(group(side, d => d[groupBy]), grp => group(grp, d => d[subGroupBy])))
       .reduce(([sides = []], side) => [[...sides, side]], [])
       .map(([left, right]) => {
@@ -250,7 +255,7 @@ export default (element, data, config) => {
             ...datum,
             direction,
             color: datum[coloring] || colors[index] || '#abc',
-          })),),);
+          }))));
 
         const dataset = series.map((datum, index) => ({
           ...datum,
@@ -290,7 +295,7 @@ const drawLabels = dualSidebar => function innerDrawLabels() {
   foreground.attr('style', 'overflow: visible');
   foreground.selectAll('text').remove();
 
-  makeUnique(data.map(d => d.category)).map(categoryId => {
+  makeUnique(data.map(d => d.category)).forEach(categoryId => {
     const categoryEntities = entities.filter(entity => entity.datum.category === categoryId);
 
     if (direction > 0 && categoryEntities.length) {
@@ -349,8 +354,8 @@ const drawLabels = dualSidebar => function innerDrawLabels() {
         .append('text')
         .text(datum.label)
         .attr('class', 'data-label')
-        .attr('x', (datum.direction > 0 ? x + width : x) + datum.direction * 10)
-        .attr('y', y + height / 2)
+        .attr('x', (datum.direction > 0 ? x + width : x) + (datum.direction * 10))
+        .attr('y', y + (height / 2))
         .attr('alignment-baseline', 'middle')
         .attr('text-anchor', datum.direction > 0 ? 'start' : 'end');
     }
