@@ -34,18 +34,24 @@ export default ({ element, plot, config }) => {
 
     orientation = 'vertical',
 
+    width,
+
+    height,
+
     labeling = {},
 
     legend = {},
   } = config;
 
+  console.log(width, height);
+
   const xScale = new Plottable.Scales.Linear();
   xScale.domainMin(0);
-  xScale.domainMax(1);
+  xScale.domainMax(width);
 
   const yScale = new Plottable.Scales.Linear();
   yScale.domainMin(0);
-  yScale.domainMax(1);
+  yScale.domainMax(height);
 
   const colorScale = new Plottable.Scales.Color();
 
@@ -119,7 +125,6 @@ export default ({ element, plot, config }) => {
 
     plot.onDetach(plot => {
       interaction.detachFrom(plot);
-      tip.dispose();
     });
   };
 

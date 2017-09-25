@@ -4,7 +4,7 @@ import createRectangleChart, { createColorFiller } from '../../factories/createT
 import { createTreeHierachy } from '../../factories/createDataset';
 import { createTreeChartLabeler } from '../../factories/createLabeler';
 import { createTreeTipper } from '../../factories/tooltips';
-import getDatumPercentage from './percentage';
+import createPercentageCalculator from './percentage';
 import createTreemapOnClickListener from './click';
 import getTilingMethod from './tiling';
 
@@ -38,27 +38,39 @@ export default (element, data = [], config) => {
     ...more
   } = config;
 
+  const width = element.parentElement.clientWidth;
+  const height = element.parentElement.clientHeight;
+  const calculatePercentage = createPercentageCalculator(width, height);
+
   const plot = new Plottable.Plots.Rectangle();
 
   plot.onAnchor(plot => {
     if (tooltips.enable) {
-      createTreeTipper(element, labeling, getDatumPercentage)(plot);
+      createTreeTipper(element, labeling, calculatePercentage)(plot);
     }
   });
 
-  plot._drawLabels = createTreeChartLabeler(labeling, getDatumPercentage);
+  plot._drawLabels = createTreeChartLabeler(labeling, calculatePercentage);
 
   // ... apply rectangle configuration
 
   const treeChart = createRectangleChart({
     element,
     plot,
-    config: { orientation, labeling, ...more },
+    config: {
+      orientation,
+      labeling,
+      width,
+      height,
+      ...more
+    },
   });
 
   const tilingMethod = getTilingMethod(tiling);
 
-  const layout = treemap().tile(tilingMethod);
+  const layout = treemap()
+    .tile(tilingMethod)
+    .size([width, height]);
 
   const colorize = createColorFiller(colors, [], coloring);
 
@@ -66,7 +78,12 @@ export default (element, data = [], config) => {
 
   const listeners = [];
 
-  treeChart.onClick(createTreemapOnClickListener(orientation, listeners));
+  treeChart.onClick(createTreemapOnClickListener({
+    orientation,
+    width,
+    height,
+    listeners
+  }));
 
   const update = data => {
     const root = colorize(createTreeHierachy(data, tree));
