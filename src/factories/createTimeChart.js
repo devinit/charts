@@ -11,6 +11,7 @@ import { makeUnique } from './createDataset';
 import { createLineTipper } from './tooltips';
 import { createScaleAnimator } from './createAnimator';
 
+// feels like this could have been an own factory, broken down into individual multi functions
 const createTimeAnchor = (table, timeScale, anchor = { start: 0 }, legend = {}, listeners) => {
   const originDate = new Date(timeScale.domainMin());
   const startDate = anchor.start ? new Date(anchor.start.toString()) : originDate;
@@ -51,7 +52,7 @@ const createTimeAnchor = (table, timeScale, anchor = { start: 0 }, legend = {}, 
     .attr('cx', xPosition)
     .attr('cy', topPosition)
     .attr('fill', 'rgb(232, 68, 58)')
-    .attr('stroke', '#444')
+    // .attr('stroke', '#444')
     .attr('r', topPosition);
 
   const text = foreground
@@ -240,7 +241,7 @@ export default ({ element, plot, config }) => {
     legendPosition: legend.position || 'bottom',
   });
 
-  const animate = createScaleAnimator(500);
+  const animate = createScaleAnimator(500); // TODO: Allan
 
   const listeners = [];
 
@@ -305,7 +306,7 @@ export default ({ element, plot, config }) => {
         );
 
         if (!time.interpolate) {
-          for (let year = startYear; year <= stopYear; year = year + 1) {
+          for (let year = startYear; year <= stopYear; year++) {
             if (!dataset[year]) {
               dataset[year] = [
                 {
@@ -319,9 +320,8 @@ export default ({ element, plot, config }) => {
             }
           }
         }
-
         return Object.keys(dataset).map(year =>
-          dataset[year].reduce((s, d) => ({ ...s, value: s.value + d.value })),);
+          dataset[year].reduce((s, d) => ({ ...s, value: s.value + d.value })));
       });
 
       if (plot.datasets().length) {

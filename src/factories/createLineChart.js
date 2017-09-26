@@ -27,7 +27,7 @@ export const createLineChart = (element, plot, config) => {
     },
   });
 
-  const { linearScale, categoryScale } = chart;
+  const { categoryScale } = chart;
 
   plot.onAnchor(plot => {
     if (tooltips.enable) {

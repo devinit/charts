@@ -9,6 +9,46 @@ import { createCategoryAxis, createNumericAxis } from './createAxis';
 import { createLinearAxisGridLines } from './createGrid';
 import { createScaleAnimator } from './createAnimator';
 
+export const createLinearPlot = ({
+  plot,
+  orientation,
+  categoryScale,
+  linearScale,
+  labeling = {},
+}) => {
+  const { showLabels = false, prefix = '', suffix = '' } = labeling;
+
+  if (plot.labelsEnabled) {
+    plot.labelFormatter(d => `${prefix}${approximate(d)}${suffix}`).labelsEnabled(showLabels);
+  }
+
+  return plot
+    .attr('stroke', d => d.color)
+    .attr('fill', d => d.color)
+    .attr('fill-opacity', d => d.opacity)
+    .x(
+      d => (orientation === 'vertical' ? d.label : d.value),
+      orientation === 'vertical' ? categoryScale : linearScale,
+    )
+    .y(
+      d => (orientation === 'horizontal' ? d.label : d.value),
+      orientation === 'horizontal' ? categoryScale : linearScale,
+    );
+};
+
+export const createPlotWithGridlines = ({ plot, grid }) => {
+  return grid ? new Plottable.Components.Group([grid, plot]) : plot;
+};
+
+const createPlotAreaWithAxes = (orientation, { linearAxis, plotArea, categoryAxis }) => {
+  const plotAreaWithAxes =
+    orientation === 'vertical'
+      ? [[linearAxis, plotArea], [null, categoryAxis]]
+      : [[categoryAxis, plotArea], [null, linearAxis]];
+
+  return new Plottable.Components.Table(plotAreaWithAxes);
+};
+
 /**
  * @typedef {Object} LinearCategoryChart
  * @private
@@ -118,15 +158,12 @@ export const createLinearChart = ({ element, plot, config }) => {
             color: item[coloring] || colors[index] || '#abc',
             opacity: 1,
           };
-        }), );
-
-      if (plot.datasets().length) {
+        }));
+      if (plot.datasets().length) { // TODO: when is this ever true ?? maybe uselses @ernest
         const sums = [];
-
         for (let i = 0; i < Math.max.apply(null, datasets.map(d => d.length)); i++) {
           sums[i] = datasets.reduce((sum, set) => sum + (set[i] ? set[i].value : 0), 0);
         }
-
         const axisMaximum = Math.max.apply(null, sums);
 
         animate([linearScale], [linearAxis.axisMinimum || 0, axisMaximum]);
@@ -139,44 +176,4 @@ export const createLinearChart = ({ element, plot, config }) => {
       table.destroy();
     },
   };
-};
-
-export const createPlotWithGridlines = ({ plot, grid }) => {
-  return grid ? new Plottable.Components.Group([grid, plot]) : plot;
-};
-
-export const createLinearPlot = ({
-  plot,
-  orientation,
-  categoryScale,
-  linearScale,
-  labeling = {},
-}) => {
-  const { showLabels = false, prefix = '', suffix = '' } = labeling;
-
-  if (plot.labelsEnabled) {
-    plot.labelFormatter(d => `${prefix}${approximate(d)}${suffix}`).labelsEnabled(showLabels);
-  }
-
-  return plot
-    .attr('stroke', d => d.color)
-    .attr('fill', d => d.color)
-    .attr('fill-opacity', d => d.opacity)
-    .x(
-      d => (orientation === 'vertical' ? d.label : d.value),
-      orientation === 'vertical' ? categoryScale : linearScale,
-    )
-    .y(
-      d => (orientation === 'horizontal' ? d.label : d.value),
-      orientation === 'horizontal' ? categoryScale : linearScale,
-    );
-};
-
-const createPlotAreaWithAxes = (orientation, { linearAxis, plotArea, categoryAxis }) => {
-  const plotAreaWithAxes =
-    orientation === 'vertical'
-      ? [[linearAxis, plotArea], [null, categoryAxis]]
-      : [[categoryAxis, plotArea], [null, linearAxis]];
-
-  return new Plottable.Components.Table(plotAreaWithAxes);
 };
