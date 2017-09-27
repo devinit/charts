@@ -8,7 +8,7 @@ export default (config = {}) => {
   } = config;
 
   const animate = createScaleAnimator(500);
-  const onAnimated = (datum) => listeners.forEach(callback => callback(datum.data));
+  const onAnimated = datum => listeners.forEach(callback => callback(datum.data));
 
   return (entities, xScale, yScale) => {
     const entity = entities.pop();
