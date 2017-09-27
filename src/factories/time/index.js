@@ -91,7 +91,7 @@ export default ({ element, plot, config }) => {
 
   let moveAnchor = null;
 
-  table.addClass('timeline');
+  table.addClass('time');
 
   table.renderTo(element);
 
