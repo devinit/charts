@@ -1,7 +1,8 @@
 import Plottable from 'plottable';
-import { createTitle } from './createTitle';
-import { createColorLegend } from './createLegend';
-import { createChartTable } from './createTable';
+import { createTitle } from '../createTitle';
+import { createColorLegend } from '../createLegend';
+import { createChartTable } from '../createTable';
+import { createCircularPlot } from './helpers';
 
 /**
  * @typedef {Object} CircularChart - Circular chart configuration
@@ -84,22 +85,4 @@ export default ({ element, plot, config }) => {
       table.destroy();
     },
   };
-};
-
-export const createCircularPlot = ({
-  plot,
-  innerRadius = 0,
-  strokeColor = '#fff',
-  strokeWidth = 0,
-}) => {
-  const innerRadiusScale = new Plottable.Scales.Linear();
-
-  innerRadiusScale.domain([0, 100]);
-
-  return plot
-    .attr('fill', d => d.color)
-    .attr('fill-opacity', d => d.opacity)
-    .attr('style', `stroke: ${strokeColor}; stroke-width: ${strokeWidth}`)
-    .sectorValue(d => d.value)
-    .innerRadius(d => d.innerRadius || innerRadius, innerRadiusScale);
 };

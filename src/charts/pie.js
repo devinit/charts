@@ -1,5 +1,5 @@
 import Plottable from 'plottable';
-import createCircularChart from '../factories/createCircularChart';
+import createCircularChart from '../factories/circular/index';
 
 /**
  * @typedef {CircularChart} Pie
