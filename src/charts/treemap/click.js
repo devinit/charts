@@ -1,4 +1,4 @@
-import { createScaleAnimator } from '../../factories/createAnimator';
+import createScaleAnimator from '../../factories/animator/scale';
 
 export default (config = {}) => {
   const {

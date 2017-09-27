@@ -2,7 +2,7 @@ import Plottable from 'plottable';
 import hash from 'object-hash';
 import createTreeChart, { createColorFiller } from '../../factories/createTreeChart';
 import { createTreeHierachy } from '../../factories/createDataset';
-import { createScaleAnimator } from '../../factories/createAnimator';
+import createScaleAnimator from '../../factories/animator/scale';
 import { createTreeChartLabeler } from '../../factories/createLabeler';
 import { createTreeTipper } from '../../factories/tooltips';
 import partition from './layout';

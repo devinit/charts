@@ -5,7 +5,7 @@ import { createScatterGridLines } from '../createGrid';
 import { createChartTable } from '../createTable';
 import { createTitle } from '../createTitle';
 import { createColorLegend } from '../createLegend';
-import { createDataAnimator } from '../createAnimator';
+import createDataAnimator from '../animator/data';
 import { createScatterClickTipper, createScatterTipper } from '../tooltips';
 import { createScatterPlot, createPlotAreaWithAxes } from './helpers';
 import createScatterAnnotations from './annotations';

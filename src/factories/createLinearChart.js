@@ -7,7 +7,7 @@ import { makeUnique } from './createDataset';
 import { createCategoryScale, createLinearScale } from './createScale';
 import { createCategoryAxis, createNumericAxis } from './createAxis';
 import { createLinearAxisGridLines } from './createGrid';
-import { createScaleAnimator } from './createAnimator';
+import createScaleAnimator from './animator/scale';
 
 export const createLinearPlot = ({
   plot,

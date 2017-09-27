@@ -8,7 +8,7 @@ import { createPlotWithGridlines } from '../createLinearChart';
 import { createNumericAxis, createTimeAxis } from '../createAxis';
 import { createLinearScale, createTimeScale } from '../createScale';
 import { createLineTipper } from '../tooltips';
-import { createScaleAnimator } from '../createAnimator';
+import createScaleAnimator from '../animator/scale';
 import { createPlotAreaWithAxes, createTimePlot } from './utils';
 import createTimeAnchor from './anchor';
 
