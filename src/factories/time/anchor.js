@@ -41,7 +41,7 @@ export default (table, timeScale, anchor = { start: 0 }, legend = {}, listeners)
     .attr('cx', xPosition)
     .attr('cy', topPosition)
     .attr('fill', 'rgb(232, 68, 58)')
-    .attr('stroke', '#444')
+    // .attr('stroke', '#444')
     .attr('r', topPosition);
 
   const text = foreground
