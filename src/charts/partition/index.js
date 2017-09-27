@@ -6,7 +6,7 @@ import { createScaleAnimator } from '../../factories/createAnimator';
 import { createTreeChartLabeler } from '../../factories/createLabeler';
 import { createTreeTipper } from '../../factories/tooltips';
 import partition from './layout';
-import getDatumPercentage from './percentage';
+import createPercentageCalculator from './percentage';
 
 /**
  * @typedef {TreeChart} Partition
@@ -35,32 +35,38 @@ export default (element, data = [], config) => {
     ...moreConfig
   } = config;
 
+  const width = element.parentElement.clientWidth;
+  const height = element.parentElement.clientHeight;
+  const calculatePercentage = createPercentageCalculator(width, height, orientation);
+
   const plot = new Plottable.Plots.Rectangle();
 
   plot.onAnchor(plot => {
     if (tooltips.enable) {
-      createTreeTipper(element, labeling, getDatumPercentage(orientation))(plot);
+      createTreeTipper(element, labeling, calculatePercentage)(plot);
     }
   });
 
-  plot._drawLabels = createTreeChartLabeler(labeling, getDatumPercentage(orientation));
+  plot._drawLabels = createTreeChartLabeler(labeling, calculatePercentage);
 
   const treeChart = createTreeChart({
     element,
     plot,
-    config: { orientation, labeling, ...moreConfig },
+    config: {
+      orientation,
+      labeling,
+      width,
+      height,
+      ...moreConfig
+    },
   });
 
-  const layout = partition().size([1, 1]);
+  const layout = partition().size([
+    orientation === 'vertical' ? width : height,
+    orientation === 'vertical' ? height : width,
+  ]);
 
   const colorize = createColorFiller(colors, [], coloring);
-
-  const transform = data => {
-    const root = colorize(createTreeHierachy(data, tree));
-    return layout(root)
-      .descendants()
-      .filter(d => d.depth <= tree.depth || Infinity);
-  };
 
   const listeners = [];
 
@@ -98,7 +104,14 @@ export default (element, data = [], config) => {
     });
   });
 
-  const update = data => treeChart.update(transform(data));
+  const update = data => {
+    const root = colorize(createTreeHierachy(data, tree)
+      .sort((a, b) => a.value - b.value));
+
+    treeChart.update(layout(root)
+      .descendants()
+      .filter(d => d.depth <= tree.depth || Infinity));
+  };
 
   const hashes = {
     labeling: hash(labeling),
@@ -115,7 +128,7 @@ export default (element, data = [], config) => {
       const labelingHash = hash(labeling);
 
       if (hashes.labeling !== labelingHash) {
-        plot._drawLabels = createTreeChartLabeler(labeling, getDatumPercentage(orientation));
+        plot._drawLabels = createTreeChartLabeler(labeling, calculatePercentage);
         // delay label redraw like plottable does
         setTimeout(() => plot._drawLabels(), 200);
         hashes.labeling = labelingHash;

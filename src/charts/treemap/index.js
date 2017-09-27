@@ -86,7 +86,8 @@ export default (element, data = [], config) => {
   }));
 
   const update = data => {
-    const root = colorize(createTreeHierachy(data, tree));
+    const root = colorize(createTreeHierachy(data, tree)
+      .sort((a, b) => b.value - a.value));
     treeChart.update(transform(root));
   };
 

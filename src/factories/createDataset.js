@@ -25,7 +25,7 @@ export const createFullStackedDataset = (data = [], linearAxisIndicator, categor
   return data.map(d => ({
     ...d,
 
-    [linearAxisIndicator]: d[linearAxisIndicator] * 100 / sums[d[categoryAxisIndicator]],
+    [linearAxisIndicator]: (d[linearAxisIndicator] * 100) / sums[d[categoryAxisIndicator]],
   }));
 };
 
@@ -33,7 +33,6 @@ export const createFullStackedDataset = (data = [], linearAxisIndicator, categor
  * createTreeHierachy
  * @param {Object[]} data
  * @param {Tree} tree
- * @param {String[]} levels
  */
 export const createTreeHierachy = (data, tree) => {
   let series = [];
@@ -98,8 +97,7 @@ export const createTreeHierachy = (data, tree) => {
   return root
     .sum(node => {
       return node.children ? 0 : node.data.value;
-    })
-    .sort((a, b) => b.value - a.value);
+    });
 };
 
 export const createTreeDataset = rects => {
