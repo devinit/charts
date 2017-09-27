@@ -31,7 +31,7 @@ export const createColorLegend = (colorScale, config = {}) => {
   if (!showLegend || !colorScale) return null;
 
   return new Plottable.Components.Legend(colorScale)
-    .symbol(d => size => Plottable.SymbolFactories[symbol]()(size))
+    .symbol(() => size => Plottable.SymbolFactories[symbol]()(size))
     .xAlignment(alignment)
     .maxEntriesPerRow(rowSpan);
 };

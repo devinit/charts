@@ -37,7 +37,6 @@ export const createFullStackedDataset = (data = [], linearAxisIndicator, categor
  */
 export const createTreeHierachy = (data, tree) => {
   let series = [];
-
   if (tree.id && tree.parent && tree.value) {
     series = data.map(datum => ({
       ...datum,
@@ -86,16 +85,16 @@ export const createTreeHierachy = (data, tree) => {
 
   const root = stratifyFactory(series);
 
-  root.sum = function (value) {
+  root.sum = function rootsum(value) {
     return this.eachAfter(node => {
-      let sum = +value(node) || 0,
-        children = node.children,
-        i = children && children.length;
+      let sum = +value(node) || 0;
+      const children = node.children;
+      let i = children && children.length;
       while (--i >= 0) sum += children[i].value;
       node.value = sum;
     });
   };
-
+  // console.log(root);
   return root
     .sum(node => {
       return node.children ? 0 : node.data.value;
