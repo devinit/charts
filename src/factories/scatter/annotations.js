@@ -1,6 +1,22 @@
 
 import { color } from 'd3';
 
+/**
+ * @typedef {Object} AnnotationBound
+ * @property {nuumber} maximum - Maximim
+ * @property {number} minimum - Minimum
+ */
+
+/**
+ * @typedef {Object} Annotation
+ * @property {string} title
+ * @property {string} body
+ * @property {string} fill
+ * @property {AnnotationBound} horizontalAxis
+ * @property {AnnotationBound} verticalAxis
+ */
+
+
 export default (config) => {
   const {
     annotations,
