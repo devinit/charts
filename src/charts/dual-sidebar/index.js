@@ -1,13 +1,14 @@
 import Plottable from 'plottable';
 import hash from 'object-hash';
 import { flattenDeep, groupBy as group, keys, mapValues, uniq, values } from 'lodash';
-import { createChartTable } from '../factories/createTable';
-import { createTitle } from '../factories/createTitle';
-import { makeUnique } from '../factories/createDataset';
-import { createCategoryScale, createLinearScale } from '../factories/createScale';
-import { createAxisModifier, createCategoryAxis, createNumericAxis } from '../factories/createAxis';
-import { createLinearAxisGridLines } from '../factories/createGrid';
-import { createBarTipper } from '../factories/tooltips';
+import { createChartTable } from '../../factories/createTable';
+import { createTitle } from '../../factories/createTitle';
+import { createCategoryScale, createLinearScale } from '../../factories/createScale';
+import { createAxisModifier, createCategoryAxis, createNumericAxis } from '../../factories/createAxis';
+import { createLinearAxisGridLines } from '../../factories/createGrid';
+import { createBarTipper } from '../../factories/tooltips/index';
+import drawLabels from './labels';
+import {createPlotWithGridlines, createPlotAreaWithAxes, createLinearPlot} from './helpers';
 
 /**
  * @typedef {LinearCategoryChart} DualSidebar
@@ -179,6 +180,8 @@ export default (element, data, config) => {
       data.sort((a, b) => ((a || a[orderBy]) > (b && b[orderBy]) ? 1 : -1)) :
       data;
 
+    const groupIds = uniq(sorted.map(d => d[groupBy]));
+
     const [
       first = [],
       second = []
@@ -227,7 +230,7 @@ export default (element, data, config) => {
           // an 'artificial' padding
           left[groupId][''] = [
             {
-              ...(left[groupId][subGroupIds[0]][0] || {}),
+              [groupBy]: '',
               [subGroupBy]: '',
               [categoryAxis.indicator]: '',
               [linearAxis.indicator]: 0,
@@ -236,7 +239,7 @@ export default (element, data, config) => {
 
           right[groupId][''] = [
             {
-              ...(right[groupId][subGroupIds[0]][0] || {}),
+              [groupBy]: '',
               [subGroupBy]: '',
               [categoryAxis.indicator]: '',
               [linearAxis.indicator]: 0,
@@ -250,16 +253,24 @@ export default (element, data, config) => {
       .forEach((side, index) => {
         const direction = index === 0 ? -1 : 1;
 
-        const series = flattenDeep(values(side).map((grp, index) =>
-          flattenDeep(values(grp)).map(datum => ({
-            ...datum,
-            direction,
-            color: datum[coloring] || colors[index] || '#abc',
-          }))));
+        const series = flattenDeep(
+          // Using previously created groupIds
+          // to preserve ordering
+          groupIds.map((groupId, index) => {
+            const grp = side[groupId];
+            return flattenDeep(values(grp))
+              .map(datum => ({
+                ...datum,
+                color: datum[coloring] || colors[index] || '#abc',
+              }));
+          })
+        );
 
         const dataset = series.map((datum, index) => ({
-          ...datum,
           index,
+          direction,
+          sort: datum[orderBy],
+          color: datum.color,
           label: datum[categoryAxis.indicator],
           value: datum[linearAxis.indicator] * direction,
           opacity: 1,
@@ -284,134 +295,4 @@ export default (element, data, config) => {
   chart.update(data);
 
   return chart;
-};
-
-const drawLabels = dualSidebar => function innerDrawLabels() {
-  const entities = this.entities();
-  const foreground = this.foreground();
-  const data = entities.map(entity => entity.datum);
-  const direction = data[0] && data[0].direction;
-
-  foreground.attr('style', 'overflow: visible');
-  foreground.selectAll('text').remove();
-
-  makeUnique(data.map(d => d.category)).forEach(categoryId => {
-    const categoryEntities = entities.filter(entity => entity.datum.category === categoryId);
-
-    if (direction > 0 && categoryEntities.length) {
-      const nodeYValues = categoryEntities.map(entity => entity.selection.node().y.baseVal.value);
-
-      const top = Math.min.apply(null, nodeYValues);
-
-      foreground
-        .append('text')
-        .text(categoryId)
-        .attr('class', 'group-label')
-        .attr('x', dualSidebar.gutter * -0.5)
-        .attr('y', top - 15)
-        .attr('text-anchor', 'middle');
-
-      makeUnique(categoryEntities.map(entity => entity.datum.subCategory))
-        .forEach(subCategoryId => {
-          const subCategoryEntities = categoryEntities
-            .filter(entity => entity.datum.subCategory === subCategoryId);
-
-          const nodeTopValues = subCategoryEntities
-            .map(entity => entity.selection.node().y.baseVal.value);
-          const nodeBottomValues = subCategoryEntities.map(entity =>
-            entity.selection.node().y.baseVal.value +
-                entity.selection.node().height.baseVal.value);
-
-          const top = Math.min.apply(null, nodeTopValues);
-          const bottom = Math.max.apply(null, nodeBottomValues);
-
-          const y = top + ((bottom - top) / 2);
-
-          foreground
-            .append('text')
-            .text(subCategoryId)
-            .attr('class', 'subGroup-label')
-            .attr('x', dualSidebar.gutter * -0.5)
-            .attr('y', y)
-            .attr('alignment-baseline', 'middle')
-            .attr('text-anchor', 'middle');
-        });
-    }
-  });
-
-  entities.forEach(entity => {
-    const {datum} = entity;
-
-    // Don't draw labels if datum has no label
-    // Maybe because it's a dummy datum
-    if (datum.label) {
-      const x = entity.selection.node().x.baseVal.value;
-      const y = entity.selection.node().y.baseVal.value;
-      const width = entity.selection.node().width.baseVal.value;
-      const height = entity.selection.node().height.baseVal.value;
-
-      foreground
-        .append('text')
-        .text(datum.label)
-        .attr('class', 'data-label')
-        .attr('x', (datum.direction > 0 ? x + width : x) + (datum.direction * 10))
-        .attr('y', y + (height / 2))
-        .attr('alignment-baseline', 'middle')
-        .attr('text-anchor', datum.direction > 0 ? 'start' : 'end');
-    }
-  });
-};
-
-export const createPlotWithGridlines = ({ plot, grid }) => {
-  return grid ? new Plottable.Components.Group([grid, plot]) : plot;
-};
-
-export const createLinearPlot = ({
-  plot, categoryScale, linearScale, showLabels
-}, modify) => {
-  if (showLabels && plot.labelsEnabled) {
-    plot.labelsEnabled(showLabels);
-  }
-
-  return plot
-    .attr('class', d => `${d.group} ${d.subGroup}`)
-    .attr('stroke', d => d.color)
-    .attr('fill', d => d.color)
-    .attr('fill-opacity', d => d.opacity)
-    .x(d => modify(d.value), linearScale)
-    .y(d => d.index, categoryScale);
-};
-
-const createPlotAreaWithAxes = ({
-  leftLinearAxis,
-  rightLinearAxis,
-  leftPlotArea,
-  rightPlotArea,
-  leftCategoryAxis,
-  rightCategoryAxis,
-  dualSidebar,
-}) => {
-  const leftBar = new Plottable.Components.Table([
-    [rightCategoryAxis, rightPlotArea],
-    [null, rightLinearAxis],
-  ]);
-
-  const rightBar = new Plottable.Components.Table([
-    [leftPlotArea, leftCategoryAxis],
-    [leftLinearAxis, null],
-  ]);
-
-  const barTable = new Plottable.Components.Table([[rightBar, leftBar]]);
-
-  const table = new Plottable.Components.Table([
-    [new Plottable.Components.Table(), barTable, new Plottable.Components.Table()],
-  ]);
-
-  barTable.columnPadding(dualSidebar.gutter);
-
-  table.columnWeight(0, 1);
-  table.columnWeight(1, 3);
-  table.columnWeight(2, 1);
-
-  return table;
 };
