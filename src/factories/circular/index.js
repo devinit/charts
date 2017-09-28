@@ -2,6 +2,7 @@ import Plottable from 'plottable';
 import { createTitle } from '../createTitle';
 import { createColorLegend } from '../createLegend';
 import { createChartTable } from '../createTable';
+import createTooltips from '../tooltips/circular';
 import { createCircularPlot } from './helpers';
 
 /**
@@ -46,6 +47,10 @@ export default ({ element, plot, config }) => {
       position: 'bottom',
       alignment: 'center',
     },
+
+    tooltips = {
+      enable: true,
+    }
   } = config;
 
   const colorScale = new Plottable.Scales.Color();
@@ -58,6 +63,12 @@ export default ({ element, plot, config }) => {
   });
 
   table.renderTo(element);
+
+  plot.onAnchor(plot => {
+    setTimeout(() => {
+      createTooltips(element, tooltips)(plot);
+    }, 500);
+  });
 
   const update = (data = []) => {
     const series = data.map((d, i) => ({
