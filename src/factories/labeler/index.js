@@ -1,22 +1,26 @@
 import { color } from 'd3';
-import approximate from './approximate';
+import { autofitStyle } from '../autofit/text';
+import approximate from '../approximate';
 
 /**
  * @typedef {Object} Labeling
  * @property {boolean} showLabels=true - Show Labels
  * @property {boolean} showValues=true - Show Values
  * @property {boolean} showPercents=true - Show Percents
+ * @property {boolean} autofit=false - Autofit Text
  * @property {string} prefix - Prefix
  * @property {string} suffix - Suffix
  *
  */
-export const createTreeChartLabeler = (config, percentage = d => 100) => {
+
+export const createTreeChartLabeler = (config, percentage = () => 100) => {
   const {
     showLabels = true,
     showValues = true,
     showPercents = true,
     prefix = '',
     suffix = '',
+    autofit = true,
   } = config;
 
   // eslint-disable-next-line func-names
@@ -42,10 +46,13 @@ export const createTreeChartLabeler = (config, percentage = d => 100) => {
         const label = showLabels ? this._label(datum) : '';
         const percent = percentage(datum);
 
-        const percentageLabel = percent === 100 || !showPercents ? '' : `${percent}% | `;
+        const percentageLabel = percent === 100 || percent < 1 || !showPercents ? '' : `${percent}% | `;
         const valueLabel = showValues
           ? `${prefix ? `${prefix} ` : ''}${value}${suffix ? ` ${suffix}` : ''}`
           : '';
+        const autofitFontStyle = autofit ?
+          autofitStyle(width, height, `${label} ${percentageLabel}${valueLabel}`) :
+          '';
 
         foreground
           .append('foreignObject')
@@ -53,9 +60,9 @@ export const createTreeChartLabeler = (config, percentage = d => 100) => {
           .attr('height', height)
           .attr('x', x)
           .attr('y', y)
-          .html(`<div class="${brightness > 0.7 ? 'dark' : 'light'}-label plot-label">
+          .html(`<div class="${brightness > 0.7 ? 'dark' : 'light'}-label plot-label" ${autofitFontStyle}>
                     <div class="plot-label-header">${label}</div>
-                    <div class="plot-label-value">${percentageLabel}${valueLabel} </div>
+                    <div class="plot-label-value">${percentageLabel}${valueLabel}</div>
                  </div>`);
       }
     });
