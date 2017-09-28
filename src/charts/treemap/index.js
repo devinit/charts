@@ -2,11 +2,11 @@ import Plottable from 'plottable';
 import { treemap } from 'd3';
 import createRectangleChart, { createColorFiller } from '../../factories/createTreeChart';
 import { createTreeHierachy } from '../../factories/createDataset';
-import { createTreeChartLabeler } from '../../factories/createLabeler';
+import { createTreeChartLabeler } from '../../factories/labeler/index';
 import { createTreeTipper } from '../../factories/tooltips';
 import createPercentageCalculator from './percentage';
 import createTreemapOnClickListener from './click';
-import getTilingMethod from './tiling';
+import createTilingMethod from './tiling';
 
 /**
  * @typedef {TreeChart} Treemap
@@ -66,7 +66,9 @@ export default (element, data = [], config) => {
     },
   });
 
-  const tilingMethod = getTilingMethod(tiling);
+  const listeners = [];
+
+  const tilingMethod = createTilingMethod(tiling);
 
   const layout = treemap()
     .tile(tilingMethod)
@@ -74,21 +76,10 @@ export default (element, data = [], config) => {
 
   const colorize = createColorFiller(colors, [], coloring);
 
-  const transform = root => layout(root).leaves();
-
-  const listeners = [];
-
-  treeChart.onClick(createTreemapOnClickListener({
-    orientation,
-    width,
-    height,
-    listeners
-  }));
-
   const update = data => {
     const root = colorize(createTreeHierachy(data, tree)
       .sort((a, b) => b.value - a.value));
-    treeChart.update(transform(root));
+    treeChart.update(layout(root).leaves());
   };
 
   const chart = {
@@ -105,6 +96,13 @@ export default (element, data = [], config) => {
 
     update,
   };
+
+  treeChart.onClick(createTreemapOnClickListener({
+    orientation,
+    width,
+    height,
+    listeners
+  }));
 
   chart.update(data);
 
