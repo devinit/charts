@@ -3,7 +3,7 @@ import hash from 'object-hash';
 import createTreeChart, { createColorFiller } from '../../factories/createTreeChart';
 import { createTreeHierachy } from '../../factories/createDataset';
 import createScaleAnimator from '../../factories/animator/scale';
-import { createTreeChartLabeler } from '../../factories/createLabeler';
+import { createTreeChartLabeler } from '../../factories/labeler/index';
 import { createTreeTipper } from '../../factories/tooltips';
 import partition from './layout';
 import createPercentageCalculator from './percentage';
