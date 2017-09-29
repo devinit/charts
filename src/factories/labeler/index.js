@@ -20,7 +20,7 @@ export const createTreeChartLabeler = (config, percentage = () => 100) => {
     showPercents = true,
     prefix = '',
     suffix = '',
-    autofit = true,
+    autofit = false,
   } = config;
 
   // eslint-disable-next-line func-names
