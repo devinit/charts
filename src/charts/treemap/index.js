@@ -44,9 +44,13 @@ export default (element, data = [], config) => {
 
   const plot = new Plottable.Plots.Rectangle();
 
+  const treeTipper = createTreeTipper(element, labeling, calculatePercentage);
+
   plot.onAnchor(plot => {
     if (tooltips.enable) {
-      createTreeTipper(element, labeling, calculatePercentage)(plot);
+      setTimout(() => {
+        treeTipper(plot);
+      }, 500);
     }
   });
 
