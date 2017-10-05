@@ -2,6 +2,7 @@
 import hash from 'object-hash';
 
 interface Chart {
+  table: Object,
   update(data: Object[]): void,
 }
 
@@ -51,6 +52,11 @@ export const draw = (args: DrawArguments) => {
               palette.size && colors ? colors.map(color => palette.get(color) || color) : colors,
           },
         );
+
+        // redraw
+        window.addEventListener('resize', () => {
+          chart.table.redraw();
+        });
 
         resolve({
           ...chart,
