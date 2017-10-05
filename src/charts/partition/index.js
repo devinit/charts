@@ -45,7 +45,8 @@ export default (element, data = [], config) => {
 
   plot.onAnchor(plot => {
     if (tooltips.enable) {
-      setTimout(() => {
+      // TODO: Replace with plottable onRender
+      setTimeout(() => {
         treeTipper(plot);
       }, 500);
     }
