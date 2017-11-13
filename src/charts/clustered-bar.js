@@ -1,5 +1,5 @@
 import Plottable from 'plottable';
-import createBarChart from '../factories/createBarChart';
+import createBarChart from '../factories/categoric/bar';
 
 /**
  * @typedef {LinearCategoryChart} ClusteredBar

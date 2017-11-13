@@ -1,13 +1,13 @@
 import Plottable from 'plottable';
-import approximate from './approximate';
-import { createChartTable } from './createTable';
-import { createTitle } from './createTitle';
-import { createColorLegend } from './createLegend';
-import { makeUnique } from './createDataset';
-import { createCategoryScale, createLinearScale } from './createScale';
-import { createCategoryAxis, createNumericAxis } from './createAxis';
-import { createLinearAxisGridLines } from './createGrid';
-import createScaleAnimator from './animator/scale';
+import approximate from '../approximate';
+import { createChartTable } from '../createTable';
+import { createTitle } from '../createTitle';
+import { createColorLegend } from '../createLegend';
+import { makeUnique } from '../createDataset';
+import { createCategoryScale, createLinearScale } from '../createScale';
+import { createCategoryAxis, createNumericAxis } from '../createAxis';
+import { createLinearAxisGridLines } from '../createGrid';
+import createScaleAnimator from '../animator/scale';
 
 export const createLinearPlot = ({
   plot,
@@ -65,7 +65,7 @@ const createPlotAreaWithAxes = (orientation, { linearAxis, plotArea, categoryAxi
  * @property {Tooltip} tooltips - Tooltips
  * @property {ColorLegend} legend - Legend
  */
-export const createLinearChart = ({ element, plot, config }) => {
+export const createCategoricChart = ({ element, plot, config }) => {
   const {
     title = null,
 

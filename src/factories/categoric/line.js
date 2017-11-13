@@ -1,5 +1,5 @@
-import { createLinearChart } from '../factories/createLinearChart';
-import { createLineTipper } from './tooltips';
+import { createCategoricChart } from './index';
+import { createLineTipper } from '../tooltips/index';
 
 export const createLineChart = (element, plot, config) => {
   const {
@@ -10,7 +10,7 @@ export const createLineChart = (element, plot, config) => {
     ...more
   } = config;
 
-  const chart = createLinearChart({
+  const chart = createCategoricChart({
     element,
     plot,
     config: {

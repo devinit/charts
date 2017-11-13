@@ -1,8 +1,8 @@
 import Plottable from 'plottable';
 import { color } from 'd3';
-import approximate from './approximate';
-import { createLinearChart } from './createLinearChart';
-import { createBarTipper } from './tooltips';
+import approximate from '../approximate';
+import { createCategoricChart } from './index';
+import { createBarTipper } from '../tooltips/index';
 
 const createBarInteraction = (orientation = 'vertical', labeling = {}, highlight = []) => {
   const { prefix = '', suffix = '' } = labeling;
@@ -91,7 +91,7 @@ const createBarInteraction = (orientation = 'vertical', labeling = {}, highlight
 
 export default (element, plot, config) => {
   const { interactions = { enable: false }, tooltips = { enable: true } } = config;
-  const chart = createLinearChart({ element, plot, config });
+  const chart = createCategoricChart({ element, plot, config });
 
   plot.onAnchor(plot => {
     setTimeout(() => {
