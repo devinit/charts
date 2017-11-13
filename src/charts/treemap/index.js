@@ -1,6 +1,6 @@
 import Plottable from 'plottable';
 import { treemap } from 'd3';
-import createRectangleChart, { createColorFiller } from '../../factories/createTreeChart';
+import createRectangleChart, { createColorFiller } from '../../factories/tree/index';
 import { createTreeHierachy } from '../../factories/createDataset';
 import { createTreeChartLabeler } from '../../factories/labeler/index';
 import { createTreeTipper } from '../../factories/tooltips';

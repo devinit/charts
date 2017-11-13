@@ -1,6 +1,6 @@
 import Plottable from 'plottable';
 import hash from 'object-hash';
-import createTreeChart, { createColorFiller } from '../../factories/createTreeChart';
+import createTreeChart, { createColorFiller } from '../../factories/tree/index';
 import { createTreeHierachy } from '../../factories/createDataset';
 import createScaleAnimator from '../../factories/animator/scale';
 import { createTreeChartLabeler } from '../../factories/labeler/index';

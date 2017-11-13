@@ -3,7 +3,7 @@ import { treemap } from 'd3';
 import { createTreeHierachy } from '../factories/createDataset';
 import approximate from '../factories/approximate';
 import getTilingMethod from './treemap/tiling';
-import { createColorFiller } from '../factories/createTreeChart';
+import { createColorFiller } from '../factories/tree/index';
 
 /**
  * @typedef {TreeChart} CompoundTreemap
