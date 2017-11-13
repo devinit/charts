@@ -4,7 +4,7 @@ import { createTitle } from '../createTitle';
 import { createChartTable } from '../createTable';
 import { createColorLegend } from '../createLegend';
 import { createLinearAxisGridLines } from '../createGrid';
-import { createPlotWithGridlines } from '../createLinearChart';
+import { createPlotWithGridlines } from '../categoric/index';
 import { createNumericAxis, createTimeAxis } from '../createAxis';
 import { createLinearScale, createTimeScale } from '../createScale';
 import { createLineTipper } from '../tooltips';
