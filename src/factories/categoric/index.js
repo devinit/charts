@@ -2,7 +2,7 @@ import Plottable from 'plottable';
 import approximate from '../approximate';
 import { createChartTable } from '../createTable';
 import { createTitle } from '../createTitle';
-import { createColorLegend } from '../createLegend';
+import { createColorLegend } from '../legend/index';
 import { makeUnique } from '../dataset/index';
 import { createCategoryScale, createLinearScale } from '../scale/index';
 import { createCategoryAxis, createNumericAxis } from '../axis/index';

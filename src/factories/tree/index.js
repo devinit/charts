@@ -2,7 +2,7 @@ import Plottable from 'plottable';
 import { createTitle } from '../createTitle';
 import { createChartTable } from '../createTable';
 import { createTreeDataset } from '../dataset/index';
-import { createColorLegend } from '../createLegend';
+import { createColorLegend } from '../legend/index';
 
 /**
  * @typedef {Object} TreeChart

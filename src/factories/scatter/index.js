@@ -4,7 +4,7 @@ import { createNumericAxis } from '../axis/index';
 import { createScatterGridLines } from '../grid/index';
 import { createChartTable } from '../createTable';
 import { createTitle } from '../createTitle';
-import { createColorLegend } from '../createLegend';
+import { createColorLegend } from '../legend/index';
 import createDataAnimator from '../animator/data';
 import { createScatterClickTipper, createScatterTipper } from '../tooltips';
 import { createScatterPlot, createPlotAreaWithAxes } from './helpers';
