@@ -4,7 +4,7 @@ import { flattenDeep, groupBy as group, keys, mapValues, uniq, values } from 'lo
 import { createChartTable } from '../../factories/createTable';
 import { createTitle } from '../../factories/createTitle';
 import { createCategoryScale, createLinearScale } from '../../factories/createScale';
-import { createAxisModifier, createCategoryAxis, createNumericAxis } from '../../factories/createAxis';
+import { createAxisModifier, createCategoryAxis, createNumericAxis } from '../../factories/axis/index';
 import { createLinearAxisGridLines } from '../../factories/createGrid';
 import { createBarTipper } from '../../factories/tooltips/index';
 import drawLabels from './labels';

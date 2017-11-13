@@ -5,7 +5,7 @@ import { createChartTable } from '../createTable';
 import { createColorLegend } from '../createLegend';
 import { createLinearAxisGridLines } from '../createGrid';
 import { createPlotWithGridlines } from '../categoric/index';
-import { createNumericAxis, createTimeAxis } from '../createAxis';
+import { createNumericAxis, createTimeAxis } from '../axis/index';
 import { createLinearScale, createTimeScale } from '../createScale';
 import { createLineTipper } from '../tooltips';
 import createScaleAnimator from '../animator/scale';

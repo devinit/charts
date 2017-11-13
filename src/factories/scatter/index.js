@@ -1,6 +1,6 @@
 import Plottable from 'plottable';
 import { createLinearScale } from '../createScale';
-import { createNumericAxis } from '../createAxis';
+import { createNumericAxis } from '../axis/index';
 import { createScatterGridLines } from '../createGrid';
 import { createChartTable } from '../createTable';
 import { createTitle } from '../createTitle';

@@ -1,6 +1,6 @@
 import Plottable from 'plottable';
-import approximate from './approximate';
-import {configureAxisTicking, configureTimeAxisTicking} from './configureTicking';
+import approximate from '../approximate';
+import {configureAxisTicking, configureTimeAxisTicking} from '../ticking/index';
 
 /**
  * @typedef {Object} NumericAxis - Numeric Axis configuration
