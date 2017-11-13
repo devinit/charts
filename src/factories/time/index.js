@@ -3,7 +3,7 @@ import { groupBy as group, keys, values, mapValues } from 'lodash';
 import { createTitle } from '../createTitle';
 import { createChartTable } from '../createTable';
 import { createColorLegend } from '../createLegend';
-import { createLinearAxisGridLines } from '../createGrid';
+import { createLinearAxisGridLines } from '../grid/index';
 import { createPlotWithGridlines } from '../categoric/index';
 import { createNumericAxis, createTimeAxis } from '../axis/index';
 import { createLinearScale, createTimeScale } from '../createScale';

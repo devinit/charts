@@ -5,7 +5,7 @@ import { createChartTable } from '../../factories/createTable';
 import { createTitle } from '../../factories/createTitle';
 import { createCategoryScale, createLinearScale } from '../../factories/createScale';
 import { createAxisModifier, createCategoryAxis, createNumericAxis } from '../../factories/axis/index';
-import { createLinearAxisGridLines } from '../../factories/createGrid';
+import { createLinearAxisGridLines } from '../../factories/grid/index';
 import { createBarTipper } from '../../factories/tooltips/index';
 import drawLabels from './labels';
 import {createPlotWithGridlines, createPlotAreaWithAxes, createLinearPlot} from './helpers';

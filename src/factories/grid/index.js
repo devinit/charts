@@ -1,5 +1,5 @@
 import Plottable from 'plottable';
-import { configureGridTicking } from './configureTicking';
+import { configureGridTicking } from '../ticking/index';
 
 export const createLinearAxisGridLines = config => {
   const {

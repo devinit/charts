@@ -1,7 +1,7 @@
 import Plottable from 'plottable';
 import { createLinearScale } from '../createScale';
 import { createNumericAxis } from '../axis/index';
-import { createScatterGridLines } from '../createGrid';
+import { createScatterGridLines } from '../grid/index';
 import { createChartTable } from '../createTable';
 import { createTitle } from '../createTitle';
 import { createColorLegend } from '../createLegend';

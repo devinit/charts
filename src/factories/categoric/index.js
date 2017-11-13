@@ -6,7 +6,7 @@ import { createColorLegend } from '../createLegend';
 import { makeUnique } from '../createDataset';
 import { createCategoryScale, createLinearScale } from '../createScale';
 import { createCategoryAxis, createNumericAxis } from '../axis/index';
-import { createLinearAxisGridLines } from '../createGrid';
+import { createLinearAxisGridLines } from '../grid/index';
 import createScaleAnimator from '../animator/scale';
 
 export const createLinearPlot = ({
