@@ -1,6 +1,6 @@
 import { color } from 'd3';
 import { autofitStyle } from '../autofit/text';
-import approximate from '../approximate';
+import approximate from '../approximate/index';
 
 /**
  * @typedef {Object} Labeling

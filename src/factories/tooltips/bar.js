@@ -1,6 +1,6 @@
 import Plottable from 'plottable';
 import Tooltip from 'tooltip.js';
-import approximate from '../approximate';
+import approximate from '../approximate/index';
 
 export default (container, labeling = {}, scale, orientation = 'vertical') => {
   let currentHash = null;

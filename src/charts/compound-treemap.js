@@ -1,7 +1,7 @@
 import Plottable from 'plottable';
 import { treemap } from 'd3';
 import { createTreeHierachy } from '../factories/dataset/index';
-import approximate from '../factories/approximate';
+import approximate from '../factories/approximate/index';
 import getTilingMethod from './treemap/tiling';
 import { createColorFiller } from '../factories/tree/index';
 

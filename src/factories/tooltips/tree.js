@@ -2,7 +2,7 @@ import Plottable from 'plottable';
 import { color } from 'd3';
 // noinspection JSFileReferences
 import Tooltip from 'tooltip.js';
-import approximate from '../approximate';
+import approximate from '../approximate/index';
 
 export default (container, labeling, percentage = () => 100) => {
   let currentId = null;

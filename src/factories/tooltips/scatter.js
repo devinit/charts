@@ -1,6 +1,6 @@
 import Plottable from 'plottable';
 import Tooltip from 'tooltip.js';
-import approximate from '../approximate';
+import approximate from '../approximate/index';
 
 export default (container, tooltips = {}, axes) => {
   let currentId = null;

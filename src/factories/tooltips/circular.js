@@ -2,7 +2,7 @@ import Plottable from 'plottable';
 import Tooltip from 'tooltip.js';
 import hash from 'object-hash';
 import { color } from 'd3';
-import approximate from '../approximate';
+import approximate from '../approximate/index';
 
 export default (container, tooltips = {}, labeling = {}) => {
   let currentId = null;

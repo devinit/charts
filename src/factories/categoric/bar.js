@@ -1,6 +1,6 @@
 import Plottable from 'plottable';
 import { color } from 'd3';
-import approximate from '../approximate';
+import approximate from '../approximate/index';
 import { createCategoricChart } from './index';
 import { createBarTipper } from '../tooltips/index';
 

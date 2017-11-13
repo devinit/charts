@@ -1,5 +1,5 @@
 import Plottable from 'plottable';
-import approximate from '../approximate';
+import approximate from '../approximate/index';
 import {configureAxisTicking, configureTimeAxisTicking} from '../ticking/index';
 
 /**
