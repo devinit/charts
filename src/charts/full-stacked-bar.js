@@ -1,6 +1,6 @@
 import Plottable from 'plottable';
 import createBarChart from '../factories/categoric/bar';
-import { createFullStackedDataset } from '../factories/createDataset';
+import { createFullStackedDataset } from '../factories/dataset/index';
 
 /**
  * @typedef {LinearCategoryChart} FullStackedBar

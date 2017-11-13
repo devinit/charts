@@ -1,6 +1,6 @@
 import Plottable from 'plottable';
 import { createLineChart } from '../factories/categoric/line';
-import { createFullStackedDataset } from '../factories/createDataset';
+import { createFullStackedDataset } from '../factories/dataset/index';
 
 /**
  * @typedef {LinearCategoryChart} FullStackedArea

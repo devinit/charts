@@ -6,7 +6,7 @@ import { createColorLegend } from '../createLegend';
 import { createLinearAxisGridLines } from '../grid/index';
 import { createPlotWithGridlines } from '../categoric/index';
 import { createNumericAxis, createTimeAxis } from '../axis/index';
-import { createLinearScale, createTimeScale } from '../createScale';
+import { createLinearScale, createTimeScale } from '../scale/index';
 import { createLineTipper } from '../tooltips';
 import createScaleAnimator from '../animator/scale';
 import { createPlotAreaWithAxes, createTimePlot } from './utils';

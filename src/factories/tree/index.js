@@ -1,7 +1,7 @@
 import Plottable from 'plottable';
 import { createTitle } from '../createTitle';
 import { createChartTable } from '../createTable';
-import { createTreeDataset } from '../createDataset';
+import { createTreeDataset } from '../dataset/index';
 import { createColorLegend } from '../createLegend';
 
 /**

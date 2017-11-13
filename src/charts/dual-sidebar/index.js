@@ -3,7 +3,7 @@ import hash from 'object-hash';
 import { flattenDeep, groupBy as group, keys, mapValues, uniq, values } from 'lodash';
 import { createChartTable } from '../../factories/createTable';
 import { createTitle } from '../../factories/createTitle';
-import { createCategoryScale, createLinearScale } from '../../factories/createScale';
+import { createCategoryScale, createLinearScale } from '../../factories/scale/index';
 import { createAxisModifier, createCategoryAxis, createNumericAxis } from '../../factories/axis/index';
 import { createLinearAxisGridLines } from '../../factories/grid/index';
 import { createBarTipper } from '../../factories/tooltips/index';
