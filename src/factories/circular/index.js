@@ -1,7 +1,7 @@
 import Plottable from 'plottable';
-import { createTitle } from '../createTitle';
+import { createTitle } from '../title/index';
 import { createColorLegend } from '../legend/index';
-import { createChartTable } from '../createTable';
+import { createChartTable } from '../table/index';
 import createTooltips from '../tooltips/circular';
 import { createCircularPlot } from './helpers';
 

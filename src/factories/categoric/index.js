@@ -1,7 +1,7 @@
 import Plottable from 'plottable';
 import approximate from '../approximate/index';
-import { createChartTable } from '../createTable';
-import { createTitle } from '../createTitle';
+import { createChartTable } from '../table/index';
+import { createTitle } from '../title/index';
 import { createColorLegend } from '../legend/index';
 import { makeUnique } from '../dataset/index';
 import { createCategoryScale, createLinearScale } from '../scale/index';

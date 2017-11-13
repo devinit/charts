@@ -1,6 +1,6 @@
 import Plottable from 'plottable';
-import { createTitle } from '../createTitle';
-import { createChartTable } from '../createTable';
+import { createTitle } from '../title/index';
+import { createChartTable } from '../table/index';
 import { createTreeDataset } from '../dataset/index';
 import { createColorLegend } from '../legend/index';
 
