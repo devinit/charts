@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const { createLinearScale, createCategoryScale } = require('../lib/factories/createScale');
+const { createLinearScale, createCategoryScale } = require('../lib/factories/scale');
 const it = require('mocha').it;
 const describe = require('mocha').describe;
 const Plottable = require('plottable');

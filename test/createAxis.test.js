@@ -6,8 +6,8 @@ const {
   createAxisModifier,
   createNumericAxis,
   createCategoryAxis,
-} = require('../lib/factories/createAxis');
-const { createLinearScale, createCategoryScale } = require('../lib/factories/createScale');
+} = require('../lib/factories/axis');
+const { createLinearScale, createCategoryScale } = require('../lib/factories/scale');
 
 chai.use(chaiStats);
 
