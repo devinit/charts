@@ -222,6 +222,128 @@
   </section>
   <section>
     <div class="chart">
+      <div id="timearea"></div>
+    </div>
+    <script>
+      DiCharts.draw({
+        element: document.getElementById('timearea'),
+        config: {
+          type: 'timearea',
+          title: 'timearea',
+          colors: ['#ba0c2f'],
+          labeling: {
+            suffix: '%',
+          },
+          linearAxis: {
+            showAxis: true,
+            indicator: 'value',
+            axisMargin: 0,
+            ticking: 'sparse',
+            suffix: '%',
+          },
+          timeAxis: {
+            showAxis: true,
+            indicator: 'years',
+            ticking: 'years',
+            tickingStep: 20,
+            axisMinimum: 2000,
+            axisMaximum: 2013,
+          },
+          time: {
+            interpolate: true,
+          }
+        },
+        data: [
+          {
+            "id": "UG",
+            "year": 2000,
+            "value": 62.56,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2001,
+            "value": 62.52,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2002,
+            "value": 62.48,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2003,
+            "value": 60,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2004,
+            "value": 57.53,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2005,
+            "value": 55.05,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2006,
+            "value": 51.34,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2007,
+            "value": 47.63,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2008,
+            "value": 43.92,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2009,
+            "value": 42.14,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2010,
+            "value": 40.36,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2011,
+            "value": 36.99,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2012,
+            "value": 34.82,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2013,
+            "value": 34.64,
+            "name": "Uganda"
+          }
+        ]
+      })
+    </script>
+  </section>
+  <section>
+    <div class="chart">
       <div id="timeline_chart"></div>
     </div>
     <script>
