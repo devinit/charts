@@ -188,7 +188,11 @@ export default (element, data, config) => {
     ] = values(group(sorted, d => d[splitBy]));
 
     [first, second]
-      .sort((a, b) => (a[0] || a[0][splitBy]) > (b[0] && b[0][splitBy]) ? -1 : 1)
+      .sort((a, b) => {
+        const firstDirection = a[0] || a[0][splitBy];
+        const secondDirection = b[0] && b[0][splitBy];
+        return firstDirection > secondDirection ? 1 : -1;
+      })
       .map(side => mapValues(group(side, d => d[groupBy]), grp => group(grp, d => d[subGroupBy])))
       .reduce(([sides = []], side) => [[...sides, side]], [])
       .map(([left, right]) => {
