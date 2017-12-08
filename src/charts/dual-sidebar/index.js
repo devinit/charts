@@ -189,7 +189,7 @@ export default (element, data, config) => {
 
     [first, second]
       .sort((a, b) => {
-        const firstDirection = a[0] || a[0][splitBy];
+        const firstDirection = a[0] && a[0][splitBy];
         const secondDirection = b[0] && b[0][splitBy];
         return firstDirection > secondDirection ? 1 : -1;
       })
