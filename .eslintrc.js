@@ -18,6 +18,7 @@ module.exports = {
         'no-confusing-arrow': 0,
         'consistent-return': 0,
         'no-constant-condition': 0,
+        'no-restricted-properties': 0,
         'import/no-dynamic-require': 0,
         'import/no-extraneous-dependencies': 0,
         'import/extensions': 0,

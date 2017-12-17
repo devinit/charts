@@ -2,6 +2,79 @@ import Plottable from 'plottable';
 import approximate from '../approximate/index';
 import {configureAxisTicking, configureTimeAxisTicking} from '../ticking/index';
 
+
+export const log = base => number => Math.round(Math.log(number) / Math.log(base));
+
+export const multiply = multiplier => number => multiplier * number;
+
+export const divide = divisor => number => number / divisor;
+
+export const power = base => exponent => Math.pow(base, exponent);
+
+export const absolutify = shouldAbsolutify => number =>
+  shouldAbsolutify ? Math.abs(number) : number;
+
+/**
+ * Create a numeric modifier from config
+ * @param {NumericAxis} config
+ * @returns {{format: (function(*=)), modify: (function(*=))}}
+ */
+export const createAxisModifier = config => {
+  const {modifier = 'multiply', modifierParam = 1, absolute = false} = config;
+
+  const absoluteFn = absolutify(absolute);
+  let modifierFn = d => d;
+  let formatterFn = d => d;
+
+  if (modifier === 'log') {
+    modifierFn = log(modifierParam);
+    formatterFn = power(modifierParam);
+  }
+
+  if (modifier === 'multiply') {
+    modifierFn = multiply(modifierParam);
+    formatterFn = divide(modifierParam);
+  }
+
+  if (modifier === 'power') {
+    modifierFn = power(modifierParam);
+    formatterFn = log(modifierParam);
+  }
+
+  return {
+    format: number => absoluteFn(formatterFn(number)),
+    modify: number => modifierFn(number),
+  };
+};
+
+export const createAxisTable = (alignment, axis, label) => {
+  if (alignment === 'top') {
+    return new Plottable.Components.Table([[label], [axis]]);
+  }
+
+  if (alignment === 'bottom') {
+    return new Plottable.Components.Table([[axis], [label]]);
+  }
+
+  if (alignment === 'left') {
+    return new Plottable.Components.Table([[label, axis]]);
+  }
+
+  if (alignment === 'right') {
+    return new Plottable.Components.Table([[axis, label]]);
+  }
+};
+
+export const getAxisLabelRotation = alignment => {
+  switch (alignment) {
+    case 'top': return 0;
+    case 'bottom': return 0;
+    case 'left': return -90;
+    case 'right': return 90;
+    default: return 0;
+  }
+};
+
 /**
  * @typedef {Object} NumericAxis - Numeric Axis configuration
  * @private
@@ -137,7 +210,7 @@ export const createCategoryAxis = (config = {}, axis) => {
     axisDirection,
     axisScale,
     axisLabel = null,
-    axisMargin = 10,
+    axisMargin = 20,
     ticking = 'all',
   } = config;
 
@@ -162,75 +235,3 @@ export const createCategoryAxis = (config = {}, axis) => {
 
   return createAxisTable(alignment, axis, label);
 };
-
-/**
- * Create a numeric modifier from config
- * @param {NumericAxis} config
- * @returns {{format: (function(*=)), modify: (function(*=))}}
- */
-export const createAxisModifier = config => {
-  const {modifier = 'multiply', modifierParam = 1, absolute = false} = config;
-
-  const absoluteFn = absolutify(absolute);
-  let modifierFn = d => d;
-  let formatterFn = d => d;
-
-  if (modifier === 'log') {
-    modifierFn = log(modifierParam);
-    formatterFn = power(modifierParam);
-  }
-
-  if (modifier === 'multiply') {
-    modifierFn = multiply(modifierParam);
-    formatterFn = divide(modifierParam);
-  }
-
-  if (modifier === 'power') {
-    modifierFn = power(modifierParam);
-    formatterFn = log(modifierParam);
-  }
-
-  return {
-    format: number => absoluteFn(formatterFn(number)),
-    modify: number => modifierFn(number),
-  };
-};
-
-export const createAxisTable = (alignment, axis, label) => {
-  if (alignment === 'top') {
-    return new Plottable.Components.Table([[label], [axis]]);
-  }
-
-  if (alignment === 'bottom') {
-    return new Plottable.Components.Table([[axis], [label]]);
-  }
-
-  if (alignment === 'left') {
-    return new Plottable.Components.Table([[label, axis]]);
-  }
-
-  if (alignment === 'right') {
-    return new Plottable.Components.Table([[axis, label]]);
-  }
-};
-
-export const getAxisLabelRotation = alignment => {
-  switch (alignment) {
-    case 'top': return 0;
-    case 'bottom': return 0;
-    case 'left': return -90;
-    case 'right': return 90;
-    default: return 0;
-  }
-};
-
-export const log = base => number => Math.round(Math.log(number) / Math.log(base));
-
-export const multiply = multiplier => number => multiplier * number;
-
-export const divide = divisor => number => number / divisor;
-
-export const power = base => exponent => Math.pow(base, exponent);
-
-export const absolutify = shouldAbsolutify => number =>
-  shouldAbsolutify ? Math.abs(number) : number;
