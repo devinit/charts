@@ -39,8 +39,8 @@ const createBarInteraction = (orientation = 'vertical', labeling = {}, highlight
             .background()
             .append('text')
             .attr('class', 'plot-label hover-label')
-            .attr('x', orientation === 'vertical' ? x + width / 2 : width + x + 5)
-            .attr('y', orientation === 'horizontal' ? y + height / 2 : y - 10)
+            .attr('x', orientation === 'vertical' ? (x + width) / 2 : width + x + 5)
+            .attr('y', orientation === 'horizontal' ? (y + height) / 2 : y - 10)
             .attr('text-anchor', orientation === 'vertical' ? 'middle' : 'start')
             .attr('style', `fill: ${entity.selection.attr('fill')}`)
             .text(`${prefix}${approximate(entity.datum.value)}${suffix}`);
