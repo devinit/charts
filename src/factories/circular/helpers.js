@@ -4,11 +4,9 @@ import approximate from '../approximate/index';
 export const createCircularPlot = (config) => {
   const {
     plot,
+    labeling,
     innerRadius = 0,
     strokeColor = '#fff',
-    showLabels,
-    prefix = ' ',
-    suffix = ' ',
     strokeWidth = 0,
   } = config;
 
@@ -16,9 +14,9 @@ export const createCircularPlot = (config) => {
 
   innerRadiusScale.domain([0, 100]);
 
-  if (showLabels) {
-    plot.labelsEnabled(showLabels)
-      .labelFormatter(d => `${prefix && prefix}${approximate(d)}${suffix && suffix}`);
+  if (labeling && labeling.showLabels) {
+    plot.labelsEnabled(labeling.showLabels)
+      .labelFormatter(d => `${labeling.prefix}${approximate(d)}${labeling.suffix}`);
   }
 
 

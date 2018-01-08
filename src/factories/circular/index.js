@@ -33,7 +33,11 @@ export default ({ element, plot, config }) => {
     colors = [],
 
     coloring = null,
-
+    labeling = {
+      showLabels: true,
+      prefix: '',
+      suffix: ''
+    },
     circular = {
       label: 'label',
       value: 'value',
@@ -58,7 +62,7 @@ export default ({ element, plot, config }) => {
 
   const table = createChartTable({
     title: createTitle({ title, titleAlignment }),
-    chart: createCircularPlot({ plot, ...circular }),
+    chart: createCircularPlot({ plot, ...circular, labeling }),
     legend: createColorLegend(colorScale, legend),
     legendPosition: legend.position,
   });
