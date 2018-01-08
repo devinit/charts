@@ -40,6 +40,7 @@ export default ({ element, plot, config }) => {
       innerRadius: 0,
       strokeWidth: 0,
       strokeColor: '#fff',
+      showLabels: true
     },
 
     legend = {
