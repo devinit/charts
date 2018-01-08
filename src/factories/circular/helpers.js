@@ -16,7 +16,7 @@ export const createCircularPlot = (config) => {
 
   if (labeling && labeling.showLabels) {
     plot.labelsEnabled(labeling.showLabels)
-      .labelFormatter(d => `${labeling.prefix}${approximate(d)}${labeling.suffix}`);
+      .labelFormatter(d => `${labeling.prefix || ''}${approximate(d)}${labeling.suffix || ' '}`);
   }
 
 
