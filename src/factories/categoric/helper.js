@@ -7,15 +7,16 @@ import approximate from '../approximate/index';
 
 
 const drawLabel = (opts, foreground) => {
-  const {width, height, x, y, value, color, suffix, prefix} = opts;
+  const {width, height, x, y, value, color, suffix, prefix, forExtend = false} = opts;
+  const yPos = height && !forExtend < 30 ? y + 5 : y + 10;
   foreground
     .append('foreignObject')
     .attr('width', width)
     .attr('height', height)
     .attr('x', x)
-    .attr('y', y)
+    .attr('y', yPos)
     .append('xhtml:body')
-    .html(width > 30 && height > 20 ?
+    .html(height > 25 || forExtend ?
       `<span class="custom-label" style="color: ${color}">
             ${prefix}${approximate(value)}${suffix}
         </span>`
@@ -27,7 +28,7 @@ const getValuesFromEntity = (entity) => {
   const width = rect.width.baseVal.value;
   const height = rect.height.baseVal.value;
   const value = entity.datum.value;
-  const y = rect.y.baseVal.value + (height / 2);
+  const y = rect.y.baseVal.value;
   const x = rect.x.baseVal.value;
   return {width, height, y, x, value };
 };
@@ -43,7 +44,7 @@ const getGroupValues = (entities) => {
       const entityValues = getValuesFromEntity(entity);
       const sum = all.sum + entityValues.value;
       if (lastKey === key) {
-        const y = entityValues.y - (entityValues.height / 2) - 15;
+        const y = entityValues.y - 20;
         return {...entityValues, value: sum, y};
       }
       return {...all, sum};
@@ -62,6 +63,6 @@ export const createCustomLabels = (config, plot) => {
   if (!entities[0].datum.group) return false;
   const groupEntities = getGroupValues(entities);
   groupEntities.forEach(group => {
-    drawLabel({...group, prefix, color: 'black', suffix}, foreground);
+    drawLabel({...group, prefix, color: 'black', suffix, forExtend: true}, foreground);
   });
 };
