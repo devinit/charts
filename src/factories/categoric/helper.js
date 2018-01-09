@@ -1,9 +1,9 @@
 import approximate from '../approximate/index';
 
 // adding labels
-export const drawLabels = (plot) => {
-  const foreground = plot.foreground();
-  return plot.entities().forEach((entity) => {
+export function drawLabels() {
+  const foreground = this.foreground();
+  return this.entities().forEach((entity) => {
     const rect = entity.selection[0][0];
     // console.log('rect', rect.x.baseVal.value, rect.y.baseVal.value);
     const width = rect.width.baseVal.value;
@@ -19,4 +19,4 @@ export const drawLabels = (plot) => {
         `<div><p>${approximate(entity.datum.value)}</p></div>`
         : '<p></p>');
   });
-};
+}

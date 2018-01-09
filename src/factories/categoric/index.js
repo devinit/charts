@@ -6,6 +6,7 @@ import { createColorLegend } from '../legend/index';
 import { makeUnique } from '../dataset/index';
 import { createCategoryScale, createLinearScale } from '../scale/index';
 import { createCategoryAxis, createNumericAxis } from '../axis/index';
+import {drawLabels} from './helper';
 import { createLinearAxisGridLines } from '../grid/index';
 import createScaleAnimator from '../animator/scale';
 

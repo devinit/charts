@@ -89,6 +89,11 @@ const createBarInteraction = (orientation = 'vertical', labeling = {}, highlight
   };
 };
 
+const createCustomLabels = (config, plot) => {
+  console.log(config);
+  console.log(plot.entities());
+};
+
 export default (element, plot, config) => {
   const { interactions = { enable: false }, tooltips = { enable: true } } = config;
   const chart = createCategoricChart({ element, plot, config });
@@ -98,7 +103,9 @@ export default (element, plot, config) => {
       if (interactions.enable) {
         createBarInteraction(config.orientation, config.labeling, config.highlight)(plot);
       }
-
+      if (config.labeling.custom) {
+        createCustomLabels(config.labeling, plot);
+      }
       if (tooltips.enable) {
         createBarTipper(element, config.labeling, chart.categoryScale, config.orientation)(plot);
       }
