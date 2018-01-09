@@ -6,7 +6,6 @@ import { createColorLegend } from '../legend/index';
 import { makeUnique } from '../dataset/index';
 import { createCategoryScale, createLinearScale } from '../scale/index';
 import { createCategoryAxis, createNumericAxis } from '../axis/index';
-import {drawLabels} from './helper';
 import { createLinearAxisGridLines } from '../grid/index';
 import createScaleAnimator from '../animator/scale';
 
@@ -17,9 +16,9 @@ export const createLinearPlot = ({
   linearScale,
   labeling = {},
 }) => {
-  const { showLabels = false, prefix = '', suffix = '' } = labeling;
+  const { showLabels = false, prefix = '', suffix = ''} = labeling;
 
-  if (plot.labelsEnabled) {
+  if (plot.labelsEnabled && !labeling.custom) {
     plot.labelFormatter(d => `${prefix}${approximate(d)}${suffix}`).labelsEnabled(showLabels);
   }
 

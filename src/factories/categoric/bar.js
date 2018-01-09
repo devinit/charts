@@ -3,6 +3,7 @@ import { color } from 'd3';
 import approximate from '../approximate/index';
 import { createCategoricChart } from './index';
 import { createBarTipper } from '../tooltips/index';
+import {createCustomLabels} from './helper';
 
 const createBarInteraction = (orientation = 'vertical', labeling = {}, highlight = []) => {
   const { prefix = '', suffix = '' } = labeling;
@@ -87,11 +88,6 @@ const createBarInteraction = (orientation = 'vertical', labeling = {}, highlight
       interaction.detachFrom(plot);
     });
   };
-};
-
-const createCustomLabels = (config, plot) => {
-  console.log(config);
-  console.log(plot.entities());
 };
 
 export default (element, plot, config) => {

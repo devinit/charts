@@ -11,6 +11,7 @@ module.exports = {
     rules: {
         'no-shadow': 0,
         'arrow-body-style': 0,
+        'object-curly-newline': 0,
         'arrow-parens': 0,
         'global-require': 0,
         'object-curly-spacing': 0,
