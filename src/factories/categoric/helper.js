@@ -16,7 +16,7 @@ const drawLabel = (opts, foreground) => {
     .attr('x', x)
     .attr('y', yPos)
     .append('xhtml:body')
-    .html(height > 25 || forExtend ?
+    .html(height > 20 || forExtend ?
       `<span class="custom-label" style="color: ${color}">
             ${prefix}${approximate(value)}${suffix}
         </span>`
@@ -45,7 +45,7 @@ const getGroupValues = (entities) => {
       const sum = all.sum + entityValues.value;
       if (lastKey === key) {
         const y = entityValues.y - 20;
-        return {...entityValues, value: sum, y};
+        return {...entityValues, height: 30, value: sum, y};
       }
       return {...all, sum};
     }, {sum: 0});
