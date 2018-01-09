@@ -1,3 +1,7 @@
+/**
+ * the labels plotable provides  for barchart are not ideal for now
+ * for instance they are cut off via height from some bars
+ */
 import {groupBy, range} from 'lodash';
 import approximate from '../approximate/index';
 
@@ -11,7 +15,7 @@ const drawLabel = (opts, foreground) => {
     .attr('x', x)
     .attr('y', y)
     .append('xhtml:body')
-    .html(width > 50 ?
+    .html(width > 30 && height > 20 ?
       `<span class="custom-label" style="color: ${color}">
             ${prefix}${approximate(value)}${suffix}
         </span>`
