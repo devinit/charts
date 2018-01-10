@@ -16,7 +16,7 @@ const drawLabel = (opts, foreground) => {
     .attr('x', x)
     .attr('y', yPos)
     .append('xhtml:body')
-    .html(height > 20 || forExtend ?
+    .html(height > 17 || forExtend ?
       `<span class="custom-label" style="color: ${color}">
             ${prefix}${approximate(value)}${suffix}
         </span>`
