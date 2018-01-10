@@ -22,12 +22,10 @@ export const createTreeChartLabeler = (config, percentage = () => 100) => {
     suffix = '',
     autofit = false,
   } = config;
-
   // eslint-disable-next-line func-names
   return function () {
     const foreground = this.foreground();
     const entities = this.entities();
-
     // Remove all current labels
     foreground.selectAll('foreignObject').remove();
 
@@ -50,11 +48,10 @@ export const createTreeChartLabeler = (config, percentage = () => 100) => {
         const valueLabel = showValues
           ? `${prefix ? `${prefix} ` : ''}${value}${suffix ? ` ${suffix}` : ''}`
           : '';
-        const separator = showLabels && showPercents ? ' | ' : '';
+        const separator = showValues && showPercents ? ' | ' : '';
         const autofitFontStyle = autofit ?
           autofitStyle(width, height, `${label} ${percentageLabel}${valueLabel}`) :
           '';
-
         foreground
           .append('foreignObject')
           .attr('width', width)
