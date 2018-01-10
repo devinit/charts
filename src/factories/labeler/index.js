@@ -46,10 +46,11 @@ export const createTreeChartLabeler = (config, percentage = () => 100) => {
         const label = showLabels ? this._label(datum) : '';
         const percent = percentage(datum);
 
-        const percentageLabel = percent === 100 || percent < 1 || !showPercents ? '' : `${percent}% | `;
+        const percentageLabel = percent === 100 || percent < 1 || !showPercents ? '' : `${percent}%`;
         const valueLabel = showValues
           ? `${prefix ? `${prefix} ` : ''}${value}${suffix ? ` ${suffix}` : ''}`
           : '';
+        const separator = showLabels && showPercents ? ' | ' : '';
         const autofitFontStyle = autofit ?
           autofitStyle(width, height, `${label} ${percentageLabel}${valueLabel}`) :
           '';
@@ -62,7 +63,7 @@ export const createTreeChartLabeler = (config, percentage = () => 100) => {
           .attr('y', y)
           .html(`<div class="${brightness > 0.7 ? 'dark' : 'light'}-label plot-label" ${autofitFontStyle}>
                     <div class="plot-label-header">${label}</div>
-                    <div class="plot-label-value">${percentageLabel}${valueLabel}</div>
+                    <div class="plot-label-value">${percentageLabel}${separator}${valueLabel}</div>
                  </div>`);
       }
     });
