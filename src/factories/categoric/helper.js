@@ -8,7 +8,7 @@ import approximate from '../approximate/index';
 
 const drawLabel = (opts, foreground) => {
   const {width, height, x, y, value, color, suffix, prefix, forExtend = false} = opts;
-  const yPos = height && !forExtend < 30 ? y + 5 : y + 10;
+  const yPos = height && !forExtend < 30 ? y + 2 : y + 10;
   foreground
     .append('foreignObject')
     .attr('width', width)
