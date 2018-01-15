@@ -1,5 +1,5 @@
 import { color } from 'd3';
-import { autofitStyle } from '../autofit/text';
+import { autofitStyles } from '../autofit/text';
 import approximate from '../approximate/index';
 
 /**
@@ -35,7 +35,7 @@ export const createTreeChartLabeler = (config, percentage = () => 100) => {
         width, height, x, y
       } = node.getBBox();
 
-      if (height > 50 && width > 40) {
+      if (height > 35 && width > 30) {
         const { r, g, b } = color(node.getAttribute('fill')).rgb();
         const brightness = (r + g + b) / (256 * 3);
 
@@ -50,7 +50,7 @@ export const createTreeChartLabeler = (config, percentage = () => 100) => {
           : '';
         const separator = showValues && showPercents ? ' | ' : '';
         const autofitFontStyle = autofit ?
-          autofitStyle(width, height, `${label} ${percentageLabel}${valueLabel}`) :
+          autofitStyles(width, height, `${label} ${percentageLabel}${valueLabel}`) :
           '';
         foreground
           .append('foreignObject')
@@ -58,9 +58,9 @@ export const createTreeChartLabeler = (config, percentage = () => 100) => {
           .attr('height', height)
           .attr('x', x)
           .attr('y', y)
-          .html(`<div class="${brightness > 0.4 ? 'dark' : 'light'}-label plot-label" ${autofitFontStyle}>
+          .html(`<div class="${brightness > 0.8 ? 'dark' : 'light'}-label plot-label" ${autofitFontStyle.font}>
                     <div class="plot-label-header">${label}</div>
-                    <div class="plot-label-value">${percentageLabel}${separator}${valueLabel}</div>
+                    <div class="plot-label-value" ${autofitFontStyle.label}>${percentageLabel}${separator}${valueLabel}</div>
                  </div>`);
       }
     });
