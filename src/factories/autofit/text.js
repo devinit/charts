@@ -16,14 +16,14 @@ export const labelFontSize = (width, height, text) => {
   }
 
   if (areaRatio < 6) {
-    return baseFont * 2;
+    return baseFont * 1.8;
   }
 
   if (areaRatio > 10) {
-    return baseFont * 2.2;
+    return baseFont * 2;
   }
 
-  return baseFont * 2.2;
+  return baseFont * 2;
 };
 
 export const autofitStyle = (width, height, text) => {
