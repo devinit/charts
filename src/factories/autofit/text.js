@@ -12,11 +12,11 @@ export const labelFontSize = (width, height, text) => {
   }
 
   if (areaRatio < 4) {
-    return baseFont * 1.5;
+    return baseFont * 1.3;
   }
 
   if (areaRatio < 6) {
-    return baseFont * 1.8;
+    return baseFont * 1.5;
   }
 
   if (areaRatio > 10) {

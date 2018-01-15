@@ -58,7 +58,7 @@ export const createTreeChartLabeler = (config, percentage = () => 100) => {
           .attr('height', height)
           .attr('x', x)
           .attr('y', y)
-          .html(`<div class="${brightness > 0.7 ? 'dark' : 'light'}-label plot-label" ${autofitFontStyle}>
+          .html(`<div class="${brightness > 0.4 ? 'dark' : 'light'}-label plot-label" ${autofitFontStyle}>
                     <div class="plot-label-header">${label}</div>
                     <div class="plot-label-value">${percentageLabel}${separator}${valueLabel}</div>
                  </div>`);
