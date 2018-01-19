@@ -6,20 +6,20 @@ export const autoFitMetrics = (width, height, text) => {
   const estimatedArea = longestWordLength * (baseFont * 0.8) * words.length * baseFont;
 
   const areaRatio = Math.floor(availableArea / estimatedArea);
-  const widthRatio = width / (longestWordLength * (baseFont * 0.8));
+  const widthRatio = width / (longestWordLength * baseFont * 0.8);
 
-  if (areaRatio < 2) return {fontSize: 0, showLabels: false};
+  if (areaRatio < 1 || widthRatio < 0.8) return {fontSize: 0, showLabels: false};
 
-  if (areaRatio < 3) {
+  if (widthRatio < 1.5) {
     return {fontSize: baseFont * 1.2, showLabels: widthRatio > 1};
   }
 
-  if (areaRatio < 4) {
-    return {fontSize: baseFont * 1.3, showLabels: widthRatio > 1};
+  if (widthRatio < 2) {
+    return {fontSize: baseFont * 1.5, showLabels: widthRatio > 1};
   }
 
-  if (areaRatio < 6) {
-    return {fontSize: baseFont * 1.4, showLabels: widthRatio > 1};
+  if (widthRatio < 3) {
+    return {fontSize: baseFont * 1.6, showLabels: widthRatio > 1};
   }
 
   return {fontSize: baseFont * 1.8, showLabels: widthRatio > 1};
