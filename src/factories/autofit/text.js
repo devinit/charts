@@ -11,18 +11,18 @@ export const autoFitMetrics = (width, height, text) => {
   if (areaRatio < 1 || widthRatio < 0.8) return {fontSize: 0, showLabels: false};
 
   if (widthRatio < 1.5) {
-    return {fontSize: baseFont * 1.2, showLabels: widthRatio > 1};
+    return {fontSize: baseFont * 1.2, showLabels: widthRatio > 0.7};
   }
 
   if (widthRatio < 2) {
-    return {fontSize: baseFont * 1.5, showLabels: widthRatio > 1};
+    return {fontSize: baseFont * 1.5, showLabels: widthRatio > 0.7};
   }
 
   if (widthRatio < 3) {
-    return {fontSize: baseFont * 1.6, showLabels: widthRatio > 1};
+    return {fontSize: baseFont * 1.6, showLabels: widthRatio > 0.7};
   }
 
-  return {fontSize: baseFont * 1.8, showLabels: widthRatio > 1};
+  return {fontSize: baseFont * 1.8, showLabels: widthRatio > 0.7};
 };
 
 export const autofitStyles = (width, height, text) => {
