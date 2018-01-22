@@ -7,8 +7,9 @@ import approximate from '../approximate/index';
 
 
 const drawLabel = (opts, foreground) => {
-  const {width, height, x, y, value, color, suffix, prefix, forExtend = false} = opts;
-  const yPos = height && !forExtend < 30 ? y + 2 : y + 10;
+  // forExtend is for drawing sums of values in a stacked bar
+  const {width, height, x, y, value, color, suffix, prefix, drawStackedBarSum = false} = opts;
+  const yPos = height && !drawStackedBarSum < 30 ? y + 2 : y + 10;
   foreground
     .append('foreignObject')
     .attr('width', width)
@@ -16,7 +17,7 @@ const drawLabel = (opts, foreground) => {
     .attr('x', x)
     .attr('y', yPos)
     .append('xhtml:body')
-    .html(height > 15 || forExtend ?
+    .html(height > 15 || drawStackedBarSum ?
       `<span class="custom-label" style="color: ${color}">
             ${prefix}${approximate(value)}${suffix}
         </span>`
@@ -60,9 +61,14 @@ export const createCustomLabels = (config, plot) => {
     const entityValues = getValuesFromEntity(entity);
     drawLabel({...entityValues, color: 'white', prefix, suffix}, foreground);
   });
-  if (!entities[0].datum.group) return false;
+  if (!entities[0].datum.group || !config.drawStackedBarSum) return false;
   const groupEntities = getGroupValues(entities);
   groupEntities.forEach(group => {
-    drawLabel({...group, prefix, color: 'black', suffix, forExtend: true}, foreground);
+    drawLabel({
+      ...group,
+      prefix,
+      color: 'black',
+      suffix,
+      drawStackedBarSum: config.drawStackedBarSum}, foreground);
   });
 };
