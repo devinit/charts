@@ -43,8 +43,9 @@ export default (container, labeling, percentage = () => 100) => {
           if (entity && entity.datum.id !== currentId) {
             const percent = percentage(entity.datum);
             tip._tooltipNode.querySelector('#tt-title').innerText = entity.datum.id;
+            const label = labeling.showValues ? `| ${labeling.prefix || ''} ${approximate(entity.datum.value)}` : '';
             tip._tooltipNode.querySelector('#tt-body').innerText =
-              `${percent === 100 || percent < 1? '' : `${percent}% | `} ${labeling.prefix || ''} ${approximate(entity.datum.value)} ${labeling.suffix || ''}`;
+              percent === 100 || percent < 1 ? '' : `${percent}% ${label}`;
 
             currentId = entity.datum.id;
 
