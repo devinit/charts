@@ -1,0 +1,102 @@
+[
+  {
+    "name": "Area",
+    "properties": [
+      {
+        "name": "type",
+        "key": "config.type",
+        "value": "area"
+      }
+    ]
+  },
+  {
+    "name": "Bar",
+    "properties": [
+      {
+        "name": "type",
+        "key": "config.type",
+        "value": "bar"
+      }
+    ]
+  },
+  {
+    "name": "Bubble",
+    "properties": [
+      {
+        "name": "type",
+        "key": "config.type",
+        "value": "bubble"
+      }
+    ]
+  },
+  {
+    "name": "ClusteredBar",
+    "properties": [
+      {
+        "name": "type",
+        "key": "config.type",
+        "value": "clustered-bar"
+      }
+    ]
+  },
+  {
+    "name": "FullStackedArea",
+    "properties": [
+      {
+        "name": "type",
+        "key": "config.type",
+        "value": "full-stacked-area"
+      }
+    ]
+  },
+  {
+    "name": "FullStackedBar",
+    "properties": [
+      {
+        "name": "type",
+        "key": "config.type",
+        "value": "full-stacked-bar"
+      }
+    ]
+  },
+  {
+    "name": "Line",
+    "properties": [
+      {
+        "name": "type",
+        "key": "config.type",
+        "value": "line"
+      }
+    ]
+  },
+  {
+    "name": "Pie",
+    "properties": [
+      {
+        "name": "type",
+        "key": "config.type",
+        "value": "pie"
+      }
+    ]
+  },
+  {
+    "name": "StackedArea",
+    "properties": [
+      {
+        "name": "type",
+        "key": "config.type",
+        "value": "stacked-area"
+      }
+    ]
+  },
+  {
+    "name": "StackedBar",
+    "properties": [
+      {
+        "name": "type",
+        "key": "config.type",
+        "value": "stacked-bar"
+      }
+    ]
+  }
+]
