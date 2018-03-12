@@ -1,7 +1,7 @@
 language: node_js
 
 node_js:
-  - v7
+  - v9
 
 install:
   - yarn --ignore-scripts
