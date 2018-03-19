@@ -1,12 +1,12 @@
 import * as Plottable from 'plottable';
 import hash from 'object-hash';
 import { flattenDeep, groupBy as group, keys, mapValues, uniq, values } from 'lodash';
-import { createChartTable } from '../../factories/table/index';
-import { createTitle } from '../../factories/title/index';
-import { createCategoryScale, createLinearScale } from '../../factories/scale/index';
-import { createAxisModifier, createCategoryAxis, createNumericAxis } from '../../factories/axis/index';
-import { createLinearAxisGridLines } from '../../factories/grid/index';
-import { createBarTipper } from '../../factories/tooltips/index';
+import { createChartTable } from '../../factories/table';
+import { createTitle } from '../../factories/title';
+import { createCategoryScale, createLinearScale } from '../../factories/scale';
+import { createAxisModifier, createCategoryAxis, createNumericAxis } from '../../factories/axis';
+import { createLinearAxisGridLines } from '../../factories/grid';
+import { createBarTipper } from '../../factories/tooltips';
 import drawLabels from './labels';
 import {createPlotWithGridlines, createPlotAreaWithAxes, createLinearPlot} from './helpers';
 

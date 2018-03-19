@@ -1,8 +1,8 @@
 import * as Plottable from 'plottable';
-import { createTitle } from '../title/index';
-import { createChartTable } from '../table/index';
-import { createTreeDataset } from '../dataset/index';
-import { createColorLegend } from '../legend/index';
+import { createTitle } from '../title';
+import { createChartTable } from '../table';
+import { createTreeDataset } from '../dataset';
+import { createColorLegend } from '../legend';
 
 /**
  * @typedef {Object} TreeChart

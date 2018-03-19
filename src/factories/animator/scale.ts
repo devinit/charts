@@ -20,8 +20,8 @@ export default duration => {
           const [dn, dx] = diffs[index];
 
           return [
-            fn - (dn * easeCircleInOut(progress, 1, 0.2)),
-            fx + (dx * easeCircleInOut(progress, 1, 0.2)),
+            fn - (dn * easeCircleInOut(progress)),
+            fx + (dx * easeCircleInOut(progress)),
           ];
         });
 

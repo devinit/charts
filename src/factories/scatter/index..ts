@@ -1,10 +1,10 @@
 import * as Plottable from 'plottable';
-import { createLinearScale } from '../scale/index';
-import { createNumericAxis } from '../axis/index';
-import { createScatterGridLines } from '../grid/index';
-import { createChartTable } from '../table/index';
-import { createTitle } from '../title/index';
-import { createColorLegend } from '../legend/index';
+import { createLinearScale } from '../scale';
+import { createNumericAxis } from '../axis';
+import { createScatterGridLines } from '../grid';
+import { createChartTable } from '../table';
+import { createTitle } from '../title';
+import { createColorLegend } from '../legend';
 import createDataAnimator from '../animator/data';
 import { createScatterClickTipper, createScatterTipper } from '../tooltips';
 import { createScatterPlot, createPlotAreaWithAxes } from './helpers';

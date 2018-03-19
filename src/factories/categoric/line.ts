@@ -1,5 +1,5 @@
-import { createCategoricChart } from './index';
-import { createLineTipper } from '../tooltips/index';
+import { createCategoricChart } from '.';
+import { createLineTipper } from '../tooltips';
 
 export const createLineChart = (element, plot, config) => {
   const {

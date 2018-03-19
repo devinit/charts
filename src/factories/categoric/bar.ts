@@ -1,12 +1,12 @@
 import * as Plottable from 'plottable';
 import { color } from 'd3';
 import {approximate} from '@devinit/prelude/lib/numbers';
-import { createCategoricChart } from './index';
-import { createBarTipper } from '../tooltips/index';
+import { createCategoricChart } from '.';
+import { createBarTipper } from '../tooltips';
 import {createCustomLabels} from './helper';
 
 const createBarInteraction = (orientation = 'vertical', labeling = {}, highlight = []) => {
-  const { prefix = '', suffix = '' } = labeling;
+  const { prefix = '', suffix = '' } = labeling as any;
 
   let currentId = null;
 

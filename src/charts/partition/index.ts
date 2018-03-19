@@ -1,9 +1,9 @@
 import * as Plottable from 'plottable';
 import hash from 'object-hash';
-import createTreeChart, { createColorFiller } from '../../factories/tree/index';
-import { createTreeHierachy } from '../../factories/dataset/index';
+import createTreeChart, { createColorFiller } from '../../factories/tree';
+import { createTreeHierachy } from '../../factories/dataset';
 import createScaleAnimator from '../../factories/animator/scale';
-import { createTreeChartLabeler } from '../../factories/labeler/index';
+import { createTreeChartLabeler } from '../../factories/labeler';
 import { createTreeTipper } from '../../factories/tooltips';
 import partition from './layout';
 import createPercentageCalculator from './percentage';

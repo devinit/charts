@@ -9,7 +9,7 @@ install:
 script:
   - npm run test
   - npm run build:production
-  - cat index.html | sed -e "s/\/di-charts.css/\/charts\/di-charts.min.css/" | sed -e "s/\/di-charts.js/\/charts\/di-charts.min.js/" | cat > dist/index.html
+  - cat index.html | sed -e "s/\/di-charts.css/\/charts\/di-charts.min.css/" | sed -e "s/\/di-charts.js/\/charts\/di-charts.min.js/" | cat > dist.html
   - npm run schema
 
 deploy:

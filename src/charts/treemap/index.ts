@@ -1,8 +1,8 @@
 import * as Plottable from 'plottable';
 import { treemap } from 'd3';
-import createRectangleChart, { createColorFiller } from '../../factories/tree/index';
-import { createTreeHierachy } from '../../factories/dataset/index';
-import { createTreeChartLabeler } from '../../factories/labeler/index';
+import createRectangleChart, { createColorFiller } from '../../factories/tree';
+import { createTreeHierachy } from '../../factories/dataset';
+import { createTreeChartLabeler } from '../../factories/labeler';
 import { createTreeTipper } from '../../factories/tooltips';
 import createPercentageCalculator from './percentage';
 import createTreemapOnClickListener from './click';

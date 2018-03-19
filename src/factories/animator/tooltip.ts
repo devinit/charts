@@ -13,8 +13,8 @@ export default (duration, anchor, tooltip) => {
 
       const stepFn = progress => {
         tooltip.hide();
-        anchor.attr('cx', initial.x + (diff.x * easeCircleInOut(progress, 1, 0.2)));
-        anchor.attr('cy', initial.y + (diff.y * easeCircleInOut(progress, 1, 0.2)));
+        anchor.attr('cx', initial.x + (diff.x * easeCircleInOut(progress)));
+        anchor.attr('cy', initial.y + (diff.y * easeCircleInOut(progress)));
         tooltip.show();
       };
 

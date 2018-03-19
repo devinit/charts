@@ -25,7 +25,7 @@ const uglifyJsPlugin = new UglifyJSPlugin({
 
 module.exports = [
   {
-    entry: [`${__dirname}/src/index.less`],
+    entry: [`${__dirname}/src.less`],
 
     output: {
       path: `${__dirname}/dist/`,
@@ -50,7 +50,7 @@ module.exports = [
   },
 
   {
-    entry: [`${__dirname}/src/index.js`],
+    entry: [`${__dirname}/src.js`],
 
     output: {
       path: `${__dirname}/dist/`,

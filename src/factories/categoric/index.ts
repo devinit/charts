@@ -1,12 +1,12 @@
 import * as Plottable from 'plottable';
 import {approximate} from '@devinit/prelude/lib/numbers';
-import { createChartTable } from '../table/index';
-import { createTitle } from '../title/index';
-import { createColorLegend } from '../legend/index';
-import { makeUnique } from '../dataset/index';
-import { createCategoryScale, createLinearScale } from '../scale/index';
-import { createCategoryAxis, createNumericAxis } from '../axis/index';
-import { createLinearAxisGridLines } from '../grid/index';
+import { createChartTable } from '../table';
+import { createTitle } from '../title';
+import { createColorLegend } from '../legend';
+import { makeUnique } from '../dataset';
+import { createCategoryScale, createLinearScale } from '../scale';
+import { createCategoryAxis, createNumericAxis } from '../axis';
+import { createLinearAxisGridLines } from '../grid';
 import createScaleAnimator from '../animator/scale';
 
 export const createLinearPlot = ({

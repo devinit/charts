@@ -1,9 +1,9 @@
 import * as Plottable from 'plottable';
 import { treemap } from 'd3';
-import { createTreeHierachy } from '../factories/dataset/index';
-import approximate from '../factories/approximate/index';
+import { createTreeHierachy } from '../factories/dataset';
+import approximate from '../factories/approximate';
 import getTilingMethod from './treemap/tiling';
-import { createColorFiller } from '../factories/tree/index';
+import { createColorFiller } from '../factories/tree';
 
 /**
  * @typedef {TreeChart} CompoundTreemap
