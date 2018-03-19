@@ -1,4 +1,4 @@
-import Plottable from 'plottable';
+import * as Plottable from 'plottable';
 import { color } from 'd3';
 import approximate from '../approximate/index';
 import { createCategoricChart } from './index';

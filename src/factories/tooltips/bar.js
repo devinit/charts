@@ -1,4 +1,4 @@
-import Plottable from 'plottable';
+import * as Plottable from 'plottable';
 import Tooltip from 'tooltip.js';
 import approximate from '../approximate/index';
 

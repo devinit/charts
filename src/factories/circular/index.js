@@ -1,4 +1,4 @@
-import Plottable from 'plottable';
+import * as Plottable from 'plottable';
 import { createTitle } from '../title/index';
 import { createColorLegend } from '../legend/index';
 import { createChartTable } from '../table/index';

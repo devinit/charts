@@ -1,5 +1,5 @@
 
-import Plottable from 'plottable';
+import * as Plottable from 'plottable';
 
 export const createTimePlot = ({ plot, timeScale, linearScale }) => {
   return plot

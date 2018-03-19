@@ -1,4 +1,4 @@
-import Plottable from 'plottable';
+import * as Plottable from 'plottable';
 import createBarChart from '../factories/categoric/bar';
 import { createFullStackedDataset } from '../factories/dataset/index';
 

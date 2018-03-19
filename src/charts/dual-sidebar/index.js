@@ -1,4 +1,4 @@
-import Plottable from 'plottable';
+import * as Plottable from 'plottable';
 import hash from 'object-hash';
 import { flattenDeep, groupBy as group, keys, mapValues, uniq, values } from 'lodash';
 import { createChartTable } from '../../factories/table/index';

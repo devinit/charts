@@ -1,4 +1,4 @@
-import Plottable from 'plottable';
+import * as Plottable from 'plottable';
 import approximate from '../approximate/index';
 import {configureAxisTicking, configureTimeAxisTicking} from '../ticking/index';
 

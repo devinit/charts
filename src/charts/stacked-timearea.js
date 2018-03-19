@@ -1,4 +1,4 @@
-import Plottable from 'plottable';
+import * as Plottable from 'plottable';
 import createTimePlot from '../factories/time';
 
 export default (element, data, config) => {

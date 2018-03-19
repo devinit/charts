@@ -1,4 +1,4 @@
-import Plottable from 'plottable';
+import * as Plottable from 'plottable';
 import { color } from 'd3';
 // noinspection JSFileReferences
 import Tooltip from 'tooltip.js';

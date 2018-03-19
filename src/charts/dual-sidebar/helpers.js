@@ -1,4 +1,4 @@
-import Plottable from 'plottable';
+import * as Plottable from 'plottable';
 
 export const createPlotWithGridlines = ({ plot, grid }) => {
   return grid ? new Plottable.Components.Group([grid, plot]) : plot;

@@ -1,4 +1,4 @@
-import Plottable from 'plottable';
+import * as Plottable from 'plottable';
 import { createLinearScale } from '../scale/index';
 import { createNumericAxis } from '../axis/index';
 import { createScatterGridLines } from '../grid/index';

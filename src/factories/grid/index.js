@@ -1,4 +1,4 @@
-import Plottable from 'plottable';
+import * as Plottable from 'plottable';
 import { configureGridTicking } from '../ticking/index';
 
 export const createLinearAxisGridLines = config => {

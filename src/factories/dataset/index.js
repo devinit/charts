@@ -1,5 +1,5 @@
 import { stratify } from 'd3';
-import Plottable from 'plottable';
+import * as Plottable from 'plottable';
 
 export const makeUnique = list => Array.from(new Set(list));
 

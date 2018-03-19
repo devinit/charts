@@ -1,4 +1,4 @@
-import Plottable from 'plottable';
+import * as Plottable from 'plottable';
 import approximate from '../approximate/index';
 import { createChartTable } from '../table/index';
 import { createTitle } from '../title/index';

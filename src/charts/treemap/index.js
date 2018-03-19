@@ -1,4 +1,4 @@
-import Plottable from 'plottable';
+import * as Plottable from 'plottable';
 import { treemap } from 'd3';
 import createRectangleChart, { createColorFiller } from '../../factories/tree/index';
 import { createTreeHierachy } from '../../factories/dataset/index';

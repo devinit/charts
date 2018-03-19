@@ -1,4 +1,4 @@
-import Plottable from 'plottable';
+import * as Plottable from 'plottable';
 import { groupBy as group, keys, values, mapValues } from 'lodash';
 import { createTitle } from '../title/index';
 import { createChartTable } from '../table/index';

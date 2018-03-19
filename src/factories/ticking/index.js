@@ -1,4 +1,4 @@
-import Plottable from 'plottable';
+import * as Plottable from 'plottable';
 
 export const configureTimeAxisTicking = (axis, ticking = 'years', tickingStep = 1) => {
   const tiers = [];

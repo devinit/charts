@@ -1,4 +1,4 @@
-import Plottable from 'plottable';
+import * as Plottable from 'plottable';
 import { createLineChart } from '../factories/categoric/line';
 import { createFullStackedDataset } from '../factories/dataset/index';
 

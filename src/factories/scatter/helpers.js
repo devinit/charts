@@ -1,4 +1,4 @@
-import Plottable from 'plottable';
+import * as Plottable from 'plottable';
 
 export const createScatterPlot = ({
   plot, horizontalScale, verticalScale, bubbleScale, idIndicator

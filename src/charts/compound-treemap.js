@@ -1,4 +1,4 @@
-import Plottable from 'plottable';
+import * as Plottable from 'plottable';
 import { treemap } from 'd3';
 import { createTreeHierachy } from '../factories/dataset/index';
 import approximate from '../factories/approximate/index';
