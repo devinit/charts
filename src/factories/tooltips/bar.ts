@@ -1,6 +1,6 @@
 import * as Plottable from 'plottable';
 import Tooltip from 'tooltip.js';
-import approximate from '../approximate/index';
+import {approximate} from '@devinit/prelude/lib/numbers';
 
 export default (container, labeling = {}, scale, orientation = 'vertical') => {
   let currentHash = null;

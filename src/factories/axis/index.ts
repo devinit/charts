@@ -1,5 +1,5 @@
 import * as Plottable from 'plottable';
-import approximate from '../approximate/index';
+import {approximate} from '@devinit/prelude/lib/numbers';
 import {configureAxisTicking, configureTimeAxisTicking} from '../ticking/index';
 
 

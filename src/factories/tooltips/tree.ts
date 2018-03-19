@@ -2,7 +2,7 @@ import * as Plottable from 'plottable';
 import { color } from 'd3';
 // noinspection JSFileReferences
 import Tooltip from 'tooltip.js';
-import approximate from '../approximate/index';
+import {approximate} from '@devinit/prelude/lib/numbers';
 
 export default (container, labeling, percentage = () => 100) => {
   let currentId = null;

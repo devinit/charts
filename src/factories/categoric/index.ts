@@ -1,5 +1,5 @@
 import * as Plottable from 'plottable';
-import approximate from '../approximate/index';
+import {approximate} from '@devinit/prelude/lib/numbers';
 import { createChartTable } from '../table/index';
 import { createTitle } from '../title/index';
 import { createColorLegend } from '../legend/index';

@@ -1,6 +1,6 @@
 import { color } from 'd3';
 import { autofitStyles } from '../autofit/text';
-import approximate from '../approximate/index';
+import {approximate} from '@devinit/prelude/lib/numbers';
 
 /**
  * @typedef {Object} Labeling

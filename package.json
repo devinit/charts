@@ -19,6 +19,7 @@
     "schema:dev": "npm run compile && npm run schema"
   },
   "dependencies": {
+    "@devinit/prelude": "^1.1.1",
     "chai-stats": "^0.3.0",
     "d3": "4.10.2",
     "d3-drag": "^1.1.0",
@@ -32,6 +33,7 @@
     "@types/d3": "^5.0.0",
     "@types/d3-drag": "^1.2.0",
     "@types/jest": "^22.2.0",
+    "@types/lodash": "^4.14.105",
     "@types/object-hash": "^1.2.0",
     "css-loader": "^0.28.11",
     "extract-text-webpack-plugin": "^3.0.0",

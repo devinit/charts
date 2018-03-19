@@ -1,6 +1,6 @@
 import * as Plottable from 'plottable';
 import { color } from 'd3';
-import approximate from '../approximate/index';
+import {approximate} from '@devinit/prelude/lib/numbers';
 import { createCategoricChart } from './index';
 import { createBarTipper } from '../tooltips/index';
 import {createCustomLabels} from './helper';
