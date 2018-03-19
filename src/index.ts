@@ -1,20 +1,19 @@
-// @flow
-import hash from 'object-hash';
+import * as hash from 'object-hash';
 
 interface Chart {
-  table: Object,
-  update(data: Object[]): void,
+  table: any;
+  update(data: any[]): void;
 }
 
-type DrawArguments = {
-  element: Element,
-  config: Object,
-  data: Object[],
+interface DrawArguments {
+  element: Element;
+  config: any;
+  data: any[];
 };
 
-type Color = {
-  name: string,
-  color: string,
+interface Color {
+  name: string;
+  color: string;
 };
 
 export const palette: Map<string, string> = new Map();
@@ -61,7 +60,7 @@ export const draw = (args: DrawArguments) => {
         resolve({
           ...chart,
 
-          update: (data: Object[]) => {
+          update: (data: any[]) => {
             const nextHash = hash(data);
             if (data && currentHash !== nextHash) {
               chart.update(data);
