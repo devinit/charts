@@ -46,10 +46,10 @@ export default (element, data = [], config) => {
 
   const treeTipper = createTreeTipper(element, labeling, calculatePercentage);
 
-  plot.onAnchor(plot => {
+  plot.onAnchor(_plot => {
     if (tooltips.enable) {
       setTimeout(() => {
-        treeTipper(plot);
+        treeTipper(_plot);
       }, 500);
     }
   });
@@ -80,8 +80,8 @@ export default (element, data = [], config) => {
 
   const colorize = createColorFiller(colors, coloring);
 
-  const update = data => {
-    const root = colorize(createTreeHierachy(data, tree)
+  const update = _data => {
+    const root = colorize(createTreeHierachy(_data, tree)
       .sort((a: any, b: any) => b.value - a.value));
     treeChart.update(layout(root).leaves());
   };
@@ -93,8 +93,8 @@ export default (element, data = [], config) => {
       listeners.push(callback);
     },
 
-    setLabeling(labeling) {
-      (plot as any)._drawLabels = createTreeChartLabeler(labeling, calculatePercentage);
+    setLabeling(_labeling) {
+      (plot as any)._drawLabels = createTreeChartLabeler(_labeling, calculatePercentage);
       (plot as any)._drawLabels();
     },
 

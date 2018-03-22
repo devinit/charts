@@ -15,7 +15,9 @@ export default (container, tooltips, idIndicator, listeners) => {
 
   if (!enable || !titleIndicator || !idIndicator) {
     return {
+      // tslint:disable-next-line:no-empty
       init: () => {},
+      // tslint:disable-next-line:no-empty
       update: () => {},
     };
   }

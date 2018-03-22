@@ -8,6 +8,7 @@ install:
 
 script:
   - npm run compile
+  - npm run lint
 
 deploy:
   - provider: releases

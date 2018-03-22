@@ -40,6 +40,7 @@ export default (id, indicators: any[], duration) => {
                 [indicator]: (to[indicator] || 0) - (from[indicator] || 0),
               }))
               .reduce(
+                // tslint:disable-next-line:no-shadowed-variable
                 (indicators, indicator) => ({
                   ...indicators,
                   ...indicator,
@@ -55,8 +56,8 @@ export default (id, indicators: any[], duration) => {
           ...final[key],
 
           ...indicators.reduce(
-            (indicators, indicator) => ({
-              ...indicators,
+            (_indicators, indicator) => ({
+              ..._indicators,
               ...{
                 [indicator]: final[key][indicator] - (diff[key][indicator] * easeLinear(1 - progress)),
               },

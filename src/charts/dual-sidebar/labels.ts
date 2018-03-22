@@ -1,4 +1,4 @@
-import {uniq} from "lodash";
+import {uniq} from 'lodash';
 
 export default dualSidebar => function innerDrawLabels(this: any) {
   const entities = this.entities();
@@ -34,11 +34,12 @@ export default dualSidebar => function innerDrawLabels(this: any) {
             .map(entity => entity.selection.node().y.baseVal.value);
 
           const nodeBottomValues = subCategoryEntities.map(entity => {
-            const y = entity.selection.node().y.baseVal.value;
+            const yValue = entity.selection.node().y.baseVal.value;
             const height = entity.selection.node().height.baseVal.value;
-            return y + height;
+            return yValue + height;
           });
 
+          // tslint:disable-next-line:no-shadowed-variable
           const top = Math.min.apply(null, nodeTopValues);
           const bottom = Math.max.apply(null, nodeBottomValues);
 

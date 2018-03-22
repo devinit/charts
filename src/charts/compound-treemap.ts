@@ -50,6 +50,7 @@ export default (element, data, config) => {
   const x = orientation === 'vertical' ? 'x' : 'y';
   const y = orientation === 'horizontal' ? 'x' : 'y';
 
+  // tslint:disable-next-line:no-shadowed-variable
   const createPlot = (plot, xScale, yScale) =>
     plot
       .x(d => d[`${x}0`], xScale)
@@ -84,8 +85,8 @@ export default (element, data, config) => {
 
   const colorize = createColorFiller(colors, coloring);
 
-  const update = data => {
-    const root = colorize(createTreeHierachy(data, tree));
+  const update = _data => {
+    const root = colorize(createTreeHierachy(_data, tree));
 
     const rectangles = layout(root).descendants();
 

@@ -23,8 +23,8 @@ export default (element, data, config) => {
     },
   });
 
-  const update = data =>
-    linearChart.update(createFullStackedDataset(data, config.linearAxis.indicator, config.categoryAxis.indicator), );
+  const update = _data =>
+    linearChart.update(createFullStackedDataset(_data, config.linearAxis.indicator, config.categoryAxis.indicator), );
 
   const chart = {
     ...linearChart,

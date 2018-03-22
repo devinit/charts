@@ -188,6 +188,7 @@ export default (element, data, config: Config) => {
     data: null,
   };
 
+  // tslint:disable-next-line:no-shadowed-variable
   const update = (data = []) => {
     const dataHash = hash(data);
     if (hashes.data === dataHash) return;
@@ -280,18 +281,18 @@ export default (element, data, config: Config) => {
         const series = flattenDeep(
           // Using previously created groupIds
           // to preserve ordering
-          groupIds.map((groupId, index) => {
+          groupIds.map((groupId, groupIndex) => {
             const grp = side[groupId];
             return flattenDeep(values(grp))
               .map(datum => ({
                 ...datum,
-                color: (coloring && datum[coloring]) || colors[index] || '#abc',
+                color: (coloring && datum[coloring]) || colors[groupIndex] || '#abc',
               }));
           })
         );
 
-        const dataset = series.map((datum, index) => ({
-          index,
+        const dataset = series.map((datum, datumIndex) => ({
+          index: datumIndex,
           direction,
           sort: datum[orderBy],
           color: datum.color,

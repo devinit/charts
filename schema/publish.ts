@@ -18,6 +18,7 @@ exports.publish = data => {
           type: type.names.join(),
           properties: properties.map(property => {
             const {
+              // tslint:disable-next-line:no-shadowed-variable
               name, type: { names }, description, defaultvalue
             } = property;
 
@@ -56,8 +57,10 @@ exports.publish = data => {
         name,
         description,
         properties: allProperties.map(({
+          // tslint:disable-next-line:no-shadowed-variable
           name, type, value, options, description, defaultValue
         }) => {
+          // tslint:disable-next-line:no-shadowed-variable
           const parent = definitions[type];
 
           if (parent) {

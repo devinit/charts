@@ -43,11 +43,11 @@ export default (element, data = [], config) => {
 
   const treeTipper = createTreeTipper(element, labeling, calculatePercentage);
 
-  plot.onAnchor(plot => {
+  plot.onAnchor(_plot => {
     if (tooltips.enable) {
       // TODO: Replace with plottable onRender
       setTimeout(() => {
-        treeTipper(plot);
+        treeTipper(_plot);
       }, 500);
     }
   });
@@ -109,8 +109,8 @@ export default (element, data = [], config) => {
     });
   });
 
-  const update = data => {
-    const root = colorize(createTreeHierachy(data, tree)
+  const update = _data => {
+    const root = colorize(createTreeHierachy(_data, tree)
       .sort((a: any, b: any) => a.value - b.value));
 
     treeChart.update(layout(root)
@@ -129,6 +129,7 @@ export default (element, data = [], config) => {
       listeners.push(callback);
     },
 
+    // tslint:disable-next-line:no-shadowed-variable
     setLabeling(labeling) {
       const labelingHash = hash(labeling);
 

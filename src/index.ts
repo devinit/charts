@@ -9,12 +9,12 @@ export interface DrawArguments {
   element: Element;
   config: any;
   data: any[];
-};
+}
 
 export interface Color {
   name: string;
   color: string;
-};
+}
 
 export const palette: Map<string, string> = new Map();
 
@@ -60,10 +60,10 @@ export const draw = (args: DrawArguments) => {
         resolve({
           ...chart,
 
-          update: (data: any[]) => {
-            const nextHash = hash(data);
-            if (data && currentHash !== nextHash) {
-              chart.update(data);
+          update: (_data: any[]) => {
+            const nextHash = hash(_data);
+            if (_data && currentHash !== nextHash) {
+              chart.update(_data);
               currentHash = nextHash;
             }
           },
