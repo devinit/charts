@@ -73,7 +73,8 @@
   ],
   "git-pre-hooks": {
     "pre-push": [
-      "npm run compile"
+      "npm run compile",
+      "npm run lint"
     ]
   },
   "jest": {
