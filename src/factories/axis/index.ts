@@ -1,7 +1,6 @@
-import * as Plottable from 'plottable';
+import { AxisOrientation, Axes, Components } from 'plottable';
 import {approximate} from '@devinit/prelude/lib/numbers';
 import {configureAxisTicking, configureTimeAxisTicking} from '../ticking';
-
 
 export const log = base => number => Math.round(Math.log(number) / Math.log(base));
 
@@ -100,8 +99,8 @@ export const getAxisLabelRotation = alignment => {
  * @returns {Plottable.Axes.Numeric}
  */
 
-export const createNumericAxis = 
-  (axisConfig, format?: (any) => any, axis?: Plottable.Axes.Numeric): Plottable.Components.Table | undefined => {
+export const createNumericAxis =
+  (axisConfig, format?: (any) => any, axis?: Axes.Numeric): Components.Table | undefined => {
   const {
     showAxis = true,
     axisOrientation,
@@ -115,20 +114,20 @@ export const createNumericAxis =
 
   if (!showAxis) return undefined;
 
-  const alignment = axisOrientation === 'horizontal' ? 'bottom' : 'left';
+  const alignment: AxisOrientation = axisOrientation === 'horizontal' ? 'bottom' : 'left';
 
-  if (!axis) axis = new Plottable.Axes.Numeric(axisScale, alignment);
+  if (!axis) axis = new Axes.Numeric(axisScale, alignment);
 
   axis.formatter(d => `${prefix}${approximate(format && format(d))}${suffix}`);
   axis.showEndTickLabels(true);
   axis.margin(0);
 
-  let label: Plottable.Components.AxisLabel | null = null;
+  let label: Components.AxisLabel | null = null;
 
   if (axisLabel) {
     axis.margin(axisMargin);
     label = axisLabel &&
-      new Plottable.Components.AxisLabel(axisLabel, getAxisLabelRotation(alignment));
+      new Components.AxisLabel(axisLabel, getAxisLabelRotation(alignment));
   }
 
   // Add ticking classes
@@ -167,17 +166,17 @@ export const createTimeAxis = (config, axis?: any) => {
 
   if (!showAxis) return null;
 
-  if (!axis) axis = new Plottable.Axes.Time(axisScale, 'bottom');
+  if (!axis) axis = new Axes.Time(axisScale, 'bottom');
 
   axis.showEndTickLabels(true);
   axis.margin(0);
 
-  let label: Plottable.Components.AxisLabel | null = null;
+  let label: Components.AxisLabel | null = null;
 
   if (axisLabel) {
     axis.margin(axisMargin);
     label =
-      axisLabel && new Plottable.Components.AxisLabel(axisLabel, getAxisLabelRotation('bottom'));
+      axisLabel && new Components.AxisLabel(axisLabel, getAxisLabelRotation('bottom'));
   }
 
   // Add ticking classes
@@ -220,16 +219,16 @@ export const createCategoryAxis = (config: any, axis?: any) => {
 
   const alignment = axisDirection || (axisOrientation === 'vertical' ? 'bottom' : 'left');
 
-  if (!axis) axis = new Plottable.Axes.Category(axisScale, alignment);
+  if (!axis) axis = new Axes.Category(axisScale, alignment);
 
   axis.margin(0);
 
-  let label: Plottable.Components.AxisLabel | null = null;
+  let label: Components.AxisLabel | null = null;
 
   if (axisLabel) {
     axis.margin(axisMargin);
     label =
-      axisLabel && new Plottable.Components.AxisLabel(axisLabel, getAxisLabelRotation(alignment));
+      axisLabel && new Components.AxisLabel(axisLabel, getAxisLabelRotation(alignment));
   }
 
   // Add ticking classes

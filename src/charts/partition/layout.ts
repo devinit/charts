@@ -1,16 +1,16 @@
 const treemapDice = (parent, x0, y0, x1, y1) => {
   // eslint-disable-next-line
-  let nodes = parent.children,
-    node,
-    i = -1,
+  const nodes = parent.children;
+  let node;
+  let i = -1;
     // eslint-disable-next-line
-    n = nodes.length,
+  const nodesLength = nodes.length;
     // eslint-disable-next-line
-    sum = nodes.reduce((sum, n) => sum + Math.abs(n.value), 0),
+  const sum = nodes.reduce((_sum, _n) => _sum + Math.abs(_n.value), 0);
     // eslint-disable-next-line
-    k = (x1 - x0) / sum;
+  const k = (x1 - x0) / sum;
 
-  while (++i < n) {
+  while (++i < nodesLength) {
     node = nodes[i];
     node.y0 = y0;
     node.y1 = y1;
