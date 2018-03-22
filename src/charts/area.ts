@@ -1,5 +1,6 @@
 import * as Plottable from 'plottable';
-import { createLineChart } from '../factories/categoric/line';
+import { CategoricChart} from '../factories/categoric';
+import { createLineChart} from '../factories/categoric/line';
 
 /**
  * @typedef {LinearCategoryChart} Area
@@ -7,7 +8,7 @@ import { createLineChart } from '../factories/categoric/line';
  * @property {'area'} type
  *
  */
-const area = (element, data, config) => {
+const area = (element, data, config): CategoricChart => {
   const plot = new Plottable.Plots.Area();
 
   // ... apply area configuration

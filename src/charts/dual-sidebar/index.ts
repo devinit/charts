@@ -1,5 +1,5 @@
 import * as Plottable from 'plottable';
-import hash from 'object-hash';
+import * as hash from 'object-hash';
 import { flattenDeep, groupBy as group, keys, mapValues, uniq, values } from 'lodash';
 import { createChartTable } from '../../factories/table';
 import { createTitle } from '../../factories/title';
@@ -9,6 +9,7 @@ import { createLinearAxisGridLines } from '../../factories/grid';
 import { createBarTipper } from '../../factories/tooltips';
 import drawLabels from './labels';
 import {createPlotWithGridlines, createPlotAreaWithAxes, createLinearPlot} from './helpers';
+import { BarOrientation } from 'plottable/build/src/plots';
 
 /**
  * @typedef {LinearCategoryChart} DualSidebar
@@ -24,13 +25,34 @@ import {createPlotWithGridlines, createPlotAreaWithAxes, createLinearPlot} from 
  * @typedef {Object} DualSidebarConfig
  * @property {number} gutter=100 - Gutter
  */
+export interface Config {
+ title?: string;
+ titleAlignment: Plottable.XAlignment;
+ labeling: any;
+ orientation?: BarOrientation;
+ splitBy: string;
+ groupBy: string;
+ subGroupBy: string;
+ orderBy: string;
+ colors?: string[];
+ coloring?: string;
+ showLabels?: true;
+ linearAxis: any;
+ categoryAxis: any;
+ dualSidebar?: any;
+ tooltips?: any;
+}
 
-export default (element, data, config) => {
+export interface Hash {
+  data: null | string;
+}
+
+export default (element, data, config: Config) => {
   const leftPlot = new Plottable.Plots.Bar(config.orientation);
   const rightPlot = new Plottable.Plots.Bar(config.orientation);
 
   const {
-    title = null,
+    title,
 
     titleAlignment = 'left',
 
@@ -82,7 +104,6 @@ export default (element, data, config) => {
         plot: createLinearPlot(
           {
             plot: leftPlot,
-            orientation,
             categoryScale: leftCategoryScale,
             linearScale: leftLinearScale,
             showLabels,
@@ -96,7 +117,6 @@ export default (element, data, config) => {
         plot: createLinearPlot(
           {
             plot: rightPlot,
-            orientation,
             categoryScale: rightCategoryScale,
             linearScale: rightLinearScale,
             showLabels,
@@ -145,13 +165,13 @@ export default (element, data, config) => {
 
   table.renderTo(element);
 
-  leftPlot._drawLabels = drawLabels(dualSidebar);
-  rightPlot._drawLabels = drawLabels(dualSidebar);
+  (leftPlot as any)._drawLabels = drawLabels(dualSidebar);
+  (rightPlot as any)._drawLabels = drawLabels(dualSidebar);
 
   leftPlot.onAnchor(plot => {
     setTimeout(() => {
       if (tooltips.enable) {
-        createBarTipper(element, config.labeling, chart.categoryScale, 'inverted-horizontal')(plot);
+        createBarTipper(element, config.labeling, 'inverted-horizontal')(plot);
       }
     }, 500);
   });
@@ -159,12 +179,12 @@ export default (element, data, config) => {
   rightPlot.onAnchor(plot => {
     setTimeout(() => {
       if (tooltips.enable) {
-        createBarTipper(element, config.labeling, chart.categoryScale, 'horizontal')(plot);
+        createBarTipper(element, config.labeling, 'horizontal')(plot);
       }
     }, 500);
   });
 
-  const hashes = {
+  const hashes: Hash = {
     data: null,
   };
 
@@ -194,7 +214,7 @@ export default (element, data, config) => {
         return firstDirection > secondDirection ? 1 : -1;
       })
       .map(side => mapValues(group(side, d => d[groupBy]), grp => group(grp, d => d[subGroupBy])))
-      .reduce(([sides = []], side) => [[...sides, side]], [])
+      .reduce(([sides = []], side) => [[...sides, side]], [] as any[])
       .map(([left, right]) => {
         uniq([...keys(left), ...keys(right)]).forEach(groupId => {
           const subGroupIds = uniq([...keys(left[groupId] || {}), ...keys(right[groupId] || {})]);
@@ -265,7 +285,7 @@ export default (element, data, config) => {
             return flattenDeep(values(grp))
               .map(datum => ({
                 ...datum,
-                color: datum[coloring] || colors[index] || '#abc',
+                color: (coloring && datum[coloring]) || colors[index] || '#abc',
               }));
           })
         );

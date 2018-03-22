@@ -1,5 +1,5 @@
 import * as Plottable from 'plottable';
-import hash from 'object-hash';
+import * as hash from 'object-hash';
 import createTreeChart, { createColorFiller } from '../../factories/tree';
 import { createTreeHierachy } from '../../factories/dataset';
 import createScaleAnimator from '../../factories/animator/scale';
@@ -52,7 +52,7 @@ export default (element, data = [], config) => {
     }
   });
 
-  plot._drawLabels = createTreeChartLabeler(labeling, calculatePercentage);
+  (plot as any)._drawLabels = createTreeChartLabeler(labeling, calculatePercentage);
 
   const treeChart = createTreeChart({
     element,
@@ -71,9 +71,9 @@ export default (element, data = [], config) => {
     orientation === 'vertical' ? height : width,
   ]);
 
-  const colorize = createColorFiller(colors, [], coloring);
+  const colorize = createColorFiller(colors, coloring);
 
-  const listeners = [];
+  const listeners: any[] = [];
 
   const animate = createScaleAnimator(500);
 
@@ -111,7 +111,7 @@ export default (element, data = [], config) => {
 
   const update = data => {
     const root = colorize(createTreeHierachy(data, tree)
-      .sort((a, b) => a.value - b.value));
+      .sort((a: any, b: any) => a.value - b.value));
 
     treeChart.update(layout(root)
       .descendants()
@@ -133,9 +133,9 @@ export default (element, data = [], config) => {
       const labelingHash = hash(labeling);
 
       if (hashes.labeling !== labelingHash) {
-        plot._drawLabels = createTreeChartLabeler(labeling, calculatePercentage);
+        (plot as any)._drawLabels = createTreeChartLabeler(labeling, calculatePercentage);
         // delay label redraw like plottable does
-        setTimeout(() => plot._drawLabels(), 200);
+        setTimeout(() => (plot as any)._drawLabels(), 200);
         hashes.labeling = labelingHash;
       }
     },

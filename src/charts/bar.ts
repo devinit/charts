@@ -1,4 +1,5 @@
 import * as Plottable from 'plottable';
+import {CategoricChart} from '../factories/categoric';
 import createBarChart from '../factories/categoric/bar';
 
 /**
@@ -7,7 +8,7 @@ import createBarChart from '../factories/categoric/bar';
  * @property {'bar'} type
  *
  */
-export default (element, data, config) => {
+export default (element, data, config): CategoricChart => {
   const { orientation } = config;
 
   const plot = new Plottable.Plots.Bar(orientation);

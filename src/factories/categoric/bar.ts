@@ -1,7 +1,7 @@
 import * as Plottable from 'plottable';
 import { color } from 'd3';
 import {approximate} from '@devinit/prelude/lib/numbers';
-import { createCategoricChart, CreateCategoricChartResult } from '.';
+import { createCategoricChart, CategoricChart } from '.';
 import { createBarTipper } from '../tooltips';
 import {createCustomLabels} from './helper';
 
@@ -92,7 +92,7 @@ const createBarInteraction = (orientation = 'vertical', labeling: any = {}, high
 
 export default (element, plot, config) => {
   const { interactions = { enable: false }, tooltips = { enable: true } } = config;
-  const chart: CreateCategoricChartResult = createCategoricChart({ element, plot, config });
+  const chart: CategoricChart = createCategoricChart({ element, plot, config });
 
   plot.onAnchor(plot => {
     setTimeout(() => {

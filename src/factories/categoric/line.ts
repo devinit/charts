@@ -1,8 +1,8 @@
 import {Plot} from 'plottable'
-import { createCategoricChart,  CreateCategoricChartResult } from '.';
+import { createCategoricChart,  CategoricChart} from '.';
 import { createLineTipper } from '../tooltips';
 
-export const createLineChart = (element: string | HTMLElement, plot: Plot, config: any) => {
+export const createLineChart = (element: string | HTMLElement, plot: Plot, config: any): CategoricChart => {
   const {
     categoryAxis = {},
     tooltips = {
@@ -11,7 +11,7 @@ export const createLineChart = (element: string | HTMLElement, plot: Plot, confi
     ...more
   } = config;
 
-  const chart:  CreateCategoricChartResult = createCategoricChart({
+  const chart: CategoricChart = createCategoricChart({
     element,
     plot,
     config: {

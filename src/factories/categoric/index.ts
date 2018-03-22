@@ -66,7 +66,7 @@ const createPlotAreaWithAxes = (orientation, { linearAxis, plotArea, categoryAxi
  * @property {ColorLegend} legend - Legend
  */
 
- export interface CreateCategoricChartResult {
+ export interface CategoricChart {
   linearScale: Plottable.Scales.Linear;
   categoryScale: Plottable.Scales.Category;
   colorScale: Plottable.Scales.Color;
@@ -80,7 +80,7 @@ export interface CreateCategoricChartArgs {
   config: any
 }
 
-export type CreateCategoricChart = (CreateCategoricChartArgs)  => CreateCategoricChartResult;
+export type CreateCategoricChart = (CreateCategoricChartArgs)  => CategoricChart;
 
 export const createCategoricChart: CreateCategoricChart = ({ element, plot, config }) => {
   const {

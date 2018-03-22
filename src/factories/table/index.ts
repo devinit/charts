@@ -1,8 +1,17 @@
 import * as Plottable from 'plottable';
+import { TitleLabel } from 'plottable/build/src/components';
+
+export interface CreateChartTableArgs {
+  title?: TitleLabel;
+  chart: any;
+  legend?: any;
+  legendPosition?: string;
+
+}
 
 export const createChartTable = ({
   title, chart, legend, legendPosition = 'bottom'
-}) => {
+}: CreateChartTableArgs) => {
   const chartWithLegend = !legend
     ? chart
     : legendPosition === 'bottom'

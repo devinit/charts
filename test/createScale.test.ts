@@ -1,14 +1,13 @@
-const expect = require('chai').expect;
-const { createLinearScale, createCategoryScale } = require('../lib/factories/scale');
-const it = require('mocha').it;
-const describe = require('mocha').describe;
-const Plottable = require('plottable');
+import 'jest'
+import { createLinearScale, createCategoryScale } from '../src/factories/scale';
+import {Scales} from 'plottable';
+
 
 describe('createLinearScale', () => {
   it('creates a linear scale', () => {
     const scale = createLinearScale({});
 
-    expect(scale instanceof Plottable.Scales.Linear);
+    expect(scale instanceof Scales.Linear);
   });
 
   it('creates a linear scale with minimum and maximum', () => {
@@ -16,8 +15,8 @@ describe('createLinearScale', () => {
     const axisMaximum = 100;
     const scale = createLinearScale({ axisMinimum, axisMaximum });
 
-    expect(scale.domainMin()).to.equal(axisMinimum);
-    expect(scale.domainMax()).to.equal(axisMaximum);
+    expect(scale.domainMin()).toBe(axisMinimum);
+    expect(scale.domainMax()).toBe(axisMaximum);
   });
 });
 
@@ -25,7 +24,7 @@ describe('createCategoryScale', () => {
   it('creates a category scale', () => {
     const scale = createCategoryScale({});
 
-    expect(scale instanceof Plottable.Scales.Category);
+    expect(scale instanceof Scales.Category);
   });
 
   it('creates a category scale with inner and outer padding', () => {
@@ -33,7 +32,7 @@ describe('createCategoryScale', () => {
     const outerPadding = 100;
     const scale = createCategoryScale({ innerPadding, outerPadding });
 
-    expect(scale.innerPadding()).to.equal(innerPadding);
-    expect(scale.outerPadding()).to.equal(outerPadding);
+    expect(scale.innerPadding()).toBe(innerPadding);
+    expect(scale.outerPadding()).toBe(outerPadding);
   });
 });

@@ -1,17 +1,17 @@
 import * as hash from 'object-hash';
 
-interface Chart {
+export interface Chart {
   table: any;
   update(data: any[]): void;
 }
 
-interface DrawArguments {
+export interface DrawArguments {
   element: Element;
   config: any;
   data: any[];
 };
 
-interface Color {
+export interface Color {
   name: string;
   color: string;
 };

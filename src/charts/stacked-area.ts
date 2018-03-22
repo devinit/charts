@@ -1,4 +1,5 @@
 import * as Plottable from 'plottable';
+import { CategoricChart } from '../factories/categoric';
 import { createLineChart } from '../factories/categoric/line';
 
 /**
@@ -7,7 +8,7 @@ import { createLineChart } from '../factories/categoric/line';
  * @property {'stacked-area'} type
  *
  */
-export default (element, data, config) => {
+export default (element, data, config): CategoricChart => {
   const plot = new Plottable.Plots.StackedArea();
 
   const chart = createLineChart(element, plot, config);

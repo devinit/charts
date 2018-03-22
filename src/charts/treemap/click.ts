@@ -1,6 +1,6 @@
 import createScaleAnimator from '../../factories/animator/scale';
 
-export default (config = {}) => {
+export default (config: any) => {
   const {
     width,
     height,

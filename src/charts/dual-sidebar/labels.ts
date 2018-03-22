@@ -1,6 +1,6 @@
 import {uniq} from "lodash";
 
-export default dualSidebar => function innerDrawLabels() {
+export default dualSidebar => function innerDrawLabels(this: any) {
   const entities = this.entities();
   const foreground = this.foreground();
   const data = entities.map(entity => entity.datum);

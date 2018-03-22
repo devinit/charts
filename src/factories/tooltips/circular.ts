@@ -5,7 +5,7 @@ import { color } from 'd3';
 import {approximate} from '@devinit/prelude/lib/numbers';
 
 export default (container, tooltips: any = {}) => {
-  let currentId = null;
+  let currentId: string | null = null;
   const { enable = true } = tooltips;
 
   // ...

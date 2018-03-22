@@ -3,7 +3,9 @@ import { color } from 'd3';
 import Tooltip from 'tooltip.js';
 import {approximate} from '@devinit/prelude/lib/numbers';
 
-export default (container, labeling, percentage: (x: number) => 100) => {
+type PercentageCalculator = (datum: {x1: number, x0: number; y0: number, y1: number}) => number;
+
+export default (container, labeling, percentage: PercentageCalculator) => {
   let currentId = null;
 
   return plot => {

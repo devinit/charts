@@ -56,7 +56,7 @@ const partition = () => {
     };
   };
 
-  const partition = (root) => {
+  const partition: any = (root) => {
     const n = root.height + 1;
     root.x0 = root.y0 = padding;
     root.x1 = dx;
@@ -68,17 +68,17 @@ const partition = () => {
 
   partition.round = (x) => {
     // eslint-disable-next-line
-    return arguments.length ? ((round = !!x), partition) : round;
+    return x ? ((round = !!x), partition) : round;
   };
 
   partition.size = (x) => {
     // eslint-disable-next-line
-    return arguments.length ? ((dx = +x[0]), (dy = +x[1]), partition) : [dx, dy];
+    return x ? ((dx = +x[0]), (dy = +x[1]), partition) : [dx, dy];
   };
 
   partition.padding = (x) => {
     // eslint-disable-next-line
-    return arguments.length ? ((padding = +x), partition) : padding;
+    return x ? ((padding = +x), partition) : padding;
   };
 
   return partition;

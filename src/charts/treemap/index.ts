@@ -54,7 +54,7 @@ export default (element, data = [], config) => {
     }
   });
 
-  plot._drawLabels = createTreeChartLabeler(labeling, calculatePercentage);
+  (plot as any)._drawLabels = createTreeChartLabeler(labeling, calculatePercentage);
 
   // ... apply rectangle configuration
 
@@ -70,7 +70,7 @@ export default (element, data = [], config) => {
     },
   });
 
-  const listeners = [];
+  const listeners: any[] = [];
 
   const tilingMethod = createTilingMethod(tiling);
 
@@ -78,7 +78,7 @@ export default (element, data = [], config) => {
     .tile(tilingMethod)
     .size([width, height]);
 
-  const colorize = createColorFiller(colors, [], coloring);
+  const colorize = createColorFiller(colors, coloring);
 
   const update = data => {
     const root = colorize(createTreeHierachy(data, tree)
@@ -94,8 +94,8 @@ export default (element, data = [], config) => {
     },
 
     setLabeling(labeling) {
-      plot._drawLabels = createTreeChartLabeler(labeling, calculatePercentage);
-      plot._drawLabels();
+      (plot as any)._drawLabels = createTreeChartLabeler(labeling, calculatePercentage);
+      (plot as any)._drawLabels();
     },
 
     update,

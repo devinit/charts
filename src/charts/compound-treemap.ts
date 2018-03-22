@@ -82,7 +82,7 @@ export default (element, data, config) => {
 
   const layout = treemap().tile(tilingMethod);
 
-  const colorize = createColorFiller(colors, [], coloring);
+  const colorize = createColorFiller(colors, coloring);
 
   const update = data => {
     const root = colorize(createTreeHierachy(data, tree));
@@ -107,7 +107,7 @@ export default (element, data, config) => {
     },
   };
 
-  chart.update(data, tree);
+  chart.update(data);
 
   return chart;
 };

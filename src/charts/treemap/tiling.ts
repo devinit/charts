@@ -22,7 +22,7 @@ const tilingMethods = {
   resquarify: treemapResquarify,
 };
 
-const tile = (config = {}) => {
+const tile = (config: {method?: string, ratio?: number }) => {
   const { method = 'resquarify', ratio = 0.5} = config;
 
   if (/(squarify|resquarify)/.test(method)) {
