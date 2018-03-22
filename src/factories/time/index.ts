@@ -95,13 +95,13 @@ export default ({ element, plot, config }) => {
   table.renderTo(element);
 
   if (anchor) {
-    const onTableAnchored = table => {
+    const onTableAnchored = _table => {
       // waiting till table is setup, hopefully 500ms will
       // always be sufficient
       // TODO: Use onRender event instead
       // see https://github.com/palantir/plottable/issues/1755
       setTimeout(() => {
-        moveAnchor = createTimeAnchor(table, timeScale, anchor, legend, listeners);
+        moveAnchor = createTimeAnchor(_table, timeScale, anchor, legend, listeners);
       }, 500);
     };
 

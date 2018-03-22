@@ -116,13 +116,13 @@ export default ({ element, plot, config }) => {
         })
         .attachTo(colorLegend);
 
-      colorLegend.onDetach(legend => {
-        legendInteraction.detachFrom(legend);
+      colorLegend.onDetach(_legend => {
+        legendInteraction.detachFrom(_legend);
       });
     }
 
-    plot.onDetach(plot => {
-      interaction.detachFrom(plot);
+    plot.onDetach(_plot => {
+      interaction.detachFrom(_plot);
     });
   };
 

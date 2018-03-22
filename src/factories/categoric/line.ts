@@ -1,4 +1,4 @@
-import {Plot} from 'plottable'
+import {Plot} from 'plottable';
 import { createCategoricChart,  CategoricChart} from '.';
 import { createLineTipper } from '../tooltips';
 
@@ -30,9 +30,9 @@ export const createLineChart = (element: string | HTMLElement, plot: Plot, confi
 
   const { categoryScale } = chart;
 
-  plot.onAnchor(plot => {
+  plot.onAnchor(_plot => {
     if (tooltips.enable) {
-      return createLineTipper(element as string, config.labeling, categoryScale)(plot);
+      return createLineTipper(element as string, config.labeling, categoryScale)(_plot);
     }
   });
 

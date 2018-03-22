@@ -33,7 +33,7 @@ export interface CircularChartResult {
 export interface CircularChartArgs {
   element: string | HTMLElement;
   plot: Plottable.Plot;
-  config: any
+  config: any;
 }
 
 export type CircularChart = (CreateCategoricChartArgs)  => CircularChartResult;
@@ -83,9 +83,9 @@ const circularChart = ({ element, plot, config }) => {
 
   table.renderTo(element);
 
-  plot.onAnchor(plot => {
+  plot.onAnchor(_plot => {
     setTimeout(() => {
-      createTooltips(element, tooltips)(plot);
+      createTooltips(element, tooltips)(_plot);
     }, 500);
   });
 

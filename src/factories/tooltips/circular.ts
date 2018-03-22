@@ -9,7 +9,8 @@ export default (container, tooltips: any = {}) => {
   const { enable = true } = tooltips;
 
   // ...
-  if (!enable) {
+  if (!enable)  {
+    // tslint:disable-next-line:no-empty
     return () => {};
   }
 
@@ -37,10 +38,10 @@ export default (container, tooltips: any = {}) => {
     tip.hide();
 
     const interaction = new Plottable.Interactions.Pointer()
+      // tslint:disable-next-line:no-empty
       .onPointerEnter(() => {})
       .onPointerMove(p => {
         const [entity] = plot.entitiesAt(p);
-
 
         requestAnimationFrame(() => {
           tooltipAnchor
@@ -56,7 +57,7 @@ export default (container, tooltips: any = {}) => {
 
             currentId = hash(entity.datum);
 
-            plot.entities().forEach(entity => {
+            plot.entities().forEach(_entity => {
               if (entity.selection.attr('initial-fill')) {
                 entity.selection.attr('fill', entity.selection.attr('initial-fill'));
               } else {

@@ -4,7 +4,7 @@ export interface CreateTitleArgs {
   title?: string;
   titleAlignment: Plottable.XAlignment;
 }
-export const createTitle = 
+export const createTitle =
   ({ title, titleAlignment = 'left' }: CreateTitleArgs): Plottable.Components.TitleLabel | undefined => {
   if (!title) return undefined;
 

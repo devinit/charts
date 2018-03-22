@@ -7,6 +7,7 @@ export default (container, tooltips = {}, axes) => {
   const { enable = true, titleIndicator } = tooltips as any;
 
   if (!enable || !titleIndicator) {
+    // tslint:disable-next-line:no-empty
     return () => {};
   }
 
@@ -29,6 +30,7 @@ export default (container, tooltips = {}, axes) => {
     });
 
     const interaction = new Plottable.Interactions.Pointer()
+      // tslint:disable-next-line:no-empty
       .onPointerEnter(() => {})
       .onPointerMove(p => {
         const [entity] = plot.entitiesAt(p);

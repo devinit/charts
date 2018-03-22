@@ -125,11 +125,11 @@ export default ({ element, plot, config }) => {
 
   table.renderTo(element);
 
-  plot.onAnchor(plot => {
+  plot.onAnchor(_plot => {
     setTimeout(() => {
       if (tooltips.enable) {
-        tipper(plot);
-        clickTipper.init(plot);
+        tipper(_plot);
+        clickTipper.init(_plot);
       }
     }, 500);
   });

@@ -5,7 +5,6 @@
 import {groupBy, range} from 'lodash';
 import {approximate} from '@devinit/prelude/lib/numbers';
 
-
 const drawLabel = (opts, foreground) => {
   // forExtend is for drawing sums of values in a stacked bar
   const {width, height, x, y, value, color, suffix, prefix, drawStackedBarSum = false} = opts;

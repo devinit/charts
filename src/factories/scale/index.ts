@@ -26,10 +26,8 @@ export const createTimeScale = (config: any) => {
   const { axisMinimum = null, axisMaximum = null } = config;
 
   const scale = new Plottable.Scales.Time();
-  axisMaximum && scale.domainMin(new Date(axisMinimum.toString()));
-  axisMaximum && scale.domainMax(new Date(axisMaximum.toString()));
-
-  // ...
+  if (axisMaximum) scale.domainMin(new Date(axisMinimum.toString()));
+  if (axisMaximum) scale.domainMax(new Date(axisMaximum.toString()));
 
   return scale;
 };
@@ -44,8 +42,5 @@ export const createCategoryScale = config => {
   const scale = new Plottable.Scales.Category();
   scale.outerPadding(outerPadding);
   scale.innerPadding(innerPadding);
-
-  // ...
-
   return scale;
 };

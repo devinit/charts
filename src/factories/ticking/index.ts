@@ -1,7 +1,7 @@
 import * as Plottable from 'plottable';
 
 export interface Tier {
-  formatter: Plottable.Formatters.Formatter
+  formatter: Plottable.Formatters.Formatter;
   interval: Plottable.TimeInterval;
   step: number;
 }
@@ -45,7 +45,7 @@ export const configureTimeAxisTicking = (axis, ticking = 'years', tickingStep = 
 
 export const configureAxisTicking = (axis, ticking) => {
   axis.addClass(`axis-tick-${ticking}`);
-  axis.tickLabelMaxLines && axis.tickLabelMaxLines(1);
+  if (axis.tickLabelMaxLines) axis.tickLabelMaxLines(1);
 };
 
 export const configureGridTicking = (grid, ticking) => {

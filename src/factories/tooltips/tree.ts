@@ -50,11 +50,11 @@ export default (container, labeling, percentage: PercentageCalculator) => {
 
             currentId = entity.datum.id;
 
-            plot.entities().forEach(entity => {
-              if (entity.selection.attr('initial-fill')) {
-                entity.selection.attr('fill', entity.selection.attr('initial-fill'));
+            plot.entities().forEach(_entity => {
+              if (_entity.selection.attr('initial-fill')) {
+                _entity.selection.attr('fill', _entity.selection.attr('initial-fill'));
               } else {
-                entity.selection.attr('initial-fill', entity.selection.attr('fill'));
+                _entity.selection.attr('initial-fill', _entity.selection.attr('fill'));
               }
             });
 
@@ -67,11 +67,11 @@ export default (container, labeling, percentage: PercentageCalculator) => {
       .onPointerExit(() => {
         tip.hide();
 
-        plot.entities().forEach(entity => {
-          if (entity.selection.attr('initial-fill')) {
-            entity.selection.attr('fill', entity.selection.attr('initial-fill'));
+        plot.entities().forEach(_entity => {
+          if (_entity.selection.attr('initial-fill')) {
+            _entity.selection.attr('fill', _entity.selection.attr('initial-fill'));
           } else {
-            entity.selection.attr('initial-fill', entity.selection.attr('fill'));
+            _entity.selection.attr('initial-fill', _entity.selection.attr('fill'));
           }
         });
 

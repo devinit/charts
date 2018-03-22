@@ -2,7 +2,6 @@ import * as Plottable from 'plottable';
 import {approximate} from '@devinit/prelude/lib/numbers';
 import {configureAxisTicking, configureTimeAxisTicking} from '../ticking';
 
-
 export const log = base => number => Math.round(Math.log(number) / Math.log(base));
 
 export const multiply = multiplier => number => multiplier * number;
@@ -100,7 +99,7 @@ export const getAxisLabelRotation = alignment => {
  * @returns {Plottable.Axes.Numeric}
  */
 
-export const createNumericAxis = 
+export const createNumericAxis =
   (axisConfig, format?: (any) => any, axis?: Plottable.Axes.Numeric): Plottable.Components.Table | undefined => {
   const {
     showAxis = true,
