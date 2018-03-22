@@ -2,7 +2,7 @@ export const autoFitMetrics = (width, height, text) => {
   const baseFont = 9;
   const availableArea = width * height;
   const words = text.split(/\s+/);
-  const longestWordLength = Math.max.apply(null, words.map((l) => { return l.length; }));
+  const longestWordLength = Math.max.apply(null, words.map((l) =>   l.length ));
   const estimatedArea = longestWordLength * (baseFont * 0.8) * words.length * baseFont;
 
   const areaRatio = Math.floor(availableArea / estimatedArea);

@@ -22,7 +22,7 @@ export const createTreeChartLabeler = (config, percentage: (number) => number = 
     suffix = '',
     autofit = false,
   } = config;
-  return function (this: any) {
+  return function(this: any) {
     const foreground = this.foreground();
     const entities = this.entities();
     // Remove all current labels

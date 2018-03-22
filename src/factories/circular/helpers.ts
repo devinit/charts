@@ -19,7 +19,6 @@ export const createCircularPlot = (config: any): Plottable.Plot => {
       .labelFormatter(d => `${labeling.prefix || ''}${approximate(d)}${labeling.suffix || ' '}`);
   }
 
-
   return plot
     .attr('fill', d => d.color)
     .attr('fill-opacity', d => d.opacity)

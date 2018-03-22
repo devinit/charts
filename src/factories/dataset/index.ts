@@ -21,7 +21,7 @@ export const createFullStackedDataset = (data = [], linearAxisIndicator, categor
         .map(d => d[linearAxisIndicator])
         .reduce((sum, value) => sum + value, 0),
     }))
-    .reduce((sums, sum) => ({ ...sums, ...sum }), {});
+    .reduce((_sums, sum) => ({ ...sums, ...sum }), {});
 
   return data.map((d: any) => ({
     ...d,

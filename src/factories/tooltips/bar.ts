@@ -16,13 +16,13 @@ export default (container, labeling: any = {}, orientation: string) => {
       .attr('r', 3)
       .attr('fill', 'transparent');
 
-    const placement = orientation => {
+    const placement = _orientation => {
       return {
-        vertical: 'top',
-        horizontal: 'right',
+        'vertical': 'top',
+        'horizontal': 'right',
         'inverted-vertical': 'bottom',
         'inverted-horizontal': 'left',
-      }[orientation];
+      }[_orientation];
     };
 
     const tip = new Tooltip(tooltipAnchor.node(), {
@@ -85,7 +85,7 @@ export default (container, labeling: any = {}, orientation: string) => {
 
         const position = getPosition(entities);
 
-        const sum = entities.reduce((sum, e) => sum + e.datum.value, 0);
+        const sum = entities.reduce((_sum, e) => _sum + e.datum.value, 0);
 
         const hash = position.x.toString() + position.y.toString();
 
@@ -106,8 +106,8 @@ export default (container, labeling: any = {}, orientation: string) => {
 
     interaction.attachTo(plot);
 
-    plot.onDetach(plot => {
-      interaction.detachFrom(plot);
+    plot.onDetach(_plot => {
+      interaction.detachFrom(_plot);
       tip.dispose();
     });
   };

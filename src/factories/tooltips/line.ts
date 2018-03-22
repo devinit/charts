@@ -94,10 +94,10 @@ const createLineTipper: CreateLineTipper = (container, labeling, scale) => {
 
     interaction.attachTo(plot);
 
-    plot.onDetach(plot => {
-      interaction.detachFrom(plot);
+    plot.onDetach(_plot => {
+      interaction.detachFrom(_plot);
       tip.dispose();
     });
   };
 };
-export default createLineTipper
+export default createLineTipper;

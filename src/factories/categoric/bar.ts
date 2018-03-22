@@ -84,8 +84,8 @@ const createBarInteraction = (orientation = 'vertical', labeling: any = {}, high
 
     interaction.attachTo(plot);
 
-    plot.onDetach(plot => {
-      interaction.detachFrom(plot);
+    plot.onDetach(_plot => {
+      interaction.detachFrom(_plot);
     });
   };
 };
@@ -94,16 +94,16 @@ export default (element, plot, config) => {
   const { interactions = { enable: false }, tooltips = { enable: true } } = config;
   const chart: CategoricChart = createCategoricChart({ element, plot, config });
 
-  plot.onAnchor(plot => {
+  plot.onAnchor(_plot => {
     setTimeout(() => {
       if (interactions.enable) {
-        createBarInteraction(config.orientation, config.labeling, config.highlight)(plot);
+        createBarInteraction(config.orientation, config.labeling, config.highlight)(_plot);
       }
       if (config.labeling.custom) {
-        createCustomLabels(config.labeling, plot);
+        createCustomLabels(config.labeling, _plot);
       }
       if (tooltips.enable) {
-        createBarTipper(element, config.labeling, config.orientation)(plot);
+        createBarTipper(element, config.labeling, config.orientation)(_plot);
       }
     }, 500);
   });

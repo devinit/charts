@@ -70,21 +70,21 @@ export default (table, timeScale, anchor = { start: 0 }, legend: any, listeners)
     // -- remove this condition at your own risk.
     // just kidding, i think
     if (year !== currentYear && year >= minYear && year <= maxYear) {
-      const foregroundBounds = foreground.node().getBoundingClientRect();
-      const timeAxisBounds = timeAxis
+      const _foregroundBounds = foreground.node().getBoundingClientRect();
+      const _timeAxisBounds = timeAxis
         .content()
         .node()
         .getBoundingClientRect();
 
-      const leftOffset = timeAxisBounds.left - foregroundBounds.left;
+      const _leftOffset = _timeAxisBounds.left - _foregroundBounds.left;
 
-      const xPosition = timeScale.scaleTransformation(year);
+      const _xPosition = timeScale.scaleTransformation(year);
 
       circle.attr('cx', leftOffset + xPosition);
 
-      text.attr('x', leftOffset + xPosition).text(year);
+      text.attr('x', _leftOffset + _xPosition).text(year);
 
-      line.attr('x1', leftOffset + xPosition).attr('x2', leftOffset + xPosition);
+      line.attr('x1', _leftOffset + _xPosition).attr('x2', _leftOffset + _xPosition);
 
       // ... notify movement listeners
       listeners.forEach(callback => {
