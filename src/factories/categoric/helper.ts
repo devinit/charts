@@ -49,7 +49,7 @@ const getGroupValues = (entities) => {
         return {...entityValues, height: 30, value: sum, y};
       }
       return {...all, sum};
-    }, {sum: 0});
+    }, {sum: 0} as any);
   });
 };
 

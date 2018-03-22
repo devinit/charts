@@ -14,9 +14,9 @@ export const createLinearPlot = ({
   orientation,
   categoryScale,
   linearScale,
-  labeling = {},
+  labeling,
 }) => {
-  const { showLabels = false, prefix = '', suffix = ''} = labeling;
+  const { showLabels = false, prefix = '', suffix = ''} = labeling as any;
 
   if (plot.labelsEnabled && !labeling.custom) {
     plot.labelFormatter(d => `${prefix}${approximate(d)}${suffix}`).labelsEnabled(showLabels);
@@ -65,7 +65,24 @@ const createPlotAreaWithAxes = (orientation, { linearAxis, plotArea, categoryAxi
  * @property {Tooltip} tooltips - Tooltips
  * @property {ColorLegend} legend - Legend
  */
-export const createCategoricChart = ({ element, plot, config }) => {
+
+ export interface CreateCategoricChartResult {
+  linearScale: Plottable.Scales.Linear;
+  categoryScale: Plottable.Scales.Category;
+  colorScale: Plottable.Scales.Color;
+  table: Plottable.Components.Table;
+  update: (data: any) => void;
+  destroy: () => void;
+}
+export interface CreateCategoricChartArgs {
+  element: string | HTMLElement;
+  plot: Plottable.Plot;
+  config: any
+}
+
+export type CreateCategoricChart = (CreateCategoricChartArgs)  => CreateCategoricChartResult;
+
+export const createCategoricChart: CreateCategoricChart = ({ element, plot, config }) => {
   const {
     title = null,
 
@@ -141,12 +158,13 @@ export const createCategoricChart = ({ element, plot, config }) => {
     table,
 
     update: (data = []) => {
-      const groupIds = makeUnique(data.map(d => d[groupBy]));
+      const groupIds: any[] = makeUnique(data.map(d => d[groupBy]));
 
       if (legend.showLegend) {
+        const scaleDomain: string[] = groupIds.map(groupId => groupId || 'Unknown');
         colorScale
-          .domain(groupIds.map(groupId => groupId || 'Unknown'))
-          .range(groupIds.map((d, i) => colors[i] || '#abc'));
+          .domain(scaleDomain)
+          .range(groupIds.map((_d, i) => colors[i] || '#abc'));
       }
 
       const datasets = groupIds.map((groupId, index) =>
@@ -160,7 +178,7 @@ export const createCategoricChart = ({ element, plot, config }) => {
           };
         }));
       if (plot.datasets().length) { // TODO: when is this ever true ?? maybe uselses @ernest
-        const sums = [];
+        const sums: number[] = [];
         for (let i = 0; i < Math.max.apply(null, datasets.map(d => d.length)); i++) {
           sums[i] = datasets.reduce((sum, set) => sum + (set[i] ? set[i].value : 0), 0);
         }

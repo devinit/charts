@@ -24,7 +24,21 @@ import { createCircularPlot } from './helpers';
  * @property {string} strokeColor - Stroke Color
  */
 
-export default ({ element, plot, config }) => {
+export interface CircularChartResult {
+  table: Plottable.Components.Table;
+  update: (data: any) => void;
+  destroy: () => void;
+}
+
+export interface CircularChartArgs {
+  element: string | HTMLElement;
+  plot: Plottable.Plot;
+  config: any
+}
+
+export type CircularChart = (CreateCategoricChartArgs)  => CircularChartResult;
+
+const circularChart = ({ element, plot, config }) => {
   const {
     title = null,
 
@@ -102,3 +116,5 @@ export default ({ element, plot, config }) => {
     },
   };
 };
+
+export default circularChart;

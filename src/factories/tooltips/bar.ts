@@ -2,7 +2,7 @@ import * as Plottable from 'plottable';
 import Tooltip from 'tooltip.js';
 import {approximate} from '@devinit/prelude/lib/numbers';
 
-export default (container, labeling = {}, scale, orientation = 'vertical') => {
+export default (container, labeling: any = {}, orientation = 'vertical') => {
   let currentHash = null;
   const {
     prefix = '',

@@ -1,7 +1,7 @@
 import * as Plottable from 'plottable';
 import { treemap } from 'd3';
 import { createTreeHierachy } from '../factories/dataset';
-import approximate from '../factories/approximate';
+import {approximate} from '@devinit/prelude/lib/numbers';
 import getTilingMethod from './treemap/tiling';
 import { createColorFiller } from '../factories/tree';
 

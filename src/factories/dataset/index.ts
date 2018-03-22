@@ -1,7 +1,8 @@
 import { stratify } from 'd3';
+import {HierarchyNode} from 'd3-hierarchy';
 import * as Plottable from 'plottable';
 
-export const makeUnique = list => Array.from(new Set(list));
+export const makeUnique = list => Array.from(new Set(list)); // TODO: use ramda
 
 /**
  * createFullStackedDataset
@@ -11,10 +12,10 @@ export const makeUnique = list => Array.from(new Set(list));
  * @returns {Array}
  */
 export const createFullStackedDataset = (data = [], linearAxisIndicator, categoryAxisIndicator) => {
-  const labels = makeUnique(data.map(d => d[categoryAxisIndicator]));
+  const labels = makeUnique(data.map((d: any) => d[categoryAxisIndicator])) as string[];
 
   const sums = labels
-    .map(label => ({
+    .map((label: string) => ({
       [label]: data
         .filter(d => d[categoryAxisIndicator] === label)
         .map(d => d[linearAxisIndicator])
@@ -22,7 +23,7 @@ export const createFullStackedDataset = (data = [], linearAxisIndicator, categor
     }))
     .reduce((sums, sum) => ({ ...sums, ...sum }), {});
 
-  return data.map(d => ({
+  return data.map((d: any) => ({
     ...d,
 
     [linearAxisIndicator]: (d[linearAxisIndicator] * 100) / sums[d[categoryAxisIndicator]],
@@ -34,8 +35,8 @@ export const createFullStackedDataset = (data = [], linearAxisIndicator, categor
  * @param {Object[]} data
  * @param {Tree} tree
  */
-export const createTreeHierachy = (data, tree) => {
-  let series = [];
+export const createTreeHierachy = (data, tree: any): HierarchyNode<any> => {
+  let series: any[] = [];
   if (tree.id && tree.parent && tree.value) {
     series = data.map(datum => ({
       ...datum,
@@ -79,23 +80,23 @@ export const createTreeHierachy = (data, tree) => {
   }
 
   const stratifyFactory = stratify()
-    .id(d => d.label)
-    .parentId(d => d.parent);
+    .id((d: any) => d.label)
+    .parentId((d: any) => d.parent);
 
   const root = stratifyFactory(series);
 
   root.sum = function rootsum(value) {
-    return this.eachAfter(node => {
+    return this.eachAfter((node: any) => {
       let sum = +value(node) || 0;
       const children = node.children;
       let i = children && children.length;
-      while (--i >= 0) sum += children[i].value;
+      while (--i >= 0) sum += children[i].value; // TODO: please remove this, looks like code smell
       node.value = sum;
     });
   };
   // console.log(root);
   return root
-    .sum(node => {
+    .sum((node: any) => {
       return node.children ? 0 : node.data.value;
     });
 };

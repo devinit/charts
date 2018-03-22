@@ -99,7 +99,9 @@ export const getAxisLabelRotation = alignment => {
  * @param {function} format
  * @returns {Plottable.Axes.Numeric}
  */
-export const createNumericAxis = (axisConfig, format = d => d, axis) => {
+
+export const createNumericAxis = 
+  (axisConfig, format?: (any) => any, axis?: Plottable.Axes.Numeric): Plottable.Components.Table | undefined => {
   const {
     showAxis = true,
     axisOrientation,
@@ -111,17 +113,17 @@ export const createNumericAxis = (axisConfig, format = d => d, axis) => {
     suffix = ''
   } = axisConfig;
 
-  if (!showAxis) return null;
+  if (!showAxis) return undefined;
 
   const alignment = axisOrientation === 'horizontal' ? 'bottom' : 'left';
 
   if (!axis) axis = new Plottable.Axes.Numeric(axisScale, alignment);
 
-  axis.formatter(d => `${prefix}${approximate(format(d))}${suffix}`);
+  axis.formatter(d => `${prefix}${approximate(format && format(d))}${suffix}`);
   axis.showEndTickLabels(true);
   axis.margin(0);
 
-  let label = null;
+  let label: Plottable.Components.AxisLabel | null = null;
 
   if (axisLabel) {
     axis.margin(axisMargin);
@@ -153,7 +155,7 @@ export const createNumericAxis = (axisConfig, format = d => d, axis) => {
  * @param {Plottable.Axes.Time} axis
  * @returns {Plottable.Axes.Time}
  */
-export const createTimeAxis = (config, axis) => {
+export const createTimeAxis = (config, axis?: any) => {
   const {
     showAxis = false,
     axisScale,
@@ -170,7 +172,7 @@ export const createTimeAxis = (config, axis) => {
   axis.showEndTickLabels(true);
   axis.margin(0);
 
-  let label = null;
+  let label: Plottable.Components.AxisLabel | null = null;
 
   if (axisLabel) {
     axis.margin(axisMargin);
@@ -203,7 +205,7 @@ export const createTimeAxis = (config, axis) => {
  * @param {Plottable.Axes.Category} axis
  * @returns {Plottable.Axes.Category}
  */
-export const createCategoryAxis = (config = {}, axis) => {
+export const createCategoryAxis = (config: any, axis?: any) => {
   const {
     showAxis = false,
     axisOrientation,
@@ -222,7 +224,7 @@ export const createCategoryAxis = (config = {}, axis) => {
 
   axis.margin(0);
 
-  let label = null;
+  let label: Plottable.Components.AxisLabel | null = null;
 
   if (axisLabel) {
     axis.margin(axisMargin);

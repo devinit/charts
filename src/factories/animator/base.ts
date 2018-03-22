@@ -1,5 +1,5 @@
 export default (stepFn, startTime, duration, callback) => {
-  let animationFrame = null;
+  let animationFrame: number | null = null;
 
   return function animate(timestamp) {
     const runtime = timestamp - startTime;
@@ -10,7 +10,7 @@ export default (stepFn, startTime, duration, callback) => {
     if (runtime < duration) {
       animationFrame = requestAnimationFrame(animate);
     } else {
-      cancelAnimationFrame(animationFrame);
+      cancelAnimationFrame(animationFrame as number);
       callback();
     }
   };

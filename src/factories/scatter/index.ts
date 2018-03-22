@@ -118,7 +118,7 @@ export default ({ element, plot, config }) => {
   });
 
   // ...
-  const selectionListeners = [];
+  const selectionListeners: any[] = [];
   const animate = createDataAnimator(idIndicator, ['x', 'y', 'z'], 2000);
   const clickTipper = createScatterClickTipper(element, tooltips, idIndicator, selectionListeners);
   const tipper = createScatterTipper(element, tooltips, [verticalAxis, horizontalAxis, bubble]);
@@ -138,10 +138,10 @@ export default ({ element, plot, config }) => {
     bubbleScale.domain([0, 3e2]).range([12, 50]);
 
     // eslint-disable-next-line
-    const callback = data => {
+    const callback = () => {
       // const rangeMinimum = Math.min.apply(null, data.map(d => d.z));
       // const rangeMaximum = Math.max.apply(null, data.map(d => d.z));
-      clickTipper.update(plot);
+      clickTipper.update();
     };
 
     const mapping = data.reduce((groups, datum) => {
@@ -175,7 +175,7 @@ export default ({ element, plot, config }) => {
       const dataset = datasets.reduce((all, set) => [...all, ...set], []);
 
       if (bubble) {
-        callback(dataset);
+        callback();
       }
 
       scatterPlot.datasets([new Plottable.Dataset(dataset)]);
@@ -212,16 +212,16 @@ export default ({ element, plot, config }) => {
       table.destroy();
     },
 
-    onSelect: callback => {
+    onSelect: (callback: any) => {
       selectionListeners.push(callback);
     },
+    // TODO: updateHorizontalAxi & updateVerticalAxis have wrong types
+    // updateHorizontalAxis: config => {
+    //   createNumericAxis(config, hAxis);
+    // },
 
-    updateHorizontalAxis: config => {
-      createNumericAxis(config, hAxis);
-    },
-
-    updateVerticalAxis: config => {
-      createNumericAxis(config, vAxis);
-    },
+    // updateVerticalAxis: config => {
+    //   createNumericAxis(config, vAxis);
+    // },
   };
 };

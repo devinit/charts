@@ -2,12 +2,14 @@ import * as Plottable from 'plottable';
 import Tooltip from 'tooltip.js';
 import {approximate} from '@devinit/prelude/lib/numbers';
 
-export default (container, labeling = {}, scale) => {
+export type CreateLineTipper = (container: string, labeling: any, scale: any) => (plot: any) => any;
+
+const createLineTipper: CreateLineTipper = (container, labeling, scale) => {
   let currentHash = null;
   const {
     prefix = '',
     suffix = ''
-  } = labeling;
+  } = labeling as any;
   return plot => {
     const tooltipAnchor = plot
       .foreground()
@@ -98,3 +100,4 @@ export default (container, labeling = {}, scale) => {
     });
   };
 };
+export default createLineTipper

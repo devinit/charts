@@ -1,10 +1,10 @@
 import * as Plottable from 'plottable';
 import Tooltip from 'tooltip.js';
-import hash from 'object-hash';
+import * as hash from 'object-hash';
 import { color } from 'd3';
 import {approximate} from '@devinit/prelude/lib/numbers';
 
-export default (container, tooltips = {}, labeling = {}) => {
+export default (container, tooltips: any = {}) => {
   let currentId = null;
   const { enable = true } = tooltips;
 

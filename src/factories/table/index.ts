@@ -1,7 +1,7 @@
 import * as Plottable from 'plottable';
 
 export const createChartTable = ({
-  title, chart, legend = null, legendPosition = 'bottom'
+  title, chart, legend, legendPosition = 'bottom'
 }) => {
   const chartWithLegend = !legend
     ? chart

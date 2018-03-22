@@ -1,14 +1,14 @@
 import * as Plottable from 'plottable';
 import { color } from 'd3';
 import {approximate} from '@devinit/prelude/lib/numbers';
-import { createCategoricChart } from '.';
+import { createCategoricChart, CreateCategoricChartResult } from '.';
 import { createBarTipper } from '../tooltips';
 import {createCustomLabels} from './helper';
 
-const createBarInteraction = (orientation = 'vertical', labeling = {}, highlight = []) => {
-  const { prefix = '', suffix = '' } = labeling as any;
+const createBarInteraction = (orientation = 'vertical', labeling: any = {}, highlight: string[] = []) => {
+  const { prefix = '', suffix = '' } = labeling;
 
-  let currentId = null;
+  let currentId: string | null = null;
 
   const reset = plot => {
     plot.entities().forEach(entity => {
@@ -30,7 +30,7 @@ const createBarInteraction = (orientation = 'vertical', labeling = {}, highlight
     if (highlight.length) {
       plot
         .entities()
-        .filter(entity => highlight.indexOf(entity.datum.label) > -1)
+        .filter((entity => highlight.indexOf(entity.datum.label) > -1))
         .forEach(entity => {
           const {
             x, y, width, height
@@ -92,7 +92,7 @@ const createBarInteraction = (orientation = 'vertical', labeling = {}, highlight
 
 export default (element, plot, config) => {
   const { interactions = { enable: false }, tooltips = { enable: true } } = config;
-  const chart = createCategoricChart({ element, plot, config });
+  const chart: CreateCategoricChartResult = createCategoricChart({ element, plot, config });
 
   plot.onAnchor(plot => {
     setTimeout(() => {
@@ -103,10 +103,9 @@ export default (element, plot, config) => {
         createCustomLabels(config.labeling, plot);
       }
       if (tooltips.enable) {
-        createBarTipper(element, config.labeling, chart.categoryScale, config.orientation)(plot);
+        createBarTipper(element, config.labeling, config.orientation)(plot);
       }
     }, 500);
   });
-
   return chart;
 };

@@ -3,8 +3,8 @@ import Tooltip from 'tooltip.js';
 import {approximate} from '@devinit/prelude/lib/numbers';
 
 export default (container, tooltips = {}, axes) => {
-  let currentId = null;
-  const { enable = true, titleIndicator } = tooltips;
+  let currentId: string | null = null;
+  const { enable = true, titleIndicator } = tooltips as any;
 
   if (!enable || !titleIndicator) {
     return () => {};

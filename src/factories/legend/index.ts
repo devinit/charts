@@ -23,7 +23,7 @@ import * as Plottable from 'plottable';
  * @param {ColorLegend} config
  * @returns {*}
  */
-export const createColorLegend = (colorScale, config = {}) => {
+export const createColorLegend = (colorScale, config: any) => {
   const {
     showLegend = false, symbol = 'square', alignment = 'left', rowSpan = Infinity
   } = config;

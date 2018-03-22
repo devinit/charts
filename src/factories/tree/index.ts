@@ -81,7 +81,7 @@ export default ({ element, plot, config }) => {
 
   table.renderTo(element);
 
-  const update = (data = null) => {
+  const update = (data?: any) => {
     if (data) {
       plot.datasets(createTreeDataset(data));
     }
@@ -92,18 +92,18 @@ export default ({ element, plot, config }) => {
     }
   };
 
-  const onClick = (callback = d => d) => {
+  const onClick = (callback?: (entities: any, xScale: any, yScale: any) => void) => {
     const interaction = new Plottable.Interactions.Click()
       .onClick(point => {
         const entities = plot.entitiesAt(point);
 
         if (entities.length) {
-          callback(entities, xScale, yScale);
+          if (callback) callback(entities, xScale, yScale);
         }
       })
       .attachTo(plot);
 
-    if (legend.showLegend) {
+    if (legend.showLegend && colorLegend) {
       const legendInteraction = new Plottable.Interactions.Click()
         .onClick(point => {
           const [clicked] = colorLegend.entitiesAt(point);
@@ -111,7 +111,7 @@ export default ({ element, plot, config }) => {
           if (clicked) {
             const entities = plot.entities().filter(d => d.datum.id === clicked.datum);
 
-            callback(entities, xScale, yScale);
+            if (callback) callback(entities, xScale, yScale);
           }
         })
         .attachTo(colorLegend);
@@ -139,7 +139,7 @@ export default ({ element, plot, config }) => {
   };
 };
 
-export const createColorFiller = (colors = [], rules, indicator) => d => {
+export const createColorFiller = (colors = [], indicator) => d => {
   d.eachBefore(node => {
     if (node.depth === 0) {
       node.color = node.data[indicator] || colors[0] || '#abc';

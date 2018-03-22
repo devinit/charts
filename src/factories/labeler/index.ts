@@ -13,7 +13,7 @@ import {approximate} from '@devinit/prelude/lib/numbers';
  *
  */
 
-export const createTreeChartLabeler = (config, percentage = () => 100) => {
+export const createTreeChartLabeler = (config, percentage: (number) => number = () => 100) => {
   const {
     showLabels = true,
     showValues = true,
@@ -22,8 +22,7 @@ export const createTreeChartLabeler = (config, percentage = () => 100) => {
     suffix = '',
     autofit = false,
   } = config;
-  // eslint-disable-next-line func-names
-  return function () {
+  return function (this: any) {
     const foreground = this.foreground();
     const entities = this.entities();
     // Remove all current labels
@@ -49,7 +48,7 @@ export const createTreeChartLabeler = (config, percentage = () => 100) => {
           ? `${prefix ? `${prefix} ` : ''}${value}${suffix ? ` ${suffix}` : ''}`
           : '';
         const separator = showValues && showPercents ? ' | ' : '';
-        const autofitFontStyle = autofit ?
+        const autofitFontStyle: any = autofit ?
           autofitStyles(width, height, `${label} ${percentageLabel}${valueLabel}`) :
           '';
         foreground

@@ -2,7 +2,7 @@ import { easeLinear } from 'd3';
 import { uniq } from 'lodash';
 import createAnimator from './base';
 
-export default (id, indicators = [], duration) => {
+export default (id, indicators: any[], duration) => {
   return (plot, scaleBubbles, data) =>
     new Promise(resolve => {
       const initial = plot

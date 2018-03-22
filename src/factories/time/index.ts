@@ -30,7 +30,7 @@ export default ({ element, plot, config }) => {
       interpolate: false,
     },
 
-    showLabels = true,
+    // showLabels = true,
 
     linearAxis,
 
@@ -53,8 +53,7 @@ export default ({ element, plot, config }) => {
         plot: createTimePlot({
           plot,
           timeScale,
-          linearScale,
-          showLabels,
+          linearScale
         }),
         grid: createLinearAxisGridLines({
           ...linearAxis,
@@ -85,11 +84,11 @@ export default ({ element, plot, config }) => {
 
   const animate = createScaleAnimator(500);
 
-  const listeners = [];
+  const listeners: any[] = [];
 
-  plot.onAnchor(createLineTipper(element, labeling, timeScale, 'vertical'));
+  plot.onAnchor(createLineTipper(element, labeling, timeScale));
 
-  let moveAnchor = null;
+  let moveAnchor: (year: number) => void;
 
   table.addClass('time');
 
@@ -135,11 +134,11 @@ export default ({ element, plot, config }) => {
       if (legend.showLegend) {
         colorScale
           .domain(groupIds.map(groupId => groupId || 'Unknown'))
-          .range(groupIds.map((d, i) => colors[i] || '#abc'));
+          .range(groupIds.map((_d, i) => colors[i] || '#abc'));
       }
 
       const datasets = groupIds.map((groupId, index) => {
-        const dataset = groups[groupId];
+        const dataset: {[year: string]: any[]} = groups[groupId];
 
         if (!time.interpolate) {
           const years = keys(dataset).map(year => +year);
@@ -163,14 +162,14 @@ export default ({ element, plot, config }) => {
         }
 
         return values(dataset)
-          .map(list => list.reduce((s, d) => ({ ...s, value: s.value + d.value })));
+          .map(list => list.reduce((s: any, d: any) => ({ ...s, value: s.value + d.value })));
       });
 
       if (plot.datasets().length) {
-        const sums = [];
+        const sums: number[] = [];
 
         for (let i = 0; i < Math.max.apply(null, datasets.map(d => d.length)); i += 1) {
-          sums[i] = datasets.reduce((sum, set) => sum + (set[i] ? set[i].value : 0), 0);
+          sums[i] = datasets.reduce((sum, set: any) => sum + (set[i] ? set[i].value : 0), 0);
         }
 
         const axisMaximum = Math.max.apply(null, sums);
@@ -181,7 +180,7 @@ export default ({ element, plot, config }) => {
       plot.datasets(datasets.map(d => new Plottable.Dataset(d)));
     },
 
-    onAnchorMoved: (callback = null) => {
+    onAnchorMoved: (callback: any = null) => {
       if (callback && callback.call) {
         listeners.push(callback);
       }

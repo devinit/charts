@@ -5,7 +5,7 @@ import * as Plottable from 'plottable';
  * @param {NumericAxis} config
  * @returns {Linear}
  */
-export const createLinearScale = (config = {}) => {
+export const createLinearScale = (config: any) => {
   const { axisMinimum = null, axisMaximum = null } = config;
 
   const scale = new Plottable.Scales.Linear();
@@ -22,7 +22,7 @@ export const createLinearScale = (config = {}) => {
  * @param {TimeAxis} config
  * @returns {Time}
  */
-export const createTimeScale = (config = {}) => {
+export const createTimeScale = (config: any) => {
   const { axisMinimum = null, axisMaximum = null } = config;
 
   const scale = new Plottable.Scales.Time();

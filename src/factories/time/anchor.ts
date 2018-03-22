@@ -1,7 +1,7 @@
 
 import { drag, event } from 'd3';
 
-export default (table, timeScale, anchor = { start: 0 }, legend = {}, listeners) => {
+export default (table, timeScale, anchor = { start: 0 }, legend: any, listeners) => {
   const originDate = new Date(timeScale.domainMin());
   const startDate = anchor.start ? new Date(anchor.start.toString()) : originDate;
   let currentYear = startDate.getFullYear().toString();
@@ -64,7 +64,7 @@ export default (table, timeScale, anchor = { start: 0 }, legend = {}, listeners)
     .attr('stroke', '#444')
     .attr('stroke-width', 2);
 
-  const changeAnchorPosition = year => {
+  const changeAnchorPosition = (year): void => {
     // Prevent duplicate movements,
     // oh and they'll be duplicate movements
     // -- remove this condition at your own risk.
@@ -114,7 +114,10 @@ export default (table, timeScale, anchor = { start: 0 }, legend = {}, listeners)
 
     function ended() {
       // revert cursor style
-      document.body.style = {};
+      // ts-disable
+      /* tslint:disable-next-line */
+      // TODO: type system says the below line is wrong
+      // document.body.style = {};
     }
 
     event.on('drag', dragged).on('end', ended);

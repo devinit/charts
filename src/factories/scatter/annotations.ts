@@ -1,4 +1,4 @@
-
+import {Plot, Scales} from 'plottable';
 import { color } from 'd3';
 
 /**
@@ -16,8 +16,24 @@ import { color } from 'd3';
  * @property {AnnotationBound} verticalAxis
  */
 
-
-export default (config) => {
+export interface Axis {
+  minimum?: number;
+  maximum?: number;
+}
+export interface Annotation {
+  horizontalAxis: Axis;
+  verticalAxis: Axis;
+  title: string;
+  body: string;
+  fill: string;
+}
+export interface Config {
+  annotations: Annotation[];
+  verticalScale: Scales.Linear;
+  horizontalScale: Scales.Linear;
+  plot: Plot;
+}
+export default (config: Config) => {
   const {
     annotations,
     verticalScale,
@@ -36,7 +52,7 @@ export default (config) => {
     .remove();
 
   annotations.forEach(({
-    title, body, fill, horizontalAxis = {}, verticalAxis = {}
+    title, body, fill, horizontalAxis, verticalAxis
   }) => {
     const x0 = horizontalScale.scale(
       typeof horizontalAxis.minimum !== 'number' ||
