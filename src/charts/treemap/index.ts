@@ -15,19 +15,34 @@ import createTilingMethod from './tiling';
  * @property {Tiling} tiling - Tiling
  *
  */
-
-export default (element, data = [], config) => {
+export interface Tree {
+  id: string;
+  parent: string;
+  value: string;
+}
+export interface Labeling {
+  suffix: string;
+}
+export interface Tiling {
+  method: string;
+  ratio: number;
+}
+export interface Tooltips {
+  enable: boolean;
+}
+export interface Config {
+  orientation: string;
+  type: 'treemap';
+  coloring?: string;
+  colors: any;
+  tree: Tree;
+  labeling: Labeling;
+  tiling: Tiling;
+  tooltips: Tooltips;
+}
+export default (element, data = [], config: Config) => {
   const {
     orientation = 'vertical',
-
-    colors = [],
-
-    coloring = null,
-
-    tree,
-
-    // Tiling configuration
-    tiling = {},
 
     labeling = {},
 
@@ -35,16 +50,14 @@ export default (element, data = [], config) => {
       enable: true,
     },
 
-    ...more
   } = config;
-
   const width = element.parentElement.clientWidth;
   const height = element.parentElement.clientHeight;
   const calculatePercentage = createPercentageCalculator(width, height);
 
   const plot = new Plottable.Plots.Rectangle();
 
-  const treeTipper = createTreeTipper(element, labeling, calculatePercentage);
+  const treeTipper = createTreeTipper(element, config.labeling, calculatePercentage);
 
   plot.onAnchor(_plot => {
     if (tooltips.enable) {
@@ -54,7 +67,7 @@ export default (element, data = [], config) => {
     }
   });
 
-  (plot as any)._drawLabels = createTreeChartLabeler(labeling, calculatePercentage);
+  (plot as any)._drawLabels = createTreeChartLabeler(config.labeling, calculatePercentage);
 
   // ... apply rectangle configuration
 
@@ -66,22 +79,22 @@ export default (element, data = [], config) => {
       labeling,
       width,
       height,
-      ...more
+      ...config
     },
   });
 
   const listeners: any[] = [];
 
-  const tilingMethod = createTilingMethod(tiling);
+  const tilingMethod = createTilingMethod(config.tiling);
 
   const layout = treemap()
     .tile(tilingMethod)
     .size([width, height]);
 
-  const colorize = createColorFiller(colors, coloring);
+  const colorize = createColorFiller(config.colors, config.coloring);
 
   const update = _data => {
-    const root = colorize(createTreeHierachy(_data, tree)
+    const root = colorize(createTreeHierachy(_data, config.tree)
       .sort((a: any, b: any) => b.value - a.value));
     treeChart.update(layout(root).leaves());
   };

@@ -8,7 +8,26 @@ import { createLineChart} from '../factories/categoric/line';
  * @property {'area'} type
  *
  */
-const area = (element, data, config): CategoricChart => {
+export interface CategoryAxis {
+  showAxis: boolean;
+  showGridlines: boolean;
+  axisLabel: string;
+  indicator: string;
+}
+export interface LinearAxis  {
+  showAxis: boolean;
+  showGridlines: boolean;
+  indicator: string;
+  axisLabel: string;
+}
+export interface Config {
+  type: 'area';
+  title: string;
+  colors: string[];
+  linearAxis: LinearAxis;
+  categoryAxis: CategoryAxis;
+}
+const area = (element: HTMLElement, data: any, config: Config): CategoricChart => {
   const plot = new Plottable.Plots.Area();
 
   // ... apply area configuration

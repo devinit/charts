@@ -1,15 +1,14 @@
 import createScaleAnimator from '../../factories/animator/scale';
 
-export default (config: any) => {
-  const {
-    width,
-    height,
-    listeners = [],
-  } = config;
-
+export interface Config {
+  width: number;
+  height: number;
+  listeners: any;
+  orientation: string;
+}
+export default (config: Config) => {
   const animate = createScaleAnimator(500);
-  const onAnimated = datum => listeners.forEach(callback => callback(datum.data));
-
+  const onAnimated = datum => config.listeners.forEach(callback => callback(datum.data));
   return (entities, xScale, yScale) => {
     const entity = entities.pop();
 
@@ -22,16 +21,14 @@ export default (config: any) => {
       xScale.domain(),
       yScale.domain(),
     ];
-
     const shouldReset = [[nextDomain, previousDomain]]
       .every(([[[a, b], [c, d]], [[w, x], [y, z]]]) => {
         const diff = (a + b + c + d) - (w + x + y + z);
 
         return +diff.toFixed(2) === 0;
       });
-
     if (shouldReset) {
-      animate([xScale, yScale], [0, width], [0, height])
+      animate([xScale, yScale], [0, config.width], [0, config.height])
         .then(() => onAnimated(datum));
     } else {
       animate([xScale, yScale], ...nextDomain)

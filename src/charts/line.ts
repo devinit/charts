@@ -8,7 +8,17 @@ import { createLineChart } from '../factories/categoric/line';
  * @property {'line'} type
  *
  */
-export default (element, data, config): CategoricChart => {
+export interface Config {
+  type: 'timeline';
+  groupBy: string;
+  title: string;
+  colors: string[];
+  coloring: string;
+  linearAxis: any;
+  timeAxis: any;
+  legend: any;
+}
+export default (element: HTMLElement, data, config: Config): CategoricChart => {
   const plot = new Plottable.Plots.Line();
 
   const linearChart = createLineChart(element, plot, config);

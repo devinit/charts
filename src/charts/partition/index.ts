@@ -7,6 +7,7 @@ import { createTreeChartLabeler } from '../../factories/labeler';
 import { createTreeTipper } from '../../factories/tooltips';
 import partition from './layout';
 import createPercentageCalculator from './percentage';
+import { Tooltips } from '../treemap';
 
 /**
  * @typedef {TreeChart} Partition
@@ -15,14 +16,31 @@ import createPercentageCalculator from './percentage';
  * @property {('vertical'|'horizontal')} orientation=horizontal - Orientation
  *
  */
-
-export default (element, data = [], config) => {
+export interface Tree {
+  id: string;
+  parent: string;
+  value: string;
+  depth: any;
+}
+export interface Legend {
+  showLegend: boolean;
+  depth: number;
+}
+export interface Labeling {
+  prefix: string;
+}
+export interface Config {
+  orientation: string;
+  colors: any;
+  coloring?: any;
+  tree: Tree;
+  labeling: Labeling;
+  legend: Legend;
+  tooltips: Tooltips;
+}
+export default (element, data = [], config: Config) => {
   const {
     orientation = 'horizontal',
-
-    colors = [],
-
-    coloring = null,
 
     tree,
 
@@ -32,16 +50,14 @@ export default (element, data = [], config) => {
       enable: true,
     },
 
-    ...moreConfig
   } = config;
-
   const width = element.parentElement.clientWidth;
   const height = element.parentElement.clientHeight;
-  const calculatePercentage = createPercentageCalculator(width, height, orientation);
+  const calculatePercentage = createPercentageCalculator(width, height, config.orientation);
 
   const plot = new Plottable.Plots.Rectangle();
 
-  const treeTipper = createTreeTipper(element, labeling, calculatePercentage);
+  const treeTipper = createTreeTipper(element, config.labeling, calculatePercentage);
 
   plot.onAnchor(_plot => {
     if (tooltips.enable) {
@@ -52,7 +68,7 @@ export default (element, data = [], config) => {
     }
   });
 
-  (plot as any)._drawLabels = createTreeChartLabeler(labeling, calculatePercentage);
+  (plot as any)._drawLabels = createTreeChartLabeler(config.labeling, calculatePercentage);
 
   const treeChart = createTreeChart({
     element,
@@ -62,7 +78,7 @@ export default (element, data = [], config) => {
       labeling,
       width,
       height,
-      ...moreConfig
+      ...config
     },
   });
 
@@ -71,7 +87,7 @@ export default (element, data = [], config) => {
     orientation === 'vertical' ? height : width,
   ]);
 
-  const colorize = createColorFiller(colors, coloring);
+  const colorize = createColorFiller(config.colors, config.coloring);
 
   const listeners: any[] = [];
 
@@ -110,7 +126,7 @@ export default (element, data = [], config) => {
   });
 
   const update = _data => {
-    const root = colorize(createTreeHierachy(_data, tree)
+    const root = colorize(createTreeHierachy(_data, config.tree)
       .sort((a: any, b: any) => a.value - b.value));
 
     treeChart.update(layout(root)
@@ -119,7 +135,7 @@ export default (element, data = [], config) => {
   };
 
   const hashes = {
-    labeling: hash(labeling),
+    labeling: hash(config.labeling),
   };
 
   const chart = {

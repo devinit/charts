@@ -25,6 +25,11 @@ import { BarOrientation } from 'plottable/build/src/plots';
  * @typedef {Object} DualSidebarConfig
  * @property {number} gutter=100 - Gutter
  */
+export interface Axis {
+  showAxis: boolean;
+  ticking: string;
+  indicator: any;
+}
 export interface Config {
  title?: string;
  titleAlignment: Plottable.XAlignment;
@@ -34,13 +39,16 @@ export interface Config {
  groupBy: string;
  subGroupBy: string;
  orderBy: string;
- colors?: string[];
+ colors?: any;
  coloring?: string;
- showLabels?: true;
+ showLabels?: boolean;
  linearAxis: any;
  categoryAxis: any;
  dualSidebar?: any;
  tooltips?: any;
+ showAxis: boolean;
+  ticking: string;
+  indicator: any;
 }
 
 export interface Hash {
@@ -48,9 +56,6 @@ export interface Hash {
 }
 
 export default (element, data, config: Config) => {
-  const leftPlot = new Plottable.Plots.Bar(config.orientation);
-  const rightPlot = new Plottable.Plots.Bar(config.orientation);
-
   const {
     title,
 
@@ -66,35 +71,27 @@ export default (element, data, config: Config) => {
 
     orderBy,
 
-    colors = [],
-
-    coloring = null,
-
     showLabels = false,
-
-    linearAxis,
-
-    categoryAxis,
 
     dualSidebar = {
       gutter: 100,
     },
 
     tooltips = { enable: true },
-
-    // ... more config
   } = config;
 
-  const { format, modify } = createAxisModifier(linearAxis);
-  const leftCategoryScale = createCategoryScale(categoryAxis);
-  const rightCategoryScale = createCategoryScale(categoryAxis);
+  const leftPlot = new Plottable.Plots.Bar(config.orientation);
+  const rightPlot = new Plottable.Plots.Bar(config.orientation);
+  const { format, modify } = createAxisModifier(config.linearAxis);
+  const leftCategoryScale = createCategoryScale(config.categoryAxis);
+  const rightCategoryScale = createCategoryScale(config.categoryAxis);
 
   const leftLinearScale = createLinearScale({
-    ...linearAxis,
-    axisMinimum: linearAxis.axisMaximum && -linearAxis.axisMaximum,
-    axisMaximum: linearAxis.axisMinimum && -linearAxis.axisMinimum,
+    ...config.linearAxis,
+    axisMinimum: config.linearAxis.axisMaximum && -config.linearAxis.axisMaximum,
+    axisMaximum: config.linearAxis.axisMinimum && -config.linearAxis.axisMinimum,
   });
-  const rightLinearScale = createLinearScale(linearAxis);
+  const rightLinearScale = createLinearScale(config.linearAxis);
 
   const table = createChartTable({
     title: createTitle({ title, titleAlignment }),
@@ -110,7 +107,7 @@ export default (element, data, config: Config) => {
           },
           modify,
         ),
-        grid: createLinearAxisGridLines({ ...linearAxis, orientation, scale: leftLinearScale }),
+        grid: createLinearAxisGridLines({ ...config.linearAxis, orientation, scale: leftLinearScale }),
       }),
 
       rightPlotArea: createPlotWithGridlines({
@@ -123,12 +120,12 @@ export default (element, data, config: Config) => {
           },
           modify,
         ),
-        grid: createLinearAxisGridLines({ ...linearAxis, orientation, scale: rightLinearScale }),
+        grid: createLinearAxisGridLines({ ...config.linearAxis, orientation, scale: rightLinearScale }),
       }),
 
       leftLinearAxis: createNumericAxis(
         {
-          ...linearAxis,
+          ...config.linearAxis,
           axisScale: leftLinearScale,
           axisOrientation: orientation,
         },
@@ -137,7 +134,7 @@ export default (element, data, config: Config) => {
 
       rightLinearAxis: createNumericAxis(
         {
-          ...linearAxis,
+          ...config.linearAxis,
           axisScale: rightLinearScale,
           axisOrientation: orientation,
           absolute: true,
@@ -236,16 +233,16 @@ export default (element, data, config: Config) => {
               for (let i = rightSubGroupSize; i < leftSubGroupSize; i++) {
                 right[groupId][subGroupId].push({
                   ...left[groupId][subGroupId][i],
-                  [categoryAxis.indicator]: '',
-                  [linearAxis.indicator]: 0,
+                  [config.categoryAxis.indicator]: '',
+                  [config.linearAxis.indicator]: 0,
                 });
               }
             } else if (leftSubGroupSize < rightSubGroupSize) {
               for (let j = leftSubGroupSize; j < rightSubGroupSize; j++) {
                 left[groupId][subGroupId].push({
                   ...right[groupId][subGroupId][j],
-                  [categoryAxis.indicator]: '',
-                  [linearAxis.indicator]: 0,
+                  [config.categoryAxis.indicator]: '',
+                  [config.linearAxis.indicator]: 0,
                 });
               }
             }
@@ -257,8 +254,8 @@ export default (element, data, config: Config) => {
             {
               [groupBy]: '',
               [subGroupBy]: '',
-              [categoryAxis.indicator]: '',
-              [linearAxis.indicator]: 0,
+              [config.categoryAxis.indicator]: '',
+              [config.linearAxis.indicator]: 0,
             },
           ];
 
@@ -266,8 +263,8 @@ export default (element, data, config: Config) => {
             {
               [groupBy]: '',
               [subGroupBy]: '',
-              [categoryAxis.indicator]: '',
-              [linearAxis.indicator]: 0,
+              [config.categoryAxis.indicator]: '',
+              [config.linearAxis.indicator]: 0,
             },
           ];
         });
@@ -286,7 +283,7 @@ export default (element, data, config: Config) => {
             return flattenDeep(values(grp))
               .map(datum => ({
                 ...datum,
-                color: (coloring && datum[coloring]) || colors[groupIndex] || '#abc',
+                color: (config.coloring && datum[config.coloring]) || config.colors[groupIndex] || '#abc',
               }));
           })
         );
@@ -296,8 +293,8 @@ export default (element, data, config: Config) => {
           direction,
           sort: datum[orderBy],
           color: datum.color,
-          label: datum[categoryAxis.indicator],
-          value: datum[linearAxis.indicator] * direction,
+          label: datum[config.categoryAxis.indicator],
+          value: datum[config.linearAxis.indicator] * direction,
           opacity: 1,
           category: datum[groupBy],
           subCategory: datum[subGroupBy],
