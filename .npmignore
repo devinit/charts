@@ -18,9 +18,15 @@ package-lock.json
 coverage
 
 # test output
+test
 test/**/out
 .DS_Store
 .csslintrc
 
 #editors
 .idea
+
+# source
+src
+index.html
+schema

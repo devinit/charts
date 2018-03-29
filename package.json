@@ -1,15 +1,14 @@
 {
   "name": "@devinit/charts",
-  "version": "1.6.52",
+  "version": "1.6.53",
   "description": "Modular D3 charts for DevInit DataHub",
   "main": "lib/index.js",
   "scripts": {
-    "test": "babel -d lib/ src/ && mocha --reporter spec -r jsdom-global/register",
-    "test:dev": "mocha --reporter spec -r jsdom-global/register",
+    "test": "jest",
+    "test:dev": "jest -w",
     "start": "webpack-dev-server",
-    "compile": "babel -d lib/ src/",
-    "lint": "eslint schema src test --ext .js && npm run flow",
-    "format": "prettier-eslint --write \"src/**/*.js\" \"test/**/*.js\" \"schema/**/*.js\"",
+    "compile": "tsc",
+    "lint": "tslint -c tslint.json 'src/**/*.ts' 'schema/**/*.ts' ",
     "build": "webpack  --env=dev --profile --colors",
     "build:production": "WEBPACK_ENV=production webpack --env=prod --profile --colors",
     "patch": "release-it -i patch -n",
@@ -19,48 +18,45 @@
     "schema:dev": "npm run compile && npm run schema"
   },
   "dependencies": {
-    "babel-runtime": "6.26.0",
+    "@devinit/prelude": "^1.1.1",
     "chai-stats": "^0.3.0",
     "d3": "4.10.2",
     "d3-drag": "^1.1.0",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.5",
     "object-hash": "^1.1.8",
-    "plottable": "3.1.1",
-    "tooltip": "^1.6.1",
-    "tooltip.js": "^1.1.4"
+    "plottable": "3.8.0",
+    "tooltip.js": "^1.2.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-eslint": "^8.0.0",
-    "babel-loader": "^7.1.2",
-    "babel-plugin-dynamic-import-node": "^1.0.2",
-    "babel-plugin-remove-webpack": "^1.1.0",
-    "babel-plugin-syntax-dynamic-import": "^6.18.0",
-    "babel-plugin-transform-object-rest-spread": "6.26.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-env": "^1.6.0",
-    "babel-preset-flow": "^6.23.0",
-    "chai": "^3.5.0",
-    "css-loader": "^0.28.4",
-    "eslint": "^4.7.2",
-    "eslint-config-airbnb-base": "^12.0.0",
-    "eslint-plugin-flowtype": "^2.35.1",
-    "eslint-plugin-import": "^2.7.0",
+    "@types/d3": "^5.0.0",
+    "@types/d3-drag": "^1.2.0",
+    "@types/jest": "^22.2.0",
+    "@types/lodash": "^4.14.105",
+    "@types/object-hash": "^1.2.0",
+    "css-loader": "^0.28.11",
     "extract-text-webpack-plugin": "^3.0.0",
-    "flow-bin": "^0.54.1",
+    "fork-ts-checker-webpack-plugin": "^0.4.1",
+    "git-pre-hooks": "^1.2.0",
+    "happypack": "^4.0.1",
+    "jest": "^22.4.2",
+    "jest-cli": "^23.0.0-alpha.0",
     "jsdoc": "^3.4.3",
     "jsdom": "^11.0.0",
     "jsdom-global": "^3.0.2",
-    "less": "^2.7.2",
-    "less-loader": "^4.0.4",
-    "mocha": "^3.4.2",
-    "prettier-eslint-cli": "^4.3.2",
-    "progress-bar-webpack-plugin": "^1.9.3",
-    "release-it": "^2.7.3",
-    "uglifyjs-webpack-plugin": "^0.4.6",
-    "webpack": "^3.6.0",
-    "webpack-dev-server": "^2.8.2"
+    "less": "^3.0.1",
+    "less-loader": "^4.1.0",
+    "node-dev": "^3.1.3",
+    "progress-bar-webpack-plugin": "^1.11.0",
+    "release-it": "^7.2.1",
+    "ts-jest": "^22.4.2",
+    "ts-loader": "^4.1.0",
+    "ts-node": "^5.0.1",
+    "tslint": "^5.9.1",
+    "typescript": "^2.7.2",
+    "uglifyjs-webpack-plugin": "^1.2.4",
+    "webpack": "4.1.1",
+    "webpack-cli": "^2.0.13",
+    "webpack-serve": "^0.2.0"
   },
   "directories": {
     "dist": "./dist",
@@ -76,6 +72,26 @@
     "charts",
     "d3"
   ],
+  "git-pre-hooks": {
+    "pre-push": [
+      "npm run compile",
+      "npm run lint"
+    ]
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true,
+    "testEnvironment": "node",
+    "testRegex": ".*\\.test\\.ts$",
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json"
+    ]
+  },
   "author": "Alex Miller",
   "license": "ISC",
   "bugs": {

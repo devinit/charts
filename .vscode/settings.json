@@ -1,5 +1,4 @@
-{
-    "files.exclude": {
+{   "files.exclude": {
         "**/.git": true,
         "**/.svn": true,
         "**/.hg": true,
@@ -7,7 +6,7 @@
         "**/.DS_Store": true,
         "**/bower_components": true,
         "**/dist": true,
-        "**/lib": false,
+        "**/lib": true,
         "**/output": true,
         "**/.pulp-cache": true,
         "**/.stack-work": true,
