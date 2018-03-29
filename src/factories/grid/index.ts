@@ -1,7 +1,13 @@
 import * as Plottable from 'plottable';
 import { configureGridTicking } from '../ticking';
 
-export const createLinearAxisGridLines = config => {
+export interface Config {
+  orientation: string;
+  scale: any;
+  showGridlines: boolean;
+  ticking: string;
+}
+export const createLinearAxisGridLines = (config: Config) => {
   const {
     orientation, scale, showGridlines = false, ticking = 'odd'
   } = config;

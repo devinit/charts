@@ -1,4 +1,4 @@
-export default (stepFn, startTime, duration, callback) => {
+export default (stepFn: (number: number) => any, startTime: number, duration: number, callback: () => void) => {
   let animationFrame: number | null = null;
 
   return function animate(timestamp) {

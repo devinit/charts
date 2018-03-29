@@ -1,6 +1,5 @@
 import * as Plottable from 'plottable';
-import createScatterChart from '../factories/scatter';
-import {Annotation} from '../factories/scatter/annotations';
+import createScatterChart, {Config as SConfig} from '../factories/scatter';
 import { Legend } from 'plottable/build/src/components';
 
 /**
@@ -28,24 +27,16 @@ export interface Tooltips {
   enable: boolean;
   titleIndicator: string;
 }
-export interface Config {
+export type Config = SConfig & {
   type: 'bubble';
-  title: string;
-  colors: string[];
-  groupBy: string;
-  horizontalAxis: Axis;
-  verticalAxis: Axis;
-  bubble: Bubble;
-  legend: Legend;
-  annotations?: Annotation;
-  tooltips: Tooltips;
-}
-export default (element: HTMLElement, data: any, config: Config) => {
+};
+
+export default (element, data: any, config: Config) => {
   const plot = new Plottable.Plots.Scatter();
 
   // ... apply scatter configuration
 
-  const chart = createScatterChart({ element, plot, config });
+  const chart = createScatterChart(element, plot, config);
 
   chart.update(data);
 

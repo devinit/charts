@@ -2,7 +2,11 @@ import * as Plottable from 'plottable';
 import Tooltip from 'tooltip.js';
 import {approximate} from '@devinit/prelude/lib/numbers';
 
-export default (container, tooltips = {}, axes) => {
+export interface TooltipI {
+  enable: boolean;
+  titleIndicator: any;
+}
+export default (container, tooltips: TooltipI, axes) => {
   let currentId: string | null = null;
   const { enable = true, titleIndicator } = tooltips as any;
 

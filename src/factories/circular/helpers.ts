@@ -1,7 +1,14 @@
 import * as Plottable from 'plottable';
 import {approximate} from '@devinit/prelude/lib/numbers';
 
-export const createCircularPlot = (config: any): Plottable.Plot => {
+export interface Config {
+  plot: any;
+  labeling: any;
+  innerRadius: number;
+  strokeColor: string;
+  strokeWidth: number;
+}
+export const createCircularPlot = (config: Config): Plottable.Plot => {
   const {
     plot,
     labeling,

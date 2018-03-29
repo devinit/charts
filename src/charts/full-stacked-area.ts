@@ -13,6 +13,7 @@ export interface LinearAxis  {
   showGridlines: boolean;
   indicator: string;
   axisLabel: string;
+  ticking: string;
 }
 export interface CategoryAxis {
   showAxis: boolean;
@@ -34,16 +35,16 @@ export interface Config {
   legend: Legend;
 }
 export default (element: HTMLElement, data: any, config: Config) => {
+  const { linearAxis = {} } = config;
   const plot = new Plottable.Plots.StackedArea();
 
   const linearChart = createLineChart(element, plot, {
+    ...config,
     linearAxis: {
       axisMaximum: 100,
       axisMinimum: 0,
-
-      ...config.linearAxis,
-    },
-    ...config,
+      ...linearAxis,
+    }
   });
 
   const update = _data =>

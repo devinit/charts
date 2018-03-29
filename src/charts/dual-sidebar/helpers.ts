@@ -7,8 +7,8 @@ export interface Args {
 export interface Components {
   leftLinearAxis: any;
   rightLinearAxis: any;
-  leftPlotArea: any;
-  rightPlotArea: any;
+  leftPlotArea: string;
+  rightPlotArea: string;
   leftCategoryAxis?: any;
   rightCategoryAxis?: any;
   dualSidebar: any;

@@ -1,7 +1,7 @@
 import createAnimator from './base';
 import { easeCircleInOut } from 'd3';
 
-export default (duration, anchor, tooltip) => {
+export default (duration: number, anchor, tooltip) => {
   return position =>
     new Promise(resolve => {
       const initial = anchor.node().getBBox();

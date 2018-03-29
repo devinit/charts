@@ -12,17 +12,26 @@ import createScaleAnimator from '../animator/scale';
 import { createPlotAreaWithAxes, createTimePlot } from './utils';
 import createTimeAnchor from './anchor';
 
-export default ({ element, plot, config }) => {
+export interface Config {
+  title?: string;
+  titleAlignment?: any;
+  groupBy: string;
+  colors: string[];
+  coloring?: string;
+  labeling?: any;
+  time: any;
+  linearAxis: any;
+  timeAxis: any;
+  anchor?: any;
+  legend?: any;
+}
+export default ( element: string, plot, config: Config) => {
   const {
-    title = null,
-
     titleAlignment = 'left',
 
     groupBy,
 
     colors = [],
-
-    coloring = null,
 
     labeling,
 
@@ -46,7 +55,7 @@ export default ({ element, plot, config }) => {
   const colorScale = new Plottable.Scales.Color();
 
   const table = createChartTable({
-    title: createTitle({ title, titleAlignment }),
+    title: createTitle({ title: config.title, titleAlignment }),
 
     chart: createPlotAreaWithAxes({
       plotArea: createPlotWithGridlines({
@@ -121,7 +130,7 @@ export default ({ element, plot, config }) => {
               group: item[groupBy],
               label: item[timeAxis.indicator],
               value: item[linearAxis.indicator],
-              color: item[coloring] || colors[index] || '#abc',
+              color: config.coloring && item[config.coloring] || colors[index] || '#abc',
               opacity: 1,
             })),
             item => item.label

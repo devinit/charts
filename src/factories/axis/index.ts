@@ -98,14 +98,23 @@ export const getAxisLabelRotation = alignment => {
  * @param {function} format
  * @returns {Plottable.Axes.Numeric}
  */
-
+export interface NumericAxis {
+  showAxis?: boolean;
+  axisOrientation: string;
+  axisScale: any;
+  axisLabel?: any;
+  axisMargin: number;
+  ticking: string;
+  prefix: string;
+  suffix: string;
+}
 export const createNumericAxis =
-  (axisConfig, format?: (any) => any, axis?: Plottable.Axes.Numeric): Plottable.Components.Table | undefined => {
+  (axisConfig: NumericAxis, format?: (any) => any, axis?: Plottable.Axes.Numeric): Plottable.Components.Table
+  | undefined => {
   const {
     showAxis = true,
     axisOrientation,
     axisScale,
-    axisLabel = null,
     axisMargin = 10,
     ticking = 'all',
     prefix = '',
@@ -124,10 +133,10 @@ export const createNumericAxis =
 
   let label: Plottable.Components.AxisLabel | null = null;
 
-  if (axisLabel) {
+  if (axisConfig.axisLabel) {
     axis.margin(axisMargin);
-    label = axisLabel &&
-      new Plottable.Components.AxisLabel(axisLabel, getAxisLabelRotation(alignment));
+    label = axisConfig.axisLabel &&
+      new Plottable.Components.AxisLabel(axisConfig.axisLabel, getAxisLabelRotation(alignment));
   }
 
   // Add ticking classes

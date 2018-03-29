@@ -1,6 +1,6 @@
 import * as Plottable from 'plottable';
 import * as hash from 'object-hash';
-import createTreeChart, { createColorFiller } from '../../factories/tree';
+import createTreeChart, { createColorFiller, Config as TConfig, Legend} from '../../factories/tree';
 import { createTreeHierachy } from '../../factories/dataset';
 import createScaleAnimator from '../../factories/animator/scale';
 import { createTreeChartLabeler } from '../../factories/labeler';
@@ -22,29 +22,21 @@ export interface Tree {
   value: string;
   depth: any;
 }
-export interface Legend {
-  showLegend: boolean;
-  depth: number;
-}
-export interface Labeling {
-  prefix: string;
-}
-export interface Config {
+
+export type  Config = TConfig  & {
   orientation: string;
   colors: any;
   coloring?: any;
   tree: Tree;
-  labeling: Labeling;
   legend: Legend;
   tooltips: Tooltips;
-}
+};
+
 export default (element, data = [], config: Config) => {
   const {
     orientation = 'horizontal',
 
     tree,
-
-    labeling = {},
 
     tooltips = {
       enable: true,
@@ -70,17 +62,11 @@ export default (element, data = [], config: Config) => {
 
   (plot as any)._drawLabels = createTreeChartLabeler(config.labeling, calculatePercentage);
 
-  const treeChart = createTreeChart({
+  const treeChart = createTreeChart(
     element,
     plot,
-    config: {
-      orientation,
-      labeling,
-      width,
-      height,
-      ...config
-    },
-  });
+    config
+  );
 
   const layout = partition().size([
     orientation === 'vertical' ? width : height,

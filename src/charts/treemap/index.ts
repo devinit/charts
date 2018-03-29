@@ -1,6 +1,6 @@
 import * as Plottable from 'plottable';
 import { treemap } from 'd3';
-import createRectangleChart, { createColorFiller } from '../../factories/tree';
+import createRectangleChart, { createColorFiller, Legend } from '../../factories/tree';
 import { createTreeHierachy } from '../../factories/dataset';
 import { createTreeChartLabeler } from '../../factories/labeler';
 import { createTreeTipper } from '../../factories/tooltips';
@@ -22,6 +22,11 @@ export interface Tree {
 }
 export interface Labeling {
   suffix: string;
+  showLabels: boolean;
+  showValues: boolean;
+  showPercents: boolean;
+  autofit: any;
+  prefix: string;
 }
 export interface Tiling {
   method: string;
@@ -35,16 +40,17 @@ export interface Config {
   type: 'treemap';
   coloring?: string;
   colors: any;
+  width: number;
+  height: number;
   tree: Tree;
   labeling: Labeling;
   tiling: Tiling;
   tooltips: Tooltips;
+  legend: Legend;
 }
 export default (element, data = [], config: Config) => {
   const {
     orientation = 'vertical',
-
-    labeling = {},
 
     tooltips = {
       enable: true,
@@ -71,17 +77,7 @@ export default (element, data = [], config: Config) => {
 
   // ... apply rectangle configuration
 
-  const treeChart = createRectangleChart({
-    element,
-    plot,
-    config: {
-      orientation,
-      labeling,
-      width,
-      height,
-      ...config
-    },
-  });
+  const treeChart = createRectangleChart( element, plot,  config);
 
   const listeners: any[] = [];
 

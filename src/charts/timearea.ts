@@ -27,15 +27,16 @@ export interface Config {
   type: 'timearea';
   title: string;
   colors: string[];
+  groupBy: string;
   labeling: Suffix;
   linearAxis: LinearAxis;
   timeAxis: TimeAxis;
   time: Time;
 }
-export default (element: HTMLElement, data: any, config: Config) => {
+export default (element: string, data: any, config: Config) => {
   const plot = new Plottable.Plots.Area();
 
-  const chart = createTimePlot({ element, plot, config });
+  const chart = createTimePlot(element, plot, config);
 
   chart.update(data);
 

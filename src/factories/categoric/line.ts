@@ -1,8 +1,28 @@
 import {Plot} from 'plottable';
 import { createCategoricChart,  CategoricChart} from '.';
 import { createLineTipper } from '../tooltips';
+import { Tooltips } from '../../charts/treemap';
+import {Config as Legend} from '../legend';
 
-export const createLineChart = (element: string | HTMLElement, plot: Plot, config: any): CategoricChart => {
+export interface LinearAxis  {
+  showAxis: boolean;
+  showGridlines: boolean;
+  indicator: string;
+  axisLabel: string;
+  ticking?: string;
+}
+export interface Config {
+  title: string;
+  type: string;
+  colors: string[];
+  categoryAxis?: any;
+  tooltips?: Tooltips;
+  labeling?: string;
+  linearAxis: any;
+  legend?: Legend;
+  groupBy?: string;
+}
+export const createLineChart = (element: string | HTMLElement, plot: Plot, config: Config): CategoricChart => {
   const {
     categoryAxis = {},
     tooltips = {

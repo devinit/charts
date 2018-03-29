@@ -39,10 +39,10 @@ export interface Config {
     anchor: Anchor;
     legend: Legend;
 }
-export default (element: HTMLElement, data: any, config: Config) => {
+export default (element, data: any, config: Config) => {
   const plot = new Plottable.Plots.Line();
 
-  const chart = createTimePlot({ element, plot, config });
+  const chart = createTimePlot(element, plot, config);
 
   chart.update(data);
 

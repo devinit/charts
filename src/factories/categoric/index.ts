@@ -74,14 +74,25 @@ export interface CategoricChart {
   update: (data: any) => void;
   destroy: () => void;
 }
+export interface Config {
+  title?: string;
+  titleAlignment: string;
+  orientation: string;
+  groupBy: string;
+  colors: string[];
+  coloring?: string;
+  Labeling: any;
+  linearAxis: any;
+  categoryAxis: any;
+  legend: any;
+}
 export interface CreateCategoricChartArgs {
   element: string | HTMLElement;
   plot: Plottable.Plot;
-  config: any;
+  config: Config;
 }
 
 export type CreateCategoricChart = (CreateCategoricChartArgs)  => CategoricChart;
-
 export const createCategoricChart: CreateCategoricChart = ({ element, plot, config }) => {
   const {
     title = null,

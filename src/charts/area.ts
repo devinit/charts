@@ -26,6 +26,8 @@ export interface Config {
   colors: string[];
   linearAxis: LinearAxis;
   categoryAxis: CategoryAxis;
+  tooltips: any;
+  labeling: any;
 }
 const area = (element: HTMLElement, data: any, config: Config): CategoricChart => {
   const plot = new Plottable.Plots.Area();

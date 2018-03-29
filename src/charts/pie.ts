@@ -15,6 +15,7 @@ export interface Circular {
 export interface Labeling {
   suffix: string;
   showLabels: boolean;
+  prefix: any;
 }
 export interface Legend {
   showLegend: boolean;
@@ -34,7 +35,7 @@ export interface Config {
 export default (element: HTMLElement, data: any, config: Config) => {
   const plot = new Plottable.Plots.Pie();
 
-  const chart = createCircularChart({ element, plot, config });
+  const chart = createCircularChart(element, plot, config);
 
   chart.update(data);
 

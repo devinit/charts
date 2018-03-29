@@ -9,7 +9,6 @@ import createDataAnimator from '../animator/data';
 import { createScatterClickTipper, createScatterTipper } from '../tooltips';
 import { createScatterPlot, createPlotAreaWithAxes } from './helpers';
 import createScatterAnnotations from './annotations';
-
 /**
  * @typedef {Object} ScatterChart - Scatter chart configuration
  * @property {string} type - Type
@@ -38,10 +37,22 @@ import createScatterAnnotations from './annotations';
  * @param plot
  * @param {ScatterChart} config
  */
-export default ({ element, plot, config }) => {
+export interface Config {
+  title?: string;
+  titleAlignment: any;
+  idIndicator: string;
+  groupBy: string;
+  colors: string[];
+  coloring?: string;
+  horizontalAxis: any;
+  verticalAxis: any;
+  bubble: any;
+  legend: any;
+  annotations: any;
+  tooltips: any;
+}
+export default ( element: HTMLElement, plot, config: Config) => {
   const {
-    title,
-
     titleAlignment = 'left',
 
     idIndicator = 'id',
@@ -49,8 +60,6 @@ export default ({ element, plot, config }) => {
     groupBy,
 
     colors = [],
-
-    coloring = null,
 
     horizontalAxis,
 
@@ -102,7 +111,7 @@ export default ({ element, plot, config }) => {
   });
 
   const table = createChartTable({
-    title: createTitle({ title, titleAlignment }),
+    title: createTitle({ title: config.title, titleAlignment }),
 
     chart: createPlotAreaWithAxes({
       verticalAxis: vAxis,
@@ -164,7 +173,7 @@ export default ({ element, plot, config }) => {
     const datasets = Object.keys(mapping).map((group, index) =>
       mapping[group].map(d => ({
         ...d,
-        color: d[coloring] || colors[index] || '#abc',
+        color: config.coloring && d[config.coloring] || colors[index] || '#abc',
       })));
 
     colorScale

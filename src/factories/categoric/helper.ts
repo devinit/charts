@@ -5,10 +5,21 @@
 import {groupBy, range} from 'lodash';
 import {approximate} from '@devinit/prelude/lib/numbers';
 
-const drawLabel = (opts, foreground) => {
+interface Args {
+  width: number;
+  height: number;
+  x: number;
+  y: number;
+  value: number;
+  color: string;
+  suffix: string;
+  prefix: string;
+  drawStackedBarSum?: boolean;
+}
+const drawLabel = (opts: Args, foreground) => {
   // forExtend is for drawing sums of values in a stacked bar
   const {width, height, x, y, value, color, suffix, prefix, drawStackedBarSum = false} = opts;
-  const yPos = height && !drawStackedBarSum && height < 30 ? y + 2 : y + 10;
+  const yPos: number = height && !drawStackedBarSum && height < 30 ? y + 2 : y + 10;
   foreground
     .append('foreignObject')
     .attr('width', width)
