@@ -27,7 +27,6 @@ const cssOutputFilename = isProductionBuild ? 'di-charts.min.css' : 'di-charts.c
 //   comments: false,
 // });
 
-
 module.exports = [
   {
     entry: [`${__dirname}/src/index.less`],
@@ -49,6 +48,7 @@ module.exports = [
   },
   {
     entry: [`${__dirname}/src/index.ts`],
+    resolve: {extensions: ['.ts', '.tsx', '.js']},
     output: {
       path: `${__dirname}/dist/`,
       filename: '[name].js',
@@ -58,7 +58,10 @@ module.exports = [
     module: {
       rules: [{
         test: /\.(ts|tsx)(\?[^?]*)?$/,
-        loader: 'happypack/loader?id=ts'
+        loader: 'happypack/loader?id=ts',
+        include: [
+          `${__dirname}/src`
+        ]
       }],
     },
 
