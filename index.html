@@ -220,5 +220,1419 @@
       })
     </script>
   </section>
+  <section>
+    <div class="chart">
+      <div id="timearea"></div>
+    </div>
+    <script>
+      DiCharts.draw({
+        element: document.getElementById('timearea'),
+        config: {
+          type: 'timearea',
+          title: 'timearea',
+          colors: ['#ba0c2f'],
+          labeling: {
+            suffix: '%',
+          },
+          linearAxis: {
+            showAxis: true,
+            indicator: 'value',
+            axisMargin: 0,
+            ticking: 'sparse',
+            suffix: '%',
+          },
+          timeAxis: {
+            showAxis: true,
+            indicator: 'year',
+            ticking: 'years',
+            tickingStep: 20,
+            axisMinimum: 2000,
+            axisMaximum: 2013,
+          },
+          time: {
+            interpolate: true,
+          }
+        },
+        data: [
+          {
+            "id": "UG",
+            "year": 2000,
+            "value": 62.56,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2001,
+            "value": 62.52,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2002,
+            "value": 62.48,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2003,
+            "value": 60,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2004,
+            "value": 57.53,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2005,
+            "value": 55.05,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2006,
+            "value": 51.34,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2007,
+            "value": 47.63,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2008,
+            "value": 43.92,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2009,
+            "value": 42.14,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2010,
+            "value": 40.36,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2011,
+            "value": 36.99,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2012,
+            "value": 34.82,
+            "name": "Uganda"
+          },
+          {
+            "id": "UG",
+            "year": 2013,
+            "value": 34.64,
+            "name": "Uganda"
+          }
+        ]
+      })
+    </script>
+  </section>
+  <section>
+    <div class="chart">
+      <div id="timeline_chart"></div>
+    </div>
+    <script>
+      DiCharts.draw({
+        element: document.getElementById('timeline_chart'),
+        config: {
+          type: 'timearea',
+          groupBy: 'Months',
+          colors: ['red1', 'blue1', 'purple1', 'orange1'],
+          coloring: 'color',
+          linearAxis: {
+            showAxis: true,
+            showGridlines: true,
+            ticking: 'sparse',
+            indicator: 'Rainfall',
+            axisMinimum: 0,
+            axisMargin: 0,
+          },
+          timeAxis: {
+            showAxis: true,
+            axisLabel: 'Years',
+            indicator: 'Years',
+            ticking: 'years',
+            tickingStep: 5,
+            axisMargin: 0,
+            axisMinimum: 2000,
+            axisMaximum: 2018,
+          },
+          time: {
+            interpolate: false,
+          },
+          anchor: {
+            start: 2015
+          },
+          legend: {
+            showLegend: true
+          }
+        },
+        data: [
+          { "Rainfall": 960000, "Years": 2000, "Months": "Jan" },
+          { "Rainfall": 1300000, "Years": 2002, "Months": "Jan" },
+          { "Rainfall": 1500000, "Years": 2003, "Months": "Jan" },
+          { "Rainfall": 1800000, "Years": 2004, "Months": "Jan" },
+          { "Rainfall": 2000000, "Years": 2005, "Months": "Jan" },
+          { "Rainfall": 1200000, "Years": 2006, "Months": "Jan" },
+          { "Rainfall": 2700000, "Years": 2007, "Months": "Jan" },
+          { "Rainfall": 2300000, "Years": 2008, "Months": "Jan" },
+          { "Rainfall": 2100000, "Years": 2009, "Months": "Jan" },
+          { "Rainfall": 2540000, "Years": 2010, "Months": "Jan" },
+          { "Rainfall": 1230000, "Years": 2011, "Months": "Jan" },
+          { "Rainfall": 4530000, "Years": 2012, "Months": "Jan" },
+          { "Rainfall": 2310000, "Years": 2013, "Months": "Jan" },
+          { "Rainfall": 2640000, "Years": 2014, "Months": "Jan" },
+          { "Rainfall": 3210000, "Years": 2015, "Months": "Jan" },
+          { "Rainfall": 1830000, "Years": 2016, "Months": "Jan" },
+          { "Rainfall": 1430000, "Years": 2017, "Months": "Jan" },
+          { "Rainfall": 1640000, "Years": 2018, "Months": "Jan" },
+          { "Rainfall": 960000, "Years": 2000, "Months": "Feb" },
+          { "Rainfall": 980000, "Years": 2001, "Months": "Feb" },
+          { "Rainfall": 1300000, "Years": 2002, "Months": "Feb" },
+          { "Rainfall": 1500000, "Years": 2003, "Months": "Feb" },
+          { "Rainfall": 1800000, "Years": 2004, "Months": "Feb" },
+          { "Rainfall": 2000000, "Years": 2005, "Months": "Feb" },
+          { "Rainfall": 1200000, "Years": 2006, "Months": "Feb" },
+          { "Rainfall": 2700000, "Years": 2007, "Months": "Feb" },
+          { "Rainfall": 2300000, "Years": 2008, "Months": "Feb" },
+          { "Rainfall": 2100000, "Years": 2009, "Months": "Feb" },
+          { "Rainfall": 2540000, "Years": 2010, "Months": "Feb" },
+          { "Rainfall": 1230000, "Years": 2011, "Months": "Feb" },
+          { "Rainfall": 4530000, "Years": 2012, "Months": "Feb" },
+          { "Rainfall": 2310000, "Years": 2013, "Months": "Feb" },
+          { "Rainfall": 2640000, "Years": 2014, "Months": "Feb" },
+          { "Rainfall": 3210000, "Years": 2015, "Months": "Feb" },
+          { "Rainfall": 1830000, "Years": 2016, "Months": "Feb" },
+          { "Rainfall": 1430000, "Years": 2017, "Months": "Feb" },
+          { "Rainfall": 1640000, "Years": 2018, "Months": "Feb" },
+        ]
+      })
+    </script>
+  </section>
+  <section>
+    <div class="chart">
+      <div id="area_chart"></div>
+    </div>
+    <script>
+      DiCharts.draw({
+        element: document.getElementById('area_chart'),
+        config: {
+          title: 'Area Chart',
+          type: 'area',
+          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
+          linearAxis: {
+            showAxis: true,
+            showGridlines: true,
+            axisLabel: 'Rainfall (mm)',
+            indicator: 'Rainfall',
+          },
+          categoryAxis: {
+            showAxis: true,
+            axisLabel: 'Months',
+            indicator: 'Months',
+          }
+        },
+        data: [
+          { "Rainfall": 100, "Months": "Jan" },
+          { "Rainfall": 200, "Months": "Feb" },
+          { "Rainfall": 120, "Months": "Mar" },
+          { "Rainfall": 270, "Months": "Apr" },
+          { "Rainfall": 230, "Months": "May" },
+          { "Rainfall": 210, "Months": "Jun" },
+        ]
+      })
+    </script>
+  </section>
+  <section>
+    <div class="chart">
+      <div id="stacked-area"></div>
+    </div>
+    <script>
+      DiCharts.draw({
+        element: document.getElementById('stacked-area'),
+        config: {
+          title: 'Stacked Area Chart',
+          type: 'stacked-area',
+          groupBy: 'Years',
+          colors: ['red1', 'blue1'],
+          linearAxis: {
+            showAxis: true,
+            showGridlines: true,
+            axisLabel: 'Rainfall (mm)',
+            indicator: 'Rainfall',
+          },
+          categoryAxis: {
+            showAxis: true,
+            axisLabel: 'Months',
+            indicator: 'Months',
+          }
+        },
+        data: [
+          { "Rainfall": 100, "Years": "1992", "Months": "Jan" },
+          { "Rainfall": 200, "Years": "1992", "Months": "Feb" },
+          { "Rainfall": 120, "Years": "1992", "Months": "Mar" },
+          { "Rainfall": 270, "Years": "1992", "Months": "Apr" },
+          { "Rainfall": 230, "Years": "1992", "Months": "May" },
+          { "Rainfall": 210, "Years": "1992", "Months": "Jun" },
+          { "Rainfall": 123, "Years": "1993", "Months": "Jan" },
+          { "Rainfall": 234, "Years": "1993", "Months": "Feb" },
+          { "Rainfall": 342, "Years": "1993", "Months": "Mar" },
+          { "Rainfall": 234, "Years": "1993", "Months": "Apr" },
+          { "Rainfall": 354, "Years": "1993", "Months": "May" },
+          { "Rainfall": 123, "Years": "1993", "Months": "Jun" }
+        ]
+      })
+    </script>
+  </section>
+  <section>
+    <div class="chart">
+      <div id="full-stacked-area"></div>
+    </div>
+    <script>
+      DiCharts.draw({
+        element: document.getElementById('full-stacked-area'),
+        config: {
+          title: '100% Stacked Area Chart',
+          type: 'full-stacked-area',
+          groupBy: 'Years',
+          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
+          linearAxis: {
+            showAxis: true,
+            showGridlines: true,
+            axisLabel: 'Rainfall (mm)',
+            indicator: 'Rainfall',
+            ticking: 'sparse',
+          },
+          categoryAxis: {
+            showAxis: true,
+            axisLabel: 'Months',
+            indicator: 'Months',
+          },
+          legend: {
+            showLegend: true,
+            position: 'right',
+            rowSpan: 1,
+          }
+        },
+        data: [
+          { "Rainfall": 100, "Years": "1992", "Months": "Jan" },
+          { "Rainfall": 200, "Years": "1992", "Months": "Feb" },
+          { "Rainfall": 120, "Years": "1992", "Months": "Mar" },
+          { "Rainfall": 270, "Years": "1992", "Months": "Apr" },
+          { "Rainfall": 230, "Years": "1992", "Months": "May" },
+          { "Rainfall": 210, "Years": "1992", "Months": "Jun" },
+          { "Rainfall": 123, "Years": "1993", "Months": "Jan" },
+          { "Rainfall": 234, "Years": "1993", "Months": "Feb" },
+          { "Rainfall": 342, "Years": "1993", "Months": "Mar" },
+          { "Rainfall": 234, "Years": "1993", "Months": "Apr" },
+          { "Rainfall": 354, "Years": "1993", "Months": "May" },
+          { "Rainfall": 123, "Years": "1993", "Months": "Jun" }
+        ]
+      })
+    </script>
+  </section>
+  <section>
+    <div class="chart">
+      <div id="bar"></div>
+    </div>
+    <script>
+      DiCharts.draw({
+        element: document.getElementById('bar'),
+        config: {
+          title: 'Bar Chart',
+          type: 'bar',
+          colors: ['blue3', '#93328e', '#b7bf10', '#004862'],
+          coloring: 'color',
+          linearAxis: {
+            showAxis: true,
+            showGridlines: true,
+            axisLabel: 'Rainfall (mm)',
+            indicator: 'Rainfall',
+            suffix: 'mm'
+          },
+          categoryAxis: {
+            showAxis: true,
+            axisLabel: 'Months',
+            indicator: 'Months',
+            innerPadding: 0.1,
+            outerPadding: 0
+          },
+          labeling: {
+            suffix: 'mm'
+          }
+        },
+        data: [
+          { "Rainfall": 100, "Months": "Jan", color: 'red1' },
+          { "Rainfall": 200, "Months": "Feb", color: 'orange1' },
+          { "Rainfall": 120, "Months": "Mar" },
+          { "Rainfall": 270, "Months": "Apr" },
+          { "Rainfall": 230, "Months": "May" },
+          { "Rainfall": 210, "Months": "Jun" },
+        ]
+      })
+    </script>
+  </section>
+  <section>
+    <div class="chart">
+      <div id="column"></div>
+    </div>
+    <script>
+      DiCharts.draw({
+        element: document.getElementById('column'),
+        config: {
+          title: 'Column Chart',
+          type: 'bar',
+          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
+          orientation: 'horizontal',
+          linearAxis: {
+            showAxis: true,
+            showGridlines: true,
+            axisLabel: 'Rainfall (mm)',
+            indicator: 'Rainfall',
+          },
+          categoryAxis: {
+            showAxis: true,
+            axisLabel: 'Months',
+            indicator: 'Months',
+            innerPadding: 0.1,
+            outerPadding: 0
+          }
+        },
+        data: [
+          { "Rainfall": 100, "Months": "Jan" },
+          { "Rainfall": 200, "Months": "Feb" },
+          { "Rainfall": 120, "Months": "Mar" },
+          { "Rainfall": 270, "Months": "Apr" },
+          { "Rainfall": 230, "Months": "May" },
+          { "Rainfall": 210, "Months": "Jun" },
+        ]
+      })
+    </script>
+  </section>
+  <section>
+    <div class="chart">
+      <div id="stacked-bar"></div>
+    </div>
+    <script>
+      DiCharts.draw({
+        element: document.getElementById('stacked-bar'),
+        config: {
+          title: 'Stacked Bar Chart',
+          type: 'stacked-bar',
+          groupBy: 'Years',
+          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
+          labeling: {
+            prefix: '$',
+            custom: true,
+            drawStackedBarSum: true,
+            showLabels: true
+          },
+
+          linearAxis: {
+            showAxis: true,
+            showGridlines: true,
+            axisLabel: 'Rainfall (mm)',
+            indicator: 'Rainfall',
+          },
+          categoryAxis: {
+            showAxis: true,
+            axisLabel: 'Months',
+            indicator: 'Months',
+            innerPadding: 0.1,
+            outerPadding: 0
+          }
+        },
+        data: [
+          { "Rainfall": 500000, "Years": "1992", "Months": "Jan" },
+          { "Rainfall": 2000000, "Years": "1992", "Months": "Feb" },
+          { "Rainfall": 1200000, "Years": "1992", "Months": "Mar" },
+          { "Rainfall": 2700000, "Years": "1992", "Months": "Apr" },
+          { "Rainfall": 2300000, "Years": "1992", "Months": "May" },
+          { "Rainfall": 2100000, "Years": "1992", "Months": "Jun" },
+          { "Rainfall": 1230000, "Years": "1993", "Months": "Jan" },
+          { "Rainfall": 2340000, "Years": "1993", "Months": "Feb" },
+          { "Rainfall": 3420000, "Years": "1993", "Months": "Mar" },
+          { "Rainfall": 2340000, "Years": "1993", "Months": "Apr" },
+          { "Rainfall": 3540000, "Years": "1993", "Months": "May" },
+          { "Rainfall": 1230000, "Years": "1993", "Months": "Jun" }
+        ]
+      })
+    </script>
+  </section>
+  <section>
+    <div class="chart">
+      <div id="full-stacked-bar"></div>
+    </div>
+    <script>
+      DiCharts.draw({
+        element: document.getElementById('full-stacked-bar'),
+        config: {
+          title: '100% Stacked Bar Chart',
+          type: 'full-stacked-bar',
+          groupBy: 'Years',
+          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
+          labeling: {
+            suffix: '%',
+          },
+          linearAxis: {
+            showAxis: true,
+            showGridlines: true,
+            axisLabel: 'Rainfall (mm)',
+            indicator: 'Rainfall',
+            suffix: '%',
+          },
+          categoryAxis: {
+            showAxis: true,
+            axisLabel: 'Months',
+            indicator: 'Months',
+            innerPadding: 0.1,
+            outerPadding: 0
+          }
+        },
+        data: [
+          { "Rainfall": 100, "Years": "1992", "Months": "Jan" },
+          { "Rainfall": 200, "Years": "1992", "Months": "Feb" },
+          { "Rainfall": 120, "Years": "1992", "Months": "Mar" },
+          { "Rainfall": 270, "Years": "1992", "Months": "Apr" },
+          { "Rainfall": 230, "Years": "1992", "Months": "May" },
+          { "Rainfall": 210, "Years": "1992", "Months": "Jun" },
+          { "Rainfall": 123, "Years": "1993", "Months": "Jan" },
+          { "Rainfall": 234, "Years": "1993", "Months": "Feb" },
+          { "Rainfall": 342, "Years": "1993", "Months": "Mar" },
+          { "Rainfall": 234, "Years": "1993", "Months": "Apr" },
+          { "Rainfall": 354, "Years": "1993", "Months": "May" },
+          { "Rainfall": 123, "Years": "1993", "Months": "Jun" }
+        ]
+      })
+    </script>
+  </section>
+  <section>
+    <div class="chart">
+      <div id="clustered-bar"></div>
+    </div>
+    <script>
+      DiCharts.draw({
+        element: document.getElementById('clustered-bar'),
+        config: {
+          title: 'Clustered Bar Chart',
+          type: 'clustered-bar',
+          orientation: 'horizontal',
+          groupBy: 'Purpose',
+          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
+          linearAxis: {
+            showAxis: true,
+            showGridlines: true,
+            axisLabel: 'Rainfall (mm)',
+            indicator: 'Rainfall',
+          },
+          categoryAxis: {
+            showAxis: true,
+            axisLabel: 'Years',
+            indicator: 'Years',
+            innerPadding: 0.1,
+            outerPadding: 0
+          }
+        },
+        data: [
+          { "Rainfall": 100, "Years": "1991", "Purpose": "ODA" },
+          { "Rainfall": 100, "Years": "1991", "Purpose": "DFI" },
+          { "Rainfall": 200, "Years": "1992", "Purpose": "DFI" },
+          { "Rainfall": 120, "Years": "1993", "Purpose": "ODA" },
+          { "Rainfall": 120, "Years": "1993", "Purpose": "DFI" },
+          { "Rainfall": 270, "Years": "1994", "Purpose": "ODA" },
+          { "Rainfall": 270, "Years": "1994", "Purpose": "DFI" },
+          { "Rainfall": 230, "Years": "1995", "Purpose": "ODA" },
+          { "Rainfall": 230, "Years": "1995", "Purpose": "DFI" },
+          { "Rainfall": 210, "Years": "1996", "Purpose": "ODA" },
+          { "Rainfall": 210, "Years": "1996", "Purpose": "DFI" },
+        ]
+      })
+    </script>
+  </section>
+  <section>
+    <div class="chart" style="height: 500px">
+      <div id="dual-sidebar"></div>
+    </div>
+    <script>
+      DiCharts.draw({
+        element: document.getElementById('dual-sidebar'),
+        config: {
+          title: 'Dual Sidebar Chart',
+          titleAlignment: 'center',
+          type: 'dual-sidebar',
+          orientation: 'horizontal',
+          splitBy: 'direction',
+          groupBy: 'flow_type',
+          subGroupBy: 'flow_category',
+          colors: [
+            'rgb(186, 12, 47)',
+            'rgb(0, 149, 200)',
+            'rgb(147, 50, 142)',
+            'rgb(234, 118, 0)',
+            'rgb(27, 54, 93)'
+          ],
+          showLabels: true,
+          linearAxis: {
+            showAxis: true,
+            indicator: 'value',
+            ticking: 'end',
+            axisMaximum: 4e9,
+            absolute: true,
+          },
+          categoryAxis: {
+            showAxis: true,
+            indicator: 'flow_name',
+            innerPadding: 1.5,
+            outerPadding: 4,
+          },
+          dualSidebar: {
+            gutter: 150
+          }
+        },
+        data: [
+          {
+            "uid": "B12gG8MTO1G",
+            "year": 2015,
+            "value": 2761410000,
+            "flow_id": "oda-in",
+            "flow_name": "Official development assistance",
+            "short_name": "Gross disbursements",
+            "flow_category": "ODA",
+            "flow_type": "official",
+            "direction": "in",
+            "color": "#e8443a",
+            "__typename": "ResourceData"
+          },
+          {
+            "uid": "S1NtzLz6O1G",
+            "year": 2015,
+            "value": 282830000,
+            "flow_id": "oda-capital-payments-out",
+            "flow_name": "Capital repayments on ODA loans",
+            "short_name": "Capital repayments",
+            "flow_category": "ODA",
+            "flow_type": "official",
+            "direction": "out",
+            "color": "#e8443a",
+            "__typename": "ResourceData"
+          },
+          {
+            "uid": "Sk2GMUMTdJG",
+            "year": 2015,
+            "value": 73980000,
+            "flow_id": "oda-interest-payments-out",
+            "flow_name": "Interest payments on ODA loans",
+            "short_name": "Interest payments",
+            "flow_category": "ODA",
+            "flow_type": "official",
+            "direction": "out",
+            "color": "#e8443a",
+            "__typename": "ResourceData"
+          },
+          {
+            "uid": "r1dcfUfauJM",
+            "year": 2015,
+            "value": 399180000,
+            "flow_id": "oofs-in",
+            "flow_name": "Other official flows",
+            "short_name": "Gross disbursements",
+            "flow_category": "OOFs",
+            "flow_type": "official",
+            "direction": "in",
+            "color": "#bcd4f0",
+            "__typename": "ResourceData"
+          },
+          {
+            "uid": "SJNEfUGTu1z",
+            "year": 2015,
+            "value": 31410000,
+            "flow_id": "oofs-interest-payments-out",
+            "flow_name": "Interest payments on OOFs loans",
+            "short_name": "Interest payments",
+            "flow_category": "OOFs",
+            "flow_type": "official",
+            "direction": "out",
+            "color": "#bcd4f0",
+            "__typename": "ResourceData"
+          },
+          {
+            "uid": "HkD-lMLGT_1f",
+            "year": 2015,
+            "value": 79920000,
+            "flow_id": "oofs-capital-payments-out",
+            "flow_name": "Capital repayments on OOFs loans",
+            "short_name": "Capital repayments",
+            "flow_category": "OOFs",
+            "flow_type": "official",
+            "direction": "out",
+            "color": "#5da3d9",
+            "__typename": "ResourceData"
+          },
+          {
+            "uid": "S178zLfaOkz",
+            "year": 2015,
+            "value": 918491000,
+            "flow_id": "long-debt-net-official-in",
+            "flow_name": "Long-term debt (official sources)",
+            "short_name": "Disbursements",
+            "flow_category": "Long term debt",
+            "flow_type": "official",
+            "direction": "in",
+            "color": "#a45ea1",
+            "__typename": "ResourceData"
+          },
+          {
+            "uid": "H141xMUGpOyG",
+            "year": 2015,
+            "value": 21944000,
+            "flow_id": "long-debt-off-amt-out",
+            "flow_name": "Capital repayments on long-term debt (official sources)",
+            "short_name": "Capital repayments",
+            "flow_category": "Long term debt",
+            "flow_type": "official",
+            "direction": "out",
+            "color": "#a45ea1",
+            "__typename": "ResourceData"
+          },
+          {
+            "uid": "Skt-G8zad1G",
+            "year": 2015,
+            "value": 125907000,
+            "flow_id": "long-debt-off-int-out",
+            "flow_name": "Interest payments on long-term debt (official sources)",
+            "short_name": "Interest payments",
+            "flow_category": "Long term debt",
+            "flow_type": "official",
+            "direction": "out",
+            "color": "#a45ea1",
+            "__typename": "ResourceData"
+          },
+          {
+            "uid": "BJxCMIfpukG",
+            "year": 2015,
+            "value": 754104000,
+            "flow_id": "long-debt-disbursement-in",
+            "flow_name": "Long-term debt (commercial sources)",
+            "short_name": "Disbursements",
+            "flow_category": "Long term debt",
+            "flow_type": "commercial",
+            "direction": "in",
+            "color": "#0c457b",
+            "__typename": "ResourceData"
+          },
+          {
+            "uid": "BkxvMIzp_kf",
+            "year": 2015,
+            "value": 1437000004.3704,
+            "flow_id": "fdi-in",
+            "flow_name": "Foreign Direct Investment",
+            "short_name": "Inward investment",
+            "flow_category": "FDI",
+            "flow_type": "commercial",
+            "direction": "in",
+            "color": "#eb642b",
+            "__typename": "ResourceData"
+          },
+          {
+            "uid": "HkBOzIf6d1z",
+            "year": 2015,
+            "value": 19786000,
+            "flow_id": "long-debt-comm-amt-out",
+            "flow_name": "Capital repayments on long-term debt (commercial sources)",
+            "short_name": "Capital repayments",
+            "flow_category": "Long term debt",
+            "flow_type": "commercial",
+            "direction": "out",
+            "color": "#f49b21",
+            "__typename": "ResourceData"
+          },
+          {
+            "uid": "rJpEMUfa_yG",
+            "year": 2015,
+            "value": 65811000,
+            "flow_id": "long-debt-comm-int-out",
+            "flow_name": "Interest payments on long-term debt (commercial sources)",
+            "short_name": "Interest payments",
+            "flow_category": "Long term debt",
+            "flow_type": "commercial",
+            "direction": "out",
+            "color": "#f49b21",
+            "__typename": "ResourceData"
+          },
+          {
+            "uid": "rkm1lz8GpO1M",
+            "year": 2015,
+            "value": 217000004.3704,
+            "flow_id": "fdi-out",
+            "flow_name": "Foreign Direct Investment",
+            "short_name": "Outward investment",
+            "flow_category": "FDI",
+            "flow_type": "commercial",
+            "direction": "out",
+            "color": "#eb642b",
+            "__typename": "ResourceData"
+          },
+          {
+            "uid": "BkcgfIf6_Jf",
+            "year": 2015,
+            "value": 612203000,
+            "flow_id": "short-debt-net-flow-in",
+            "flow_name": "Short-term debt",
+            "short_name": "Net disbursements",
+            "flow_category": "Short term debt",
+            "flow_type": "commercial",
+            "direction": "in",
+            "color": "#109e68",
+            "__typename": "ResourceData"
+          },
+          {
+            "uid": "HJrQfLMTukM",
+            "year": 2015,
+            "value": 38007000,
+            "flow_id": "short-debt-interest-out",
+            "flow_name": "Interest payments on short-term debt",
+            "short_name": "Interest payments",
+            "flow_category": "Short term debt",
+            "flow_type": "commercial",
+            "direction": "out",
+            "color": "#109e68",
+            "__typename": "ResourceData"
+          },
+          {
+            "uid": "Hk9ZMLM6uyM",
+            "year": 2015,
+            "value": 1561429806.63255,
+            "flow_id": "remittances-in",
+            "flow_name": "Remittances",
+            "short_name": "Inflows",
+            "flow_category": "Remittances",
+            "flow_type": "private",
+            "direction": "in",
+            "color": "#c2135b",
+            "__typename": "ResourceData"
+          }
+        ]
+      })
+    </script>
+  </section>
+  <section>
+    <div class="chart">
+      <div id="pie_chart"></div>
+    </div>
+    <script>
+      DiCharts.draw({
+        element: document.getElementById('pie_chart'),
+        config: {
+          type: 'pie',
+          title: 'Pie Chart',
+          titleAlignment: 'center',
+          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
+          coloring: 'color',
+          circular: {
+            label: 'Country',
+            value: 'Population',
+            strokeWidth: 0,
+           
+            strokeColor: '#fff',
+          },
+          labeling: {
+            suffix: 'USD',
+            showLabels: true,
+          },
+          legend: {
+            showLegend: true,
+            position: 'bottom',
+            'alignment': 'center'
+          }
+        },
+        data: [
+          { 'Country': 'Tanzania', 'Population': 53470000 },
+          { 'Country': 'Kenya', 'Population': 46050000 },
+          { 'Country': '‌Uganda', 'Population': 39030000, color: 'teal' },
+        ]
+      })
+    </script>
+  </section>
+  <section>
+    <div class="chart">
+      <div id="donut-chart"></div>
+    </div>
+    <script>
+      DiCharts.draw({
+        element: document.getElementById('donut-chart'),
+        config: {
+          type: 'pie',
+          title: 'Donut Chart',
+          titleAlignment: 'center',
+          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
+          circular: {
+            label: 'Country',
+            value: 'Population',
+            innerRadius: 80,
+            strokeWidth: 5,
+            strokeColor: '#fff',
+          },
+          legend: {
+            showLegend: true,
+            position: 'bottom',
+            alignment: 'center'
+          }
+        },
+        data: [
+          { 'Country': 'Tanzania', 'Population': 53470000 },
+          { 'Country': 'Kenya', 'Population': 46050000 },
+          { 'Country': '‌Uganda', 'Population': 39030000 },
+        ]
+      })
+    </script>
+  </section>
+  <section>
+    <div class="chart">
+      <div id="treemap-chart"></div>
+    </div>
+    <script>
+      DiCharts.draw({
+        element: document.getElementById('treemap-chart'),
+        config: {
+          type: 'treemap',
+          coloring: 'color',
+          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
+          tree: {
+            id: 'label',
+            parent: 'parent',
+            value: 'value'
+          },
+          labeling: {
+            suffix: 'tons'
+          },
+          tiling: {
+            method: 'resquarify',
+            ratio: 0.5,
+          }
+        },
+        data: [
+          {
+            "label": 'World',
+          },
+          {
+            "label": 'South America',
+            "parent": 'World',
+            "value": 320,
+            "color": "teal"
+          },
+          {
+            "label": 'Africa',
+            "parent": 'World',
+          },
+          {
+            "label": 'Europe',
+            "parent": 'World',
+          },
+          {
+            "label": 'Portugal',
+            "parent": 'Europe',
+            "value": 30,
+          },
+          {
+            "label": 'Spain',
+            "parent": 'Europe',
+            "value": 120,
+          },
+          {
+            "label": 'Kenya',
+            "parent": 'Africa',
+            "value": 70,
+          },
+          {
+            "label": 'Uganda',
+            "parent": 'Africa',
+          },
+          {
+            "label": 'Kampala',
+            "parent": 'Uganda',
+            "value": 60,
+          },
+          {
+            "label": 'Jinja',
+            "parent": 'Uganda',
+            "value": 60,
+          },
+        ]
+      })
+    </script>
+  </section>
+  <section>
+    <div class="chart">
+      <div id="treemap-chart-w-level-indicators"></div>
+    </div>
+    <script>
+      DiCharts.draw({
+        element: document.getElementById('treemap-chart-w-level-indicators'),
+        config: {
+          title: 'Treemap Chart',
+          type: 'treemap',
+          coloring: 'color',
+          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
+          tree: {
+            value: 'value',
+            levels: ['planet', 'continent', 'country', 'city'],
+          },
+          labeling: {
+            suffix: 'tons'
+          }
+        },
+        data: [
+          {
+            "planet": 'Earth',
+          },
+          {
+            "planet": 'Earth',
+            "continent": 'South America',
+            "value": 2.3234e5,
+            "color": "teal"
+          },
+          {
+            "planet": 'Earth',
+            "continent": 'Africa',
+          },
+          {
+            "planet": 'Earth',
+            "continent": 'Europe',
+            "parent": 'World',
+          },
+          {
+            "planet": 'Earth',
+            "continent": 'Europe',
+            "country": 'Portugal',
+            "value": 9.23e4,
+          },
+          {
+            "planet": 'Earth',
+            "continent": 'Europe',
+            "country": 'Spain',
+            "value": 1.203e5,
+          },
+          {
+            "planet": 'Earth',
+            "continent": 'Africa',
+            "country": 'Kenya',
+            "value": 8.234e4,
+          },
+          {
+            "planet": 'Earth',
+            "continent": 'Africa',
+            "country": 'Uganda',
+          },
+          {
+            "planet": 'Earth',
+            "continent": 'Africa',
+            "country": 'Uganda',
+            "city": 'Kampala',
+            "value": 3e4,
+          },
+          {
+            "planet": 'Earth',
+            "continent": 'Africa',
+            "country": 'Uganda',
+            "city": 'Jinja',
+            "value": 2e4,
+          },
+        ]
+      })
+    </script>
+  </section>
+  <section>
+    <div class="chart">
+      <div id="treemap-chart-from-flat"></div>
+    </div>
+    <script>
+      DiCharts.draw({
+        element: document.getElementById('treemap-chart-from-flat'),
+        config: {
+          title: 'Treemap Chart',
+          type: 'treemap',
+          coloring: 'color',
+          tree: {
+            'id': 'name',
+            'value': 'value',
+          },
+          labeling: {
+            prefix: 'US$ ',
+            showValues: false,
+            autofit: true,
+          },
+          treemap: {
+            tile: 'squarify'
+          }
+        },
+        data: [
+          {
+            "uid": "Syj_CPIjb",
+            "id": "ME",
+            "name": "Montenegro",
+            "value": 66823169.184752956,
+            "color": "#0071b1",
+          },
+          {
+            "uid": "ryloOCDUjW",
+            "id": "UZ",
+            "name": "Uzbekistan",
+            "value": 234453969.7894683,
+            "color": "#5da3d9",
+          },
+          {
+            "uid": "ry7-ouCD8oW",
+            "id": "IQ",
+            "name": "Iraq",
+            "value": 2205781657.423498,
+            "color": "#0c457b",
+          },
+          {
+            "uid": "SkVZj_RwLiW",
+            "id": "AL",
+            "name": "Albania",
+            "value": 360714017.52067727,
+            "color": "#0071b1",
+          },
+          {
+            "uid": "Byr-oO0DIi-",
+            "id": "CG",
+            "name": "Congo",
+            "value": 1481557576.3263793,
+            "color": "#bc2629",
+          },
+          {
+            "uid": "rk8bjdCwLoW",
+            "id": "south-asia",
+            "name": "South Asia, regional",
+            "value": 94202212.49565199,
+            "color": "#5da3d9",
+          },
+          {
+            "uid": "HyP-sO0DIsZ",
+            "id": "VE",
+            "name": "Venezuela",
+            "value": 48547250.54668666,
+            "color": "#7b3b89",
+          },
+          {
+            "uid": "H1uWs_CwUi-",
+            "id": "BW",
+            "name": "Botswana",
+            "value": 157529160.0949819,
+            "color": "#bc2629",
+          },
+          {
+            "uid": "B1ibsOCv8ob",
+            "id": "BJ",
+            "name": "Benin",
+            "value": 643260808.4789865,
+            "color": "#bc2629",
+          },
+          {
+            "uid": "rkh-iu0DUjb",
+            "id": "central-asia",
+            "name": "Central Asia, regional",
+            "value": 189122909.37297234,
+            "color": "#5da3d9",
+          },
+          {
+            "uid": "S16-iu0wLoZ",
+            "id": "RS",
+            "name": "Serbia",
+            "value": 622126031.5013603,
+            "color": "#0071b1",
+          },
+          {
+            "uid": "B1CZjOAvLjZ",
+            "id": "TH",
+            "name": "Thailand",
+            "value": 356515174.3114766,
+            "color": "#f49b21",
+          },
+          {
+            "uid": "BkbSodCDIoZ",
+            "id": "ER",
+            "name": "Eritrea",
+            "value": 134390973.7761298,
+            "color": "#bc2629",
+          },
+          {
+            "uid": "BJfBjdRv8i-",
+            "id": "SR",
+            "name": "Suriname",
+            "value": 93343962.414561,
+            "color": "#7b3b89",
+          },
+          {
+            "uid": "BJfereRv8i-",
+            "id": "SR",
+            "name": "Someplace",
+            "value": 9334402.414561,
+            "color": "#abccba",
+          },
+        ]
+      })
+    </script>
+  </section>
+  <section>
+    <div class="chart">
+      <div id="compound-treemap-chart"></div>
+    </div>
+    <script>
+      DiCharts.draw({
+        element: document.getElementById('compound-treemap-chart'),
+        config: {
+          title: 'Summarized Treemap Chart',
+          type: 'compound-treemap',
+          coloring: 'color',
+          tree: {
+            id: 'label',
+            parent: 'parent',
+            value: 'value'
+          }
+        },
+        data: [
+          {
+            "label": 'World',
+            "color": '#86c',
+          },
+          {
+            "label": 'South America',
+            "parent": 'World',
+            "color": '#e7b2ff',
+            "value": 32000000,
+          },
+          {
+            "label": 'Africa',
+            "parent": 'World',
+            "color": '#ff9a55',
+          },
+          {
+            "label": 'Europe',
+            "parent": 'World',
+            "color": '#3dab37',
+          },
+          {
+            "label": 'Portugal',
+            "parent": 'Europe',
+            "value": 30000000,
+          },
+          {
+            "label": 'Spain',
+            "parent": 'Europe',
+            "value": 12000000,
+          },
+          {
+            "label": 'Kenya',
+            "parent": 'Africa',
+            "value": 7000000,
+          },
+          {
+            "label": 'Uganda',
+            "parent": 'Africa',
+          },
+          {
+            "label": 'Kampala',
+            "parent": 'Uganda',
+            "value": 600000,
+          },
+          {
+            "label": 'Jinja',
+            "parent": 'Uganda',
+            "value": 6000000,
+          },
+        ]
+      })
+    </script>
+  </section>
+  <section>
+    <div class="chart">
+      <div id="partition-chart"></div>
+    </div>
+    <script>
+      DiCharts.draw({
+        element: document.getElementById('partition-chart'),
+        config: {
+          title: 'Partition Chart',
+          type: 'partition',
+          coloring: 'color',
+          colors: ['#0095cb'],
+          orientation: 'horizontal',
+          tree: {
+            id: 'label',
+            parent: 'parent',
+            value: 'value'
+          },
+          legend: {
+            showLegend: true,
+            depth: 2,
+          },
+          labeling: {
+            prefix: 'US$'
+          }
+        },
+        data: [
+          {
+            "label": 'World',
+          },
+          {
+            "label": 'Africa',
+            "parent": 'World',
+          },
+          {
+            "label": 'Uganda',
+            "parent": 'Africa',
+          },
+          {
+            "parent": 'Uganda',
+            "color": "green",
+            "label": 'Jinja',
+            "value": 10,
+          },
+          {
+            "parent": 'Uganda',
+            "label": 'Kampala',
+            "value": 100,
+          },
+          {
+            "parent": 'Uganda',
+            "label": 'Mbarara',
+            "value": -40,
+          },
+          {
+            "parent": 'Uganda',
+            "label": 'Gulu',
+            "value": 80,
+          },
+          {
+            "label": 'Kenya',
+            "parent": 'Africa',
+            "value": 70,
+          },
+        ]
+      })
+    </script>
+  </section>
+  <section>
+    <div class="chart">
+      <div id="bubble-chart"></div>
+    </div>
+    <script>
+      DiCharts.draw({
+        element: document.getElementById('bubble-chart'),
+        config: {
+          title: 'Bubble Chart',
+          type: 'bubble',
+          coloring: 'color',
+          colors: ['#ba0c2f', '#93328e', '#b7bf10', '#004862'],
+          groupBy: 'Region',
+          horizontalAxis: {
+            showAxis: true,
+            // Axis Label
+            axisLabel: 'Height (cm)',
+            indicator: 'Height',
+            axisMinimum: 110,
+            axisMaximum: 180,
+            showGridlines: true,
+          },
+          verticalAxis: {
+            showAxis: true,
+            // Axis Label
+            axisLabel: 'Weight (kg)',
+            indicator: 'Weight',
+            axisMinimum: 0,
+            axisMaximum: 100,
+            showGridlines: true,
+          },
+          bubble: {
+            indicator: 'Age',
+            label: 'Age (Yrs)',
+          },
+          legend: {
+            showLegend: true,
+          },
+          annotations: [
+            {
+              title: 'The Red zone',
+              body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam, animi atque consectetur consequatur delectus esse excepturi exercitationem fugit impedit libero molestias, non officia provident quae, repellendus suscipit tempore vel veritatis.',
+              fill: 'red',
+              horizontalAxis: {
+                minimum: 130,
+                maximum: 150,
+              },
+              verticalAxis: {
+                minimum: 10,
+                maximum: 70,
+              },
+            },
+            {
+              title: 'The Green zone',
+              body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam, animi atque consectetur consequatur delectus esse excepturi exercitationem fugit impedit libero molestias, non officia provident quae, repellendus suscipit tempore vel veritatis.',
+              fill: 'green',
+              horizontalAxis: {
+                minimum: 155,
+                maximum: 170,
+              },
+            },
+          ],
+          tooltips: {
+            enable: true,
+            titleIndicator: 'Region',
+          },
+        },
+        data: [
+          { id: '1', "Age": 25, "Weight": 47, "Height": 151, "Region": 'Kampala' },
+          { id: '2', "Age": 150, "Weight": 36, "Height": 139, "Region": 'Kampala', color: 'green' },
+          { id: '3', "Age": 65, "Weight": 31, "Height": 136, "Region": 'Kampala' },
+          { id: '4', "Age": 41, "Weight": 53, "Height": 156, "Region": 'Kampala' },
+          { id: '5', "Age": 51, "Weight": 41, "Height": 145, "Region": 'Kampala' },
+          { id: '6', "Age": 35, "Weight": 62, "Height": 163, "Region": 'Kampala' },
+          { id: '7', "Age": 32, "Weight": 38, "Height": 149, "Region": 'Kampala' },
+          { id: '8', "Age": 60, "Weight": 36, "Height": 144, "Region": 'Jinja' },
+          { id: '9', "Age": 56, "Weight": 42, "Height": 120, "Region": 'Jinja' },
+          { id: '10', "Age": 70, "Weight": 54, "Height": 160, "Region": 'Jinja' },
+          { id: '11', "Age": 45, "Weight": 45, "Height": 126, "Region": 'Jinja' },
+          { id: '12', "Age": 36, "Weight": 56, "Height": 138, "Region": 'Jinja' },
+          { id: '13', "Age": 28, "Weight": 65, "Height": 136, "Region": 'Jinja' },
+          { id: '14', "Age": 40, "Weight": 70, "Height": 170, "Region": 'Jinja' },
+        ]
+      }).then(chart => {
+        setTimeout(() => {
+          chart.update([
+            { id: '1', "Weight": 47, "Height": 151, "Region": 'Kampala' },
+            { id: '2', "Weight": 50, "Height": 139, "Region": 'Kampala', color: 'green' },
+            { id: '3', "Weight": 31, "Height": 136, "Region": 'Kampala' },
+            { id: '4', "Weight": 53, "Height": 156, "Region": 'Kampala' },
+            { id: '5', "Weight": 41, "Height": 145, "Region": 'Kampala' },
+            { id: '6', "Weight": 62, "Height": 163, "Region": 'Kampala' },
+            { id: '7', "Weight": 38, "Height": 149, "Region": 'Kampala' },
+            { id: '8', "Weight": 36, "Height": 144, "Region": 'Jinja' },
+            { id: '10', "Weight": 54, "Height": 160, "Region": 'Jinja' },
+            { id: '11', "Weight": 45, "Height": 126, "Region": 'Jinja' },
+            { id: '12', "Weight": 56, "Height": 138, "Region": 'Jinja' },
+            { id: '13', "Weight": 65, "Height": 136, "Region": 'Jinja' },
+            { id: '14', "Weight": 70, "Height": 170, "Region": 'Jinja' },
+            { id: '15', "Weight": 40, "Height": 120, "Region": 'Jinja' },
+          ]);
+        }, 10000)
+      })
+    </script>
+  </section>
 </body>
 </html>
