@@ -1,6 +1,6 @@
 import { AxisOrientation, Axes, Components } from 'plottable';
 import {approximate} from '@devinit/prelude/lib/numbers';
-import {configureAxisTicking, configureTimeAxisTicking} from '../ticking';
+import {configureAxisTicking, configureTimeAxisTicking} from '../axes/ticking';
 
 export const log = base => number => Math.round(Math.log(number) / Math.log(base));
 

@@ -19,6 +19,7 @@
     },
     "dependencies": {
       "@devinit/prelude": "^1.1.1",
+      "@devinit-charts/core": "1.0.0",
       "d3": "4.13.0",
       "d3-drag": "^1.1.0",
       "lodash": "^4.17.5",

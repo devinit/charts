@@ -33,6 +33,7 @@ export interface Config {
   categoryAxis: CategoryAxis;
   labeling: Labeling;
 }
+
 export default (element, data, config: Config): CategoricChart => {
   const { orientation } = config;
 
