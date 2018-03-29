@@ -20,7 +20,7 @@
   "dependencies": {
     "@devinit/prelude": "^1.1.1",
     "chai-stats": "^0.3.0",
-    "d3": "4.10.2",
+    "d3": "4.13.0",
     "d3-drag": "^1.1.0",
     "lodash": "^4.17.5",
     "object-hash": "^1.1.8",
