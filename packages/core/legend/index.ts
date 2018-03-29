@@ -1,4 +1,4 @@
-import * as Plottable from 'plottable';
+import {Components, Scales, XAlignment, SymbolFactories} from 'plottable';
 
 /**
  *
@@ -26,18 +26,18 @@ import * as Plottable from 'plottable';
 export interface Config {
   showLegend: boolean;
   symbol?: string;
-  alignment?: Plottable.XAlignment;
+  alignment?: XAlignment;
   rowSpan?: any;
 }
-export const createColorLegend = (colorScale, config: Config) => {
+export const createColorLegend = (colorScale: Scales.Color, config: Config) => {
   const {
     showLegend = false, symbol = 'square', alignment = 'left', rowSpan = Infinity
   } = config;
 
   if (!showLegend || !colorScale) return null;
 
-  return new Plottable.Components.Legend(colorScale)
-    .symbol(() => size => Plottable.SymbolFactories[symbol]()(size))
+  return new Components.Legend(colorScale)
+    .symbol(() => size => SymbolFactories[symbol]()(size))
     .xAlignment(alignment)
     .maxEntriesPerRow(rowSpan);
 };
