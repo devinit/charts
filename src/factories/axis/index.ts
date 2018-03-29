@@ -98,14 +98,23 @@ export const getAxisLabelRotation = alignment => {
  * @param {function} format
  * @returns {Plottable.Axes.Numeric}
  */
-
+export interface NumericAxis {
+  showAxis?: boolean;
+  axisOrientation: string;
+  axisScale: any;
+  axisLabel?: any;
+  axisMargin: number;
+  ticking: string;
+  prefix: string;
+  suffix: string;
+}
 export const createNumericAxis =
-  (axisConfig, format?: (any) => any, axis?: Plottable.Axes.Numeric): Plottable.Components.Table | undefined => {
+  (axisConfig: NumericAxis, format?: (any) => any, axis?: Plottable.Axes.Numeric): Plottable.Components.Table
+  | undefined => {
   const {
     showAxis = true,
     axisOrientation,
     axisScale,
-    axisLabel = null,
     axisMargin = 10,
     ticking = 'all',
     prefix = '',
@@ -124,10 +133,10 @@ export const createNumericAxis =
 
   let label: Plottable.Components.AxisLabel | null = null;
 
-  if (axisLabel) {
+  if (axisConfig.axisLabel) {
     axis.margin(axisMargin);
-    label = axisLabel &&
-      new Plottable.Components.AxisLabel(axisLabel, getAxisLabelRotation(alignment));
+    label = axisConfig.axisLabel &&
+      new Plottable.Components.AxisLabel(axisConfig.axisLabel, getAxisLabelRotation(alignment));
   }
 
   // Add ticking classes
@@ -154,33 +163,32 @@ export const createNumericAxis =
  * @param {Plottable.Axes.Time} axis
  * @returns {Plottable.Axes.Time}
  */
-export const createTimeAxis = (config, axis?: any) => {
-  const {
-    showAxis = false,
-    axisScale,
-    axisLabel = null,
-    axisMargin = 10,
-    ticking,
-    tickingStep = 1,
-  } = config;
+export interface Config {
+  showAxis: boolean;
+  axisScale: any;
+  axisMargin?: number;
+  axisLabel?: string;
+  ticking: any;
+  tickingStep?: number;
+}
+export const createTimeAxis = (config: Config, axis?: any) => {
+  if (!config.showAxis) return null;
 
-  if (!showAxis) return null;
-
-  if (!axis) axis = new Plottable.Axes.Time(axisScale, 'bottom');
+  if (!axis) axis = new Plottable.Axes.Time(config.axisScale, 'bottom');
 
   axis.showEndTickLabels(true);
   axis.margin(0);
 
   let label: Plottable.Components.AxisLabel | null = null;
 
-  if (axisLabel) {
-    axis.margin(axisMargin);
+  if (config.axisLabel) {
+    axis.margin(config.axisMargin);
     label =
-      axisLabel && new Plottable.Components.AxisLabel(axisLabel, getAxisLabelRotation('bottom'));
+      new Plottable.Components.AxisLabel(config.axisLabel, getAxisLabelRotation('bottom'));
   }
 
   // Add ticking classes
-  configureTimeAxisTicking(axis, ticking, tickingStep);
+  configureTimeAxisTicking(axis, config.ticking, config.tickingStep);
 
   return createAxisTable('bottom', axis, label);
 };
@@ -204,35 +212,30 @@ export const createTimeAxis = (config, axis?: any) => {
  * @param {Plottable.Axes.Category} axis
  * @returns {Plottable.Axes.Category}
  */
-export const createCategoryAxis = (config: any, axis?: any) => {
-  const {
-    showAxis = false,
-    axisOrientation,
-    axisDirection,
-    axisScale,
-    axisLabel = null,
-    axisMargin = 20,
-    ticking = 'all',
-  } = config;
+export type CategoryConfig = Config & {
+  axisOrientation?: string;
+  innerPadding?: number;
+  outerPadding?: number;
+  axisDirection: any;
+};
+export const createCategoryAxis = (config: CategoryConfig, axis?: any) => {
+  if (!config.showAxis) return null;
 
-  if (!showAxis) return null;
+  const alignment = config.axisDirection || (config.axisOrientation === 'vertical' ? 'bottom' : 'left');
 
-  const alignment = axisDirection || (axisOrientation === 'vertical' ? 'bottom' : 'left');
-
-  if (!axis) axis = new Plottable.Axes.Category(axisScale, alignment);
+  if (!axis) axis = new Plottable.Axes.Category(config.axisScale, alignment);
 
   axis.margin(0);
 
   let label: Plottable.Components.AxisLabel | null = null;
 
-  if (axisLabel) {
-    axis.margin(axisMargin);
-    label =
-      axisLabel && new Plottable.Components.AxisLabel(axisLabel, getAxisLabelRotation(alignment));
+  if (config.axisLabel) {
+    axis.margin(config.axisMargin);
+    label = new Plottable.Components.AxisLabel(config.axisLabel, getAxisLabelRotation(alignment));
   }
 
   // Add ticking classes
-  configureAxisTicking(axis, ticking);
+  configureAxisTicking(axis, config.ticking);
 
   return createAxisTable(alignment, axis, label);
 };

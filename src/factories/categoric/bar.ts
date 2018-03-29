@@ -5,7 +5,11 @@ import { createCategoricChart, CategoricChart } from '.';
 import { createBarTipper } from '../tooltips';
 import {createCustomLabels} from './helper';
 
-const createBarInteraction = (orientation = 'vertical', labeling: any = {}, highlight: string[] = []) => {
+export interface Labeling {
+  prefix: string;
+  suffix: string;
+}
+const createBarInteraction = (orientation = 'vertical', labeling: Labeling, highlight: string[] = []) => {
   const { prefix = '', suffix = '' } = labeling;
 
   let currentId: string | null = null;

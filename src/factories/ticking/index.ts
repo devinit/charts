@@ -5,7 +5,7 @@ export interface Tier {
   interval: Plottable.TimeInterval;
   step: number;
 }
-export const configureTimeAxisTicking = (axis, ticking = 'years', tickingStep = 1) => {
+export const configureTimeAxisTicking = (axis, ticking: string = 'years', tickingStep: number = 1) => {
   const tiers: Tier[] = [];
 
   if (ticking === 'years') {

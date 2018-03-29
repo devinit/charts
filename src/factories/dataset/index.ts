@@ -11,7 +11,7 @@ export const makeUnique = list => Array.from(new Set(list)); // TODO: use ramda
  * @param {string} categoryAxisIndicator
  * @returns {Array}
  */
-export const createFullStackedDataset = (data = [], linearAxisIndicator, categoryAxisIndicator) => {
+export const createFullStackedDataset = (data = [], linearAxisIndicator: string, categoryAxisIndicator: string) => {
   const labels = makeUnique(data.map((d: any) => d[categoryAxisIndicator])) as string[];
 
   const sums = labels

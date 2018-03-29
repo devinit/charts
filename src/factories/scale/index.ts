@@ -22,12 +22,14 @@ export const createLinearScale = (config: any) => {
  * @param {TimeAxis} config
  * @returns {Time}
  */
-export const createTimeScale = (config: any) => {
-  const { axisMinimum = null, axisMaximum = null } = config;
-
+export interface TimeScale {
+  axisMaximum?: any;
+  axisMinimum?: any;
+}
+export const createTimeScale = (config: TimeScale) => {
   const scale = new Plottable.Scales.Time();
-  if (axisMaximum) scale.domainMin(new Date(axisMinimum.toString()));
-  if (axisMaximum) scale.domainMax(new Date(axisMaximum.toString()));
+  if (config.axisMaximum) scale.domainMin(new Date(config.axisMinimum.toString()));
+  if (config.axisMaximum) scale.domainMax(new Date(config.axisMaximum.toString()));
 
   return scale;
 };
@@ -37,7 +39,11 @@ export const createTimeScale = (config: any) => {
  * @param {CategoryAxis} config
  * @returns {Category}
  */
-export const createCategoryScale = config => {
+export interface Config {
+  innerPadding?: number;
+  outerPadding?: number;
+}
+export const createCategoryScale = (config: Config) => {
   const { innerPadding = 0, outerPadding = 0 } = config;
   const scale = new Plottable.Scales.Category();
   scale.outerPadding(outerPadding);

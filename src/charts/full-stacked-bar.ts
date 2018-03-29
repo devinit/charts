@@ -8,15 +8,39 @@ import { createFullStackedDataset } from '../factories/dataset';
  * @property {'full-stacked-bar'} type
  *
  */
-export default (element, data, config) => {
+export interface Labeling {
+  suffix: string;
+}
+export interface LinearAxis  {
+  showAxis: boolean;
+  showGridlines: boolean;
+  innerPadding: number;
+  outerPadding: number;
+  indicator: string;
+}
+export interface CategoryAxis {
+  showAxis: boolean;
+  axisLabel: string;
+  indicator: string;
+  innerPadding: number;
+  outerPadding: number;
+}
+export interface Config {
+  title: string;
+  type: 'bar';
+  linearAxis: LinearAxis;
+  categoryAxis: CategoryAxis;
+  labeling: Labeling;
+  orientation: any;
+}
+export default (element, data, config: Config) => {
   const { orientation, linearAxis } = config;
-
   const plot = new Plottable.Plots.StackedBar(orientation);
 
   const linearChart = createBarChart(element, plot, {
     ...config,
     linearAxis: {
-      ...linearAxis,
+      ...config.linearAxis,
 
       axisMaximum: 100,
       axisMinimum: 0,
@@ -24,7 +48,7 @@ export default (element, data, config) => {
   });
 
   const update = _data =>
-    linearChart.update(createFullStackedDataset(_data, config.linearAxis.indicator, config.categoryAxis.indicator), );
+    linearChart.update(createFullStackedDataset(_data, linearAxis.indicator, config.categoryAxis.indicator), );
 
   const chart = {
     ...linearChart,

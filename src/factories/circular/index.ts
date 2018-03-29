@@ -4,6 +4,7 @@ import { createColorLegend } from '../legend';
 import { createChartTable } from '../table';
 import createTooltips from '../tooltips/circular';
 import { createCircularPlot } from './helpers';
+import { Tooltips } from '../../charts/bubble';
 
 /**
  * @typedef {Object} CircularChart - Circular chart configuration
@@ -37,16 +38,45 @@ export interface CircularChartArgs {
 }
 
 export type CircularChart = (CreateCategoricChartArgs)  => CircularChartResult;
-
-const circularChart = ({ element, plot, config }) => {
+export interface Labeling {
+  showLabels: boolean;
+  prefix: string;
+  suffix: string;
+}
+export interface Circular {
+  label: string;
+  value: string;
+  innerRadius: number;
+  strokeWidth: number;
+  strokeColor: string;
+  showLabels: boolean;
+}
+export interface Legend {
+  showLegend: false;
+  position: string;
+  alignment: string;
+  symbol: any;
+  rowSpan: any;
+}
+export type TooltipG = Tooltips & {
+  titleIndicator?: any;
+};
+export interface ConfigCircular {
+  title?: string;
+  titleAlignment: any;
+  colors: string[];
+  coloring?: string;
+  labeling: Labeling;
+  circular: any;
+  legend: any;
+  tooltips?: TooltipG;
+}
+const circularChart = ( element: HTMLElement, plot, config: ConfigCircular) => {
   const {
-    title = null,
-
     titleAlignment = 'left',
 
     colors = [],
 
-    coloring = null,
     labeling = {
       showLabels: true,
       prefix: '',
@@ -69,13 +99,14 @@ const circularChart = ({ element, plot, config }) => {
 
     tooltips = {
       enable: true,
+      titleIndicator: ''
     }
   } = config;
 
   const colorScale = new Plottable.Scales.Color();
 
   const table = createChartTable({
-    title: createTitle({ title, titleAlignment }),
+    title: createTitle({title: config.title, titleAlignment }),
     chart: createCircularPlot({ plot, ...circular, labeling }),
     legend: createColorLegend(colorScale, legend),
     legendPosition: legend.position,
@@ -93,7 +124,7 @@ const circularChart = ({ element, plot, config }) => {
     const series = data.map((d, i) => ({
       label: d[circular.label],
       value: parseFloat(d[circular.value]),
-      color: d[coloring] || colors[i] || '#abc',
+      color: config.coloring && d[config.coloring] || colors[i] || 'grey',
     }));
 
     // TODO: Efficiently update legend

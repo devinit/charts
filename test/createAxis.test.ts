@@ -5,8 +5,7 @@ import {
   createCategoryAxis,
 } from '../src/factories/axis';
 import {Axes} from 'plottable';
-import { createLinearScale, createCategoryScale } from '../lib/factories/scale';
-
+import { createLinearScale, createCategoryScale } from '../src/factories/scale';
 
 describe('createAxisModifier', () => {
   it('creates a valid modifier', () => {

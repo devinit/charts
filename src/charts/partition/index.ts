@@ -1,12 +1,13 @@
 import * as Plottable from 'plottable';
 import * as hash from 'object-hash';
-import createTreeChart, { createColorFiller } from '../../factories/tree';
+import createTreeChart, { createColorFiller, Config as TConfig, Legend} from '../../factories/tree';
 import { createTreeHierachy } from '../../factories/dataset';
 import createScaleAnimator from '../../factories/animator/scale';
 import { createTreeChartLabeler } from '../../factories/labeler';
 import { createTreeTipper } from '../../factories/tooltips';
 import partition from './layout';
 import createPercentageCalculator from './percentage';
+import { Tooltips } from '../treemap';
 
 /**
  * @typedef {TreeChart} Partition
@@ -15,33 +16,40 @@ import createPercentageCalculator from './percentage';
  * @property {('vertical'|'horizontal')} orientation=horizontal - Orientation
  *
  */
+export interface Tree {
+  id: string;
+  parent: string;
+  value: string;
+  depth: any;
+}
 
-export default (element, data = [], config) => {
+export type  Config = TConfig  & {
+  orientation: string;
+  colors: any;
+  coloring?: any;
+  tree: Tree;
+  legend: Legend;
+  tooltips: Tooltips;
+};
+
+export default (element, data = [], config: Config) => {
   const {
     orientation = 'horizontal',
 
-    colors = [],
-
-    coloring = null,
-
     tree,
-
-    labeling = {},
 
     tooltips = {
       enable: true,
     },
 
-    ...moreConfig
   } = config;
-
   const width = element.parentElement.clientWidth;
   const height = element.parentElement.clientHeight;
-  const calculatePercentage = createPercentageCalculator(width, height, orientation);
+  const calculatePercentage = createPercentageCalculator(width, height, config.orientation);
 
   const plot = new Plottable.Plots.Rectangle();
 
-  const treeTipper = createTreeTipper(element, labeling, calculatePercentage);
+  const treeTipper = createTreeTipper(element, config.labeling, calculatePercentage);
 
   plot.onAnchor(_plot => {
     if (tooltips.enable) {
@@ -52,26 +60,20 @@ export default (element, data = [], config) => {
     }
   });
 
-  (plot as any)._drawLabels = createTreeChartLabeler(labeling, calculatePercentage);
+  (plot as any)._drawLabels = createTreeChartLabeler(config.labeling, calculatePercentage);
 
-  const treeChart = createTreeChart({
+  const treeChart = createTreeChart(
     element,
     plot,
-    config: {
-      orientation,
-      labeling,
-      width,
-      height,
-      ...moreConfig
-    },
-  });
+    config
+  );
 
   const layout = partition().size([
     orientation === 'vertical' ? width : height,
     orientation === 'vertical' ? height : width,
   ]);
 
-  const colorize = createColorFiller(colors, coloring);
+  const colorize = createColorFiller(config.colors, config.coloring);
 
   const listeners: any[] = [];
 
@@ -110,7 +112,7 @@ export default (element, data = [], config) => {
   });
 
   const update = _data => {
-    const root = colorize(createTreeHierachy(_data, tree)
+    const root = colorize(createTreeHierachy(_data, config.tree)
       .sort((a: any, b: any) => a.value - b.value));
 
     treeChart.update(layout(root)
@@ -119,7 +121,7 @@ export default (element, data = [], config) => {
   };
 
   const hashes = {
-    labeling: hash(labeling),
+    labeling: hash(config.labeling),
   };
 
   const chart = {

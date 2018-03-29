@@ -25,11 +25,32 @@ import { createColorLegend } from '../legend';
  * @property {indicator} parent - Parent Indicator
  * @property {indicator} value - Value Indicator
  */
+export interface Labeling {
+  prefix: string;
+  showLabels: boolean;
+  showValues: any;
+  showPercents: any;
+  autofit: any;
+  suffix: string;
+}
 
-export default ({ element, plot, config }) => {
+export interface Legend {
+  showLegend: boolean;
+  position: Plottable.XAlignment;
+  depth: number;
+}
+
+export interface Config {
+  title?: string;
+  titleAlignment?: Plottable.XAlignment;
+  orientation: string;
+  width: number;
+  height: number;
+  labeling: Labeling;
+  legend: Legend;
+}
+export default ( element, plot, config: Config) => {
   const {
-    title = null,
-
     titleAlignment = 'left',
 
     orientation = 'vertical',
@@ -38,9 +59,9 @@ export default ({ element, plot, config }) => {
 
     height,
 
-    labeling = {},
+    labeling,
 
-    legend = {},
+    legend
   } = config;
 
   const xScale = new Plottable.Scales.Linear();
@@ -64,19 +85,20 @@ export default ({ element, plot, config }) => {
     .attr('fill', d => d.color || '#abc')
     .attr('stroke', '#fff')
     .attr('stroke-width', 1)
-    .labelsEnabled(labeling.showLabels || true)
+    .labelsEnabled(labeling && labeling.showLabels || true)
     .label(d => d.data.label);
 
-  const colorLegend = createColorLegend(colorScale, legend);
+  const colorLegend =
+    createColorLegend(colorScale, { showLegend: legend.showLegend });
 
   const table = createChartTable({
-    title: createTitle({ title, titleAlignment }),
+    title: createTitle({ title: config.title, titleAlignment }),
 
     chart: plot,
 
     legend: colorLegend,
 
-    legendPosition: legend.position || 'bottom',
+    legendPosition:  legend.position || 'bottom',
   });
 
   table.renderTo(element);

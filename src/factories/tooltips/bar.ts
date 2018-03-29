@@ -3,7 +3,11 @@ import Tooltip from 'tooltip.js';
 import {approximate} from '@devinit/prelude/lib/numbers';
 
 // TODO: get proper orientation type
-export default (container, labeling: any = {}, orientation: string) => {
+export interface Labeling {
+  prefix: string;
+  suffix: string;
+}
+export default (container, labeling: Labeling, orientation: string) => {
   let currentHash = null;
   const {
     prefix = '',

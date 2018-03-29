@@ -1,7 +1,21 @@
 import * as Plottable from 'plottable';
 
-export const createPlotWithGridlines = ({ plot, grid }) => {
-  return grid ? new Plottable.Components.Group([grid, plot]) : plot;
+export interface Args {
+  plot: any;
+  grid: any;
+}
+export interface Components {
+  leftLinearAxis: any;
+  rightLinearAxis: any;
+  leftPlotArea: string;
+  rightPlotArea: string;
+  leftCategoryAxis?: any;
+  rightCategoryAxis?: any;
+  dualSidebar: any;
+  right?: any;
+}
+export const createPlotWithGridlines = (args: Args) => {
+  return args.grid ? new Plottable.Components.Group([args.grid, args.plot]) : args.plot;
 };
 
 export const createLinearPlot = ({plot, categoryScale, linearScale, showLabels}, modify) => {
@@ -18,25 +32,15 @@ export const createLinearPlot = ({plot, categoryScale, linearScale, showLabels},
     .y(d => d.index, categoryScale);
 };
 
-export const createPlotAreaWithAxes = (components) => {
-  const {
-    leftLinearAxis,
-    rightLinearAxis,
-    leftPlotArea,
-    rightPlotArea,
-    leftCategoryAxis,
-    rightCategoryAxis,
-    dualSidebar,
-  } = components;
-
+export const createPlotAreaWithAxes = (components: Components) => {
   const leftBar = new Plottable.Components.Table([
-    [rightCategoryAxis, rightPlotArea],
-    [null, rightLinearAxis],
+    [components.right, components.rightPlotArea],
+    [null, components.rightLinearAxis],
   ]);
 
   const rightBar = new Plottable.Components.Table([
-    [leftPlotArea, leftCategoryAxis],
-    [leftLinearAxis, null],
+    [components.leftPlotArea, components.leftCategoryAxis],
+    [components.leftLinearAxis, null],
   ]);
 
   const barTable = new Plottable.Components.Table([[rightBar, leftBar]]);
@@ -45,7 +49,7 @@ export const createPlotAreaWithAxes = (components) => {
     [new Plottable.Components.Table(), barTable, new Plottable.Components.Table()],
   ]);
 
-  barTable.columnPadding(dualSidebar.gutter);
+  barTable.columnPadding(components.dualSidebar.gutter);
 
   table.columnWeight(0, 1);
   table.columnWeight(1, 3);

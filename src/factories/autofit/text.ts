@@ -1,4 +1,4 @@
-export const autoFitMetrics = (width, height, text) => {
+export const autoFitMetrics = (width: number, height: number, text: string) => {
   const baseFont = 9;
   const availableArea = width * height;
   const words = text.split(/\s+/);

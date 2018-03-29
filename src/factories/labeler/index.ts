@@ -12,8 +12,15 @@ import {approximate} from '@devinit/prelude/lib/numbers';
  * @property {string} suffix - Suffix
  *
  */
-
-export const createTreeChartLabeler = (config, percentage: (number) => number = () => 100) => {
+export interface Config {
+  showLabels: boolean;
+  showValues: boolean;
+  showPercents: boolean;
+  autofit: boolean;
+  prefix: string;
+  suffix: string;
+}
+export const createTreeChartLabeler = (config: Config, percentage: (number) => number = () => 100) => {
   const {
     showLabels = true,
     showValues = true,

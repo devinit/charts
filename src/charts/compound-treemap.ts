@@ -11,17 +11,29 @@ import { createColorFiller } from '../factories/tree';
  * @property {'compound-treemap'} type
  *
  */
-export default (element, data, config) => {
+export interface Tree {
+  id: string;
+  parent: string;
+  value: string;
+  depth: 'Infinity';
+}
+export interface Config {
+  title?: any;
+  orientation: string;
+  titleAlignment: any;
+  colors: any;
+  coloring?: any;
+  tree: Tree;
+}
+export default (element, data, config: Config) => {
+
+  // ... apply rectangle configuration
   const {
     title = null,
 
     orientation = 'vertical',
 
     titleAlignment = 'left',
-
-    colors = [],
-
-    coloring = null,
 
     tree = {
       id: 'id',
@@ -32,9 +44,6 @@ export default (element, data, config) => {
 
     // ...
   } = config;
-
-  // ... apply rectangle configuration
-
   const xScale = new Plottable.Scales.Linear();
   xScale.domainMin(0);
   xScale.domainMax(1);
@@ -83,7 +92,7 @@ export default (element, data, config) => {
 
   const layout = treemap().tile(tilingMethod);
 
-  const colorize = createColorFiller(colors, coloring);
+  const colorize = createColorFiller(config.colors, config.coloring);
 
   const update = _data => {
     const root = colorize(createTreeHierachy(_data, tree));

@@ -8,7 +8,30 @@ import createBarChart from '../factories/categoric/bar';
  * @property {'clustered-bar'} type
  *
  */
-export default (element, data, config): CategoricChart => {
+export interface LinearAxis {
+  showAxis: boolean;
+  axisLabel: string;
+  indicator: string;
+  innerPadding: number;
+  outerPadding: number;
+}
+export interface CategoryAxis {
+  showAxis: boolean;
+  axisLabel: string;
+  indicator: string;
+  innerPadding: number;
+  outerPadding: number;
+}
+export interface Config {
+  orientation: any;
+  title: string;
+  type: 'clustered-bar';
+  groupBy: string;
+  colors: string[];
+  linearAxis: LinearAxis;
+  categoryAxis: CategoryAxis;
+}
+export default (element, data, config: Config): CategoricChart => {
   const plot = new Plottable.Plots.ClusteredBar(config.orientation);
 
   const chart = createBarChart(element, plot, config);
