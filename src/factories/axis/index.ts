@@ -136,7 +136,7 @@ export const createNumericAxis =
   if (axisConfig.axisLabel) {
     axis.margin(axisMargin);
     label = axisConfig.axisLabel &&
-      new Plottable.Components.AxisLabel(axisConfig.axisLabel, getAxisLabelRotation(alignment));
+      new Components.AxisLabel(axisConfig.axisLabel, getAxisLabelRotation(alignment));
   }
 
   // Add ticking classes
