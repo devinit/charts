@@ -48,19 +48,19 @@ export const createAxisModifier = config => {
 
 export const createAxisTable = (alignment, axis, label) => {
   if (alignment === 'top') {
-    return new Plottable.Components.Table([[label], [axis]]);
+    return new Components.Table([[label], [axis]]);
   }
 
   if (alignment === 'bottom') {
-    return new Plottable.Components.Table([[axis], [label]]);
+    return new Components.Table([[axis], [label]]);
   }
 
   if (alignment === 'left') {
-    return new Plottable.Components.Table([[label, axis]]);
+    return new Components.Table([[label, axis]]);
   }
 
   if (alignment === 'right') {
-    return new Plottable.Components.Table([[axis, label]]);
+    return new Components.Table([[axis, label]]);
   }
 };
 
@@ -109,7 +109,7 @@ export interface NumericAxis {
   suffix: string;
 }
 export const createNumericAxis =
-  (axisConfig: NumericAxis, format?: (any) => any, axis?: Plottable.Axes.Numeric): Plottable.Components.Table
+  (axisConfig: NumericAxis, format?: (any) => any, axis?: Axes.Numeric): Components.Table
   | undefined => {
   const {
     showAxis = true,
@@ -135,13 +135,8 @@ export const createNumericAxis =
 
   if (axisConfig.axisLabel) {
     axis.margin(axisMargin);
-<<<<<<< HEAD
     label = axisConfig.axisLabel &&
       new Plottable.Components.AxisLabel(axisConfig.axisLabel, getAxisLabelRotation(alignment));
-=======
-    label = axisLabel &&
-      new Components.AxisLabel(axisLabel, getAxisLabelRotation(alignment));
->>>>>>> webpack
   }
 
   // Add ticking classes
@@ -168,7 +163,6 @@ export const createNumericAxis =
  * @param {Plottable.Axes.Time} axis
  * @returns {Plottable.Axes.Time}
  */
-<<<<<<< HEAD
 export interface Config {
   showAxis: boolean;
   axisScale: any;
@@ -180,22 +174,7 @@ export interface Config {
 export const createTimeAxis = (config: Config, axis?: any) => {
   if (!config.showAxis) return null;
 
-  if (!axis) axis = new Plottable.Axes.Time(config.axisScale, 'bottom');
-=======
-export const createTimeAxis = (config, axis?: any) => {
-  const {
-    showAxis = false,
-    axisScale,
-    axisLabel = null,
-    axisMargin = 10,
-    ticking,
-    tickingStep = 1,
-  } = config;
-
-  if (!showAxis) return null;
-
-  if (!axis) axis = new Axes.Time(axisScale, 'bottom');
->>>>>>> webpack
+  if (!axis) axis = new Axes.Time(config.axisScale, 'bottom');
 
   axis.showEndTickLabels(true);
   axis.margin(0);
@@ -205,11 +184,7 @@ export const createTimeAxis = (config, axis?: any) => {
   if (config.axisLabel) {
     axis.margin(config.axisMargin);
     label =
-<<<<<<< HEAD
-      new Plottable.Components.AxisLabel(config.axisLabel, getAxisLabelRotation('bottom'));
-=======
-      axisLabel && new Components.AxisLabel(axisLabel, getAxisLabelRotation('bottom'));
->>>>>>> webpack
+      new Components.AxisLabel(config.axisLabel, getAxisLabelRotation('bottom'));
   }
 
   // Add ticking classes
@@ -248,26 +223,15 @@ export const createCategoryAxis = (config: CategoryConfig, axis?: any) => {
 
   const alignment = config.axisDirection || (config.axisOrientation === 'vertical' ? 'bottom' : 'left');
 
-<<<<<<< HEAD
-  if (!axis) axis = new Plottable.Axes.Category(config.axisScale, alignment);
-=======
-  if (!axis) axis = new Axes.Category(axisScale, alignment);
->>>>>>> webpack
+  if (!axis) axis = new Axes.Category(config.axisScale, alignment);
 
   axis.margin(0);
 
   let label: Components.AxisLabel | null = null;
 
-<<<<<<< HEAD
   if (config.axisLabel) {
     axis.margin(config.axisMargin);
-    label = new Plottable.Components.AxisLabel(config.axisLabel, getAxisLabelRotation(alignment));
-=======
-  if (axisLabel) {
-    axis.margin(axisMargin);
-    label =
-      axisLabel && new Components.AxisLabel(axisLabel, getAxisLabelRotation(alignment));
->>>>>>> webpack
+    label = new Components.AxisLabel(config.axisLabel, getAxisLabelRotation(alignment));
   }
 
   // Add ticking classes
