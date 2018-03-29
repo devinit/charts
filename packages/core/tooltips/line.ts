@@ -1,8 +1,13 @@
-import * as Plottable from 'plottable';
+import {Scales, Interactions} from 'plottable';
 import Tooltip from 'tooltip.js';
+import {Labeling} from './types';
 import {approximate} from '@devinit/prelude/lib/numbers';
 
-export type CreateLineTipper = (container: string, labeling: any, scale: any) => (plot: any) => any;
+export type CreateLineTipper = (
+  container: HTMLElement | string,
+  labeling: Labeling,
+  scale: Scales.Category | Scales.Time)
+  => (plot: any) => any;
 
 const createLineTipper: CreateLineTipper = (container, labeling, scale) => {
   let currentHash = null;
@@ -36,7 +41,7 @@ const createLineTipper: CreateLineTipper = (container, labeling, scale) => {
         </div>
       `;
 
-    const interaction = new Plottable.Interactions.Pointer()
+    const interaction = new Interactions.Pointer()
       .onPointerEnter(() => tip.show())
       .onPointerExit(() => {
         tip.hide();
@@ -45,10 +50,10 @@ const createLineTipper: CreateLineTipper = (container, labeling, scale) => {
       .onPointerMove(point => {
         let halfStepWidth = 0;
 
-        if (scale.stepWidth) {
-          halfStepWidth = scale.stepWidth() / 2;
-        } else if (scale.tickInterval) {
-          halfStepWidth = plot.width() / (scale.tickInterval('year').length * 2);
+        if ((scale as Scales.Category).stepWidth) {
+          halfStepWidth = (scale as Scales.Category).stepWidth() / 2;
+        } else if ((scale as Scales.Time).tickInterval) {
+          halfStepWidth = plot.width() / ((scale as Scales.Time).tickInterval('year').length * 2);
         }
 
         const entities = plot.entitiesIn(

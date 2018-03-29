@@ -1,13 +1,9 @@
 import * as Plottable from 'plottable';
 import Tooltip from 'tooltip.js';
-import {approximate} from '@devinit/prelude/lib/numbers';
+import { Labeling } from './types';
+import { approximate } from '@devinit/prelude/lib/numbers';
 
-// TODO: get proper orientation type
-export interface Labeling {
-  prefix: string;
-  suffix: string;
-}
-export default (container, labeling: Labeling, orientation: string) => {
+export default (container: HTMLElement, labeling: Labeling, orientation: string) => {
   let currentHash = null;
   const {
     prefix = '',
@@ -29,7 +25,7 @@ export default (container, labeling: Labeling, orientation: string) => {
       }[_orientation];
     };
 
-    const tip = new Tooltip(tooltipAnchor.node(), {
+    const tip = Tooltip(tooltipAnchor.node(), {
       title: 'Tooltip',
       placement: placement(orientation),
       container,

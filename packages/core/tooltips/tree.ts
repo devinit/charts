@@ -1,11 +1,12 @@
 import * as Plottable from 'plottable';
 import { color } from 'd3';
 import Tooltip from 'tooltip.js';
+import {Labeling} from './types';
 import {approximate} from '@devinit/prelude/lib/numbers';
 
 type PercentageCalculator = (datum: {x1: number, x0: number; y0: number, y1: number}) => number;
 
-export default (container, labeling, percentage: PercentageCalculator) => {
+export default (container: string | HTMLElement, labeling: Labeling, percentage: PercentageCalculator) => {
   let currentId = null;
 
   return plot => {

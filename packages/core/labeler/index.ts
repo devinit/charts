@@ -13,12 +13,12 @@ import {approximate} from '@devinit/prelude/lib/numbers';
  *
  */
 export interface Config {
-  showLabels: boolean;
-  showValues: boolean;
-  showPercents: boolean;
-  autofit: boolean;
-  prefix: string;
-  suffix: string;
+  showLabels?: boolean;
+  showValues?: boolean;
+  showPercents?: boolean;
+  autofit?: boolean;
+  prefix?: string;
+  suffix?: string;
 }
 export const createTreeChartLabeler = (config: Config, percentage: (number) => number = () => 100) => {
   const {

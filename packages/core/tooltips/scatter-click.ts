@@ -1,6 +1,6 @@
 import * as Plottable from 'plottable';
 import Tooltip from 'tooltip.js';
-import { TooltipI } from './scatter';
+import { ITooltip, Listener } from './types';
 
 const template =
     '<div class="tooltip" role="tooltip" style="text-align: left;">' +
@@ -9,7 +9,7 @@ const template =
     '<div id="tt-body" class="tooltip-body"></div>' +
     '</div>';
 
-export default (container, tooltips: TooltipI, idIndicator, listeners) => {
+export default (container: HTMLElement | string, tooltips: ITooltip, idIndicator: string, listeners: Listener[]) => {
   const { enable = true, titleIndicator } = tooltips;
 
   const selected = {};

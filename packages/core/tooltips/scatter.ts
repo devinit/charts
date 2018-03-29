@@ -6,7 +6,7 @@ export interface TooltipI {
   enable: boolean;
   titleIndicator: any;
 }
-export default (container, tooltips: TooltipI, axes) => {
+export default (container: HTMLElement | string, tooltips: TooltipI, axes: any) => {
   let currentId: string | null = null;
   const { enable = true, titleIndicator } = tooltips as any;
 

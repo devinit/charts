@@ -3,9 +3,9 @@ import Tooltip from 'tooltip.js';
 import * as hash from 'object-hash';
 import { color } from 'd3';
 import {approximate} from '@devinit/prelude/lib/numbers';
-import { TooltipG } from '../circular';
+import { ITooltip } from './types';
 
-export default (container, tooltips: TooltipG) => {
+export default (container: HTMLElement, tooltips: ITooltip) => {
   let currentId: string | null = null;
   const { enable = true } = tooltips;
 
