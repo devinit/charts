@@ -1,6 +1,16 @@
-import { AxisOrientation, Axes, Components } from 'plottable';
+import { AxisOrientation, Axes, Components, Scales, Component, XAlignment } from 'plottable';
 import {approximate} from '@devinit/prelude/lib/numbers';
 import {configureAxisTicking, configureTimeAxisTicking} from '../axes/ticking';
+
+export interface AxisConfig {
+  showAxis?: boolean;
+  axisMargin?: number;
+  axisLabel?: string;
+  ticking?: string;
+  tickingStep?: number;
+  prefix?: string;
+  suffix?: string;
+}
 
 export const log = base => number => Math.round(Math.log(number) / Math.log(base));
 
@@ -98,22 +108,17 @@ export const getAxisLabelRotation = alignment => {
  * @param {function} format
  * @returns {Plottable.Axes.Numeric}
  */
-export interface NumericAxis {
-  showAxis?: boolean;
-  axisOrientation: string;
-  axisScale: any;
-  axisLabel?: any;
-  axisMargin: number;
-  ticking: string;
-  prefix: string;
-  suffix: string;
-}
+export type NumericAxis = AxisConfig & {
+  axisScale: Scales.Linear;
+  axisOrientation?: XAlignment;
+};
+
 export const createNumericAxis =
   (axisConfig: NumericAxis, format?: (any) => any, axis?: Axes.Numeric): Components.Table
   | undefined => {
   const {
     showAxis = true,
-    axisOrientation,
+    axisOrientation = 'horizontal',
     axisScale,
     axisMargin = 10,
     ticking = 'all',
@@ -135,8 +140,7 @@ export const createNumericAxis =
 
   if (axisConfig.axisLabel) {
     axis.margin(axisMargin);
-    label = axisConfig.axisLabel &&
-      new Components.AxisLabel(axisConfig.axisLabel, getAxisLabelRotation(alignment));
+    label = new Components.AxisLabel(axisConfig.axisLabel, getAxisLabelRotation(alignment));
   }
 
   // Add ticking classes
@@ -163,16 +167,12 @@ export const createNumericAxis =
  * @param {Plottable.Axes.Time} axis
  * @returns {Plottable.Axes.Time}
  */
-export interface Config {
-  showAxis: boolean;
-  axisScale: any;
-  axisMargin?: number;
-  axisLabel?: string;
-  ticking: any;
-  tickingStep?: number;
-}
-export const createTimeAxis = (config: Config, axis?: any) => {
-  if (!config.showAxis) return null;
+export type TimeConfig = AxisConfig & {
+  axisScale: Scales.Time;
+};
+
+export const createTimeAxis = (config: TimeConfig, axis?: any): Component | undefined => {
+  if (!config.showAxis) return undefined;
 
   if (!axis) axis = new Axes.Time(config.axisScale, 'bottom');
 
@@ -212,13 +212,14 @@ export const createTimeAxis = (config: Config, axis?: any) => {
  * @param {Plottable.Axes.Category} axis
  * @returns {Plottable.Axes.Category}
  */
-export type CategoryConfig = Config & {
+export type CategoryConfig = AxisConfig & {
+  axisScale: Scales.Category;
   axisOrientation?: string;
   innerPadding?: number;
   outerPadding?: number;
-  axisDirection: any;
+  axisDirection?: AxisOrientation;
 };
-export const createCategoryAxis = (config: CategoryConfig, axis?: any) => {
+export const createCategoryAxis = (config: CategoryConfig, axis?: Axes.Category) => {
   if (!config.showAxis) return null;
 
   const alignment = config.axisDirection || (config.axisOrientation === 'vertical' ? 'bottom' : 'left');
@@ -230,7 +231,7 @@ export const createCategoryAxis = (config: CategoryConfig, axis?: any) => {
   let label: Components.AxisLabel | null = null;
 
   if (config.axisLabel) {
-    axis.margin(config.axisMargin);
+    axis.margin(config.axisMargin || 10);
     label = new Components.AxisLabel(config.axisLabel, getAxisLabelRotation(alignment));
   }
 
