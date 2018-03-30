@@ -34,7 +34,7 @@ export const createColorLegend = (colorScale: Scales.Color, config: Config) => {
     showLegend = false, symbol = 'square', alignment = 'left', rowSpan = Infinity
   } = config;
 
-  if (!showLegend || !colorScale) return null;
+  if (!showLegend || !colorScale) return undefined;
 
   return new Components.Legend(colorScale)
     .symbol(() => size => SymbolFactories[symbol]()(size))

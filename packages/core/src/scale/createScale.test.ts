@@ -1,5 +1,5 @@
 import 'jest';
-import { createLinearScale, createCategoryScale } from '../src/factories/scale';
+import { createLinearScale, createCategoryScale } from '.';
 import {Scales} from 'plottable';
 
 describe('createLinearScale', () => {

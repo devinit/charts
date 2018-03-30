@@ -25,7 +25,7 @@ export const autoFitMetrics = (width: number, height: number, text: string) => {
     return {fontSize: baseFont * 1.8, showLabels: widthRatio > 0.7};
   };
 
-export const autofitStyles = (width, height, text) => {
+export const autofitStyles = (width: number, height: number, text: string) => {
     const autoFit = autoFitMetrics(width, height, text);
     return {
       label: `style="display: ${autoFit.showLabels ? 'block' : 'none'}"`,

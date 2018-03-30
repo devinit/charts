@@ -3,9 +3,9 @@ import {
   createAxisModifier,
   createNumericAxis,
   createCategoryAxis,
-} from '../src/factories/axis';
+} from '.';
 import {Axes} from 'plottable';
-import { createLinearScale, createCategoryScale } from '../src/factories/scale';
+import { createLinearScale, createCategoryScale } from '../scale';
 
 describe('createAxisModifier', () => {
   it('creates a valid modifier', () => {

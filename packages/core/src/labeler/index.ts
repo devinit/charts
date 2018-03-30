@@ -1,5 +1,5 @@
 import { color } from 'd3';
-import { autofitStyles } from '../autofit/text';
+import { autofitStyles } from './autofit';
 import {approximate} from '@devinit/prelude/lib/numbers';
 
 /**

@@ -1,3 +1,7 @@
+/**
+ * for normalising data sets. For instance data for drawing some chart may need to get transformed
+ * into a certain shape. This is what this module does.
+ */
 import { stratify } from 'd3';
 import {HierarchyNode} from 'd3-hierarchy';
 import * as Plottable from 'plottable';
