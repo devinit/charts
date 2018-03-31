@@ -1,3 +1,6 @@
+/**
+ * TODO: refactor along the lines of line & bar chart
+ */
 import * as Plottable from 'plottable';
 import {approximate} from '@devinit/prelude/lib/numbers';
 import { createChartTable } from '../table';
