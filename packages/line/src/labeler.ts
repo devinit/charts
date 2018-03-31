@@ -16,6 +16,7 @@ interface Args {
   prefix: string;
   drawStackedBarSum?: boolean;
 }
+
 const drawLabel = (opts: Args, foreground) => {
   // forExtend is for drawing sums of values in a stacked bar
   const {width, height, x, y, value, color, suffix, prefix, drawStackedBarSum = false} = opts;

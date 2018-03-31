@@ -5,15 +5,16 @@ import { Scales } from 'plottable';
  * @param {NumericAxis} config
  * @returns {Linear}
  */
-export const createLinearScale = (config: any) => {
-  const { axisMinimum = null, axisMaximum = null } = config;
+export interface LinearScale {
+  axisMaximum?: number;
+  axisMinimum?: number;
+}
+export const createLinearScale = (config: LinearScale): Scales.Linear => {
+  const { axisMinimum, axisMaximum} = config;
 
   const scale = new Scales.Linear();
-  scale.domainMin(axisMinimum);
-  scale.domainMax(axisMaximum);
-
-  // ...
-
+  if (axisMinimum) scale.domainMin(axisMinimum);
+  if (axisMaximum) scale.domainMax(axisMaximum);
   return scale;
 };
 
@@ -23,13 +24,14 @@ export const createLinearScale = (config: any) => {
  * @returns {Time}
  */
 export interface TimeScale {
-  axisMaximum?: any;
-  axisMinimum?: any;
+  axisMaximum?: string | Date;
+  axisMinimum?: string | Date;
 }
-export const createTimeScale = (config: TimeScale) => {
+export const createTimeScale = (config: TimeScale): Scales.Time => {
   const scale = new Scales.Time();
-  if (config.axisMaximum) scale.domainMin(new Date(config.axisMinimum.toString()));
-  if (config.axisMaximum) scale.domainMax(new Date(config.axisMaximum.toString()));
+  const { axisMinimum, axisMaximum} = config;
+  if (axisMinimum) scale.domainMin(new Date(axisMinimum.toString()));
+  if (axisMaximum) scale.domainMax(new Date(axisMaximum.toString()));
 
   return scale;
 };
@@ -39,11 +41,12 @@ export const createTimeScale = (config: TimeScale) => {
  * @param {CategoryAxis} config
  * @returns {Category}
  */
-export interface Config {
+export interface CategoryScale {
   innerPadding?: number;
   outerPadding?: number;
 }
-export const createCategoryScale = (config: Config) => {
+
+export const createCategoryScale = (config: CategoryScale): Scales.Category => {
   const { innerPadding = 0, outerPadding = 0 } = config;
   const scale = new Scales.Category();
   scale.outerPadding(outerPadding);

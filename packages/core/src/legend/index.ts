@@ -23,13 +23,13 @@ import {Components, Scales, XAlignment, SymbolFactories} from 'plottable';
  * @param {ColorLegend} config
  * @returns {*}
  */
-export interface Config {
-  showLegend: boolean;
+export interface LegendConfig {
+  showLegend?: boolean;
   symbol?: string;
   alignment?: XAlignment;
   rowSpan?: any;
 }
-export const createColorLegend = (colorScale: Scales.Color, config: Config) => {
+export const createColorLegend = (colorScale: Scales.Color, config: LegendConfig) => {
   const {
     showLegend = false, symbol = 'square', alignment = 'left', rowSpan = Infinity
   } = config;

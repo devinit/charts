@@ -2,7 +2,7 @@ import * as Plottable from 'plottable';
 
 export interface CreateTitleArgs {
   title?: string;
-  titleAlignment: Plottable.XAlignment;
+  titleAlignment?: Plottable.XAlignment;
 }
 export const createTitle =
   ({ title, titleAlignment = 'left' }: CreateTitleArgs): Plottable.Components.TitleLabel | undefined => {

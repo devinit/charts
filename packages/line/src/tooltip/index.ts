@@ -1,6 +1,6 @@
 import {Scales, Interactions} from 'plottable';
 import Tooltip from 'tooltip.js';
-import {Labeling} from './types';
+import {Labeling} from '@devinit-charts/core/lib/types';
 import {approximate} from '@devinit/prelude/lib/numbers';
 
 export type CreateLineTipper = (

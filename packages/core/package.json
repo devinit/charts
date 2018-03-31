@@ -2,7 +2,6 @@
     "name": "@devinit-charts/core",
     "version": "1.0.0",
     "description": "Core package for devinit charts",
-    "main": "lib/index.js",
     "scripts": {
       "test": "jest",
       "test:dev": "jest -w",
@@ -19,10 +18,8 @@
       "plottable": "3.8.1"
     },
     "directories": {
-      "dist": "./dist",
       "lib": "./lib",
-      "src": "./src",
-      "test": "./test"
+      "src": "./src"
     },
     "repository": {
       "type": "git",

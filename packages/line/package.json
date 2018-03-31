@@ -6,21 +6,16 @@
     "scripts": {
       "test": "jest",
       "test:dev": "jest -w",
-      "start": "WEBPACK_ENV=development wepack-serve --config ./webpack.config.js",
-      "compile": "tsc",
-      "lint": "tslint -c tslint.json 'src/**/*.ts' 'schema/**/*.ts' ",
-      "build": "webpack --profile --colors --mode=production",
-      "build:production": "WEBPACK_ENV=production webpack --profile --colors",
+      "build": "tsc",
+      "lint": "tslint -c ../../tslint.json 'src/**/*.ts' ",
       "patch": "release-it -i patch -n",
       "feature": "release-it -i minor -n",
-      "breaking": "release-it -i major -n",
-      "schema": "mkdir -p dist && jsdoc --template schema --destination dist/di-charts.schema.json lib/charts lib/factories",
-      "schema:dev": "npm run compile && npm run schema"
+      "breaking": "release-it -i major -n"
     },
     "dependencies": {
       "@devinit/prelude": "^1.1.1",
+      "@devinit-charts/core": "1.0.0",
       "d3": "4.13.0",
-      "d3-drag": "^1.1.0",
       "lodash": "^4.17.5",
       "plottable": "3.8.1",
       "tooltip.js": "^1.2.0"

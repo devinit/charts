@@ -1,14 +1,14 @@
 import * as Plottable from 'plottable';
 import { groupBy as group, keys, values, mapValues } from 'lodash';
-import { createTitle } from '../title';
-import { createChartTable } from '../table';
-import { createColorLegend } from '../legend';
-import { createLinearAxisGridLines } from '../grid';
-import { createPlotWithGridlines } from '../categoric';
-import { createNumericAxis, createTimeAxis } from '../axis';
-import { createLinearScale, createTimeScale } from '../scale';
-import { createLineTipper } from '../tooltips';
-import createScaleAnimator from '../animator/scale';
+import { createTitle } from '@devinit-charts/core/lib/title';
+import { createChartTable } from '@devinit-charts/core/lib/table';
+import { createColorLegend } from '@devinit-charts/core/lib/legend';
+import { createLinearAxisGridLines } from '@devinit-charts/core/lib/axes/grid';
+import { createPlotWithGridlines } from '@devinit-charts/core/lib/categoric';
+import { createNumericAxis, createTimeAxis } from '@devinit-charts/core/lib/axes';
+import { createLinearScale, createTimeScale } from '@devinit-charts/core/lib/scale';
+import createLineTipper from '../tooltip';
+import createScaleAnimator from '@devinit-charts/core/lib/animator/scale';
 import { createPlotAreaWithAxes, createTimePlot } from './utils';
 import createTimeAnchor from './anchor';
 

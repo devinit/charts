@@ -1,4 +1,4 @@
-import { AxisOrientation, Axes, Components, Scales, Component, XAlignment } from 'plottable';
+import { AxisOrientation, Axes, Components, Scales, Component} from 'plottable';
 import {approximate} from '@devinit/prelude/lib/numbers';
 import {configureAxisTicking, configureTimeAxisTicking} from '../axes/ticking';
 
@@ -108,13 +108,13 @@ export const getAxisLabelRotation = alignment => {
  * @param {function} format
  * @returns {Plottable.Axes.Numeric}
  */
-export type NumericAxis = AxisConfig & {
+export type NumericConfigAxis = AxisConfig & {
   axisScale: Scales.Linear;
-  axisOrientation?: XAlignment;
+  axisOrientation?: string;
 };
 
 export const createNumericAxis =
-  (axisConfig: NumericAxis, format?: (any) => any, axis?: Axes.Numeric): Components.Table
+  (axisConfig: NumericConfigAxis, format?: (any) => any, axis?: Axes.Numeric): Components.Table
   | undefined => {
   const {
     showAxis = true,
@@ -167,11 +167,11 @@ export const createNumericAxis =
  * @param {Plottable.Axes.Time} axis
  * @returns {Plottable.Axes.Time}
  */
-export type TimeConfig = AxisConfig & {
+export type TimeAxisConfig = AxisConfig & {
   axisScale: Scales.Time;
 };
 
-export const createTimeAxis = (config: TimeConfig, axis?: any): Component | undefined => {
+export const createTimeAxis = (config: TimeAxisConfig, axis?: any): Component | undefined => {
   if (!config.showAxis) return undefined;
 
   if (!axis) axis = new Axes.Time(config.axisScale, 'bottom');
@@ -212,14 +212,15 @@ export const createTimeAxis = (config: TimeConfig, axis?: any): Component | unde
  * @param {Plottable.Axes.Category} axis
  * @returns {Plottable.Axes.Category}
  */
-export type CategoryConfig = AxisConfig & {
+export type CategoryAxisConfig = AxisConfig & {
   axisScale: Scales.Category;
   axisOrientation?: string;
   innerPadding?: number;
   outerPadding?: number;
   axisDirection?: AxisOrientation;
 };
-export const createCategoryAxis = (config: CategoryConfig, axis?: Axes.Category) => {
+
+export const createCategoryAxis = (config: CategoryAxisConfig, axis?: Axes.Category) => {
   if (!config.showAxis) return null;
 
   const alignment = config.axisDirection || (config.axisOrientation === 'vertical' ? 'bottom' : 'left');

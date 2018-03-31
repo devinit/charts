@@ -1,10 +1,12 @@
 export interface Labeling {
-    prefix: string;
+    prefix?: string;
+    showLabels?: boolean;
     showValues?: boolean;
-    suffix: string;
+    custom?: boolean;
+    suffix?: string;
 }
 
-export interface ITooltip {
+export interface Tooltip {
     enable: boolean;
     titleIndicator: string;
 }

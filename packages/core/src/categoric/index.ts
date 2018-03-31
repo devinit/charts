@@ -2,27 +2,73 @@ import * as Plottable from 'plottable';
 import {approximate} from '@devinit/prelude/lib/numbers';
 import { createChartTable } from '../table';
 import { createTitle } from '../title';
-import { createColorLegend } from '../legend';
+import { createColorLegend, LegendConfig } from '../legend';
 import { makeUnique } from '../dataset';
-import { createCategoryScale, createLinearScale } from '../scale';
-import { createCategoryAxis, createNumericAxis } from '../axis';
-import { createLinearAxisGridLines } from '../grid';
+import { createCategoryScale, createLinearScale, LinearScale, CategoryScale } from '../scale';
+import { createCategoryAxis, CategoryAxisConfig, NumericConfigAxis, createNumericAxis } from '../axes';
+import { createLinearAxisGridLines } from '../axes/grid';
 import createScaleAnimator from '../animator/scale';
+import { Labeling } from '../types';
+import { XAlignment } from 'plottable';
 
-export const createLinearPlot = ({
-  plot,
-  orientation,
-  categoryScale,
-  linearScale,
-  labeling,
-}) => {
-  const { showLabels = false, prefix = '', suffix = ''} = labeling as any;
+export interface CategoricChart {
+  linearScale: Plottable.Scales.Linear;
+  categoryScale: Plottable.Scales.Category;
+  colorScale: Plottable.Scales.Color;
+  table: Plottable.Components.Table;
+  update: (data: any) => void;
+  destroy: () => void;
+}
 
-  if (plot.labelsEnabled && !labeling.custom) {
-    plot.labelFormatter(d => `${prefix}${approximate(d)}${suffix}`).labelsEnabled(showLabels);
+export interface CategoricConfig {
+  title?: string;
+  titleAlignment?: Plottable.XAlignment;
+  orientation: string;
+  groupBy: string;
+  colors: string[];
+  coloring?: string;
+  labeling: Labeling;
+  linearScaleOpts?: LinearScale;
+  linearAxisOpts: NumericConfigAxis & {indicator: string};
+  categoryAxisOpts: CategoryAxisConfig & {indicator: string};
+  categoryScaleOpts?: CategoryScale;
+  legend: LegendConfig & {position: XAlignment};
+}
+
+export type BarPlot = Plottable.Plots.Bar<any, any>;
+export type LinePlot =  Plottable.Plots.Line<any>;
+
+export interface CreateCategoricChartArgs {
+  element: string | HTMLElement;
+  plot: BarPlot | LinePlot;
+  config: CategoricConfig;
+}
+
+export interface LinearPlotArgs {
+  plot: BarPlot | LinePlot;
+  orientation: string;
+  categoryScale: Plottable.Scales.Category;
+  linearScale: Plottable.Scales.Linear;
+  labeling: Labeling;
+}
+
+export const createLinearPlot = (args: LinearPlotArgs) => {
+  const {
+    plot,
+    orientation,
+    categoryScale,
+    linearScale,
+    labeling,
+  } = args;
+
+  const {prefix, suffix, showLabels} = labeling;
+
+  if ((plot as BarPlot).labelsEnabled && showLabels && !labeling.custom) {
+    (plot as BarPlot)
+      .labelFormatter(d => `${prefix}${approximate(d)}${suffix}`).labelsEnabled(true);
   }
 
-  return plot
+  return (plot as Plottable.Plots.Bar<any, any>)
     .attr('stroke', d => d.color)
     .attr('fill', d => d.color)
     .attr('fill-opacity', d => d.opacity)
@@ -49,53 +95,10 @@ const createPlotAreaWithAxes = (orientation, { linearAxis, plotArea, categoryAxi
   return new Plottable.Components.Table(plotAreaWithAxes);
 };
 
-/**
- * @typedef {Object} LinearCategoryChart
- * @private
- * @property {string} type - Type
- * @property {string} title - Title
- * @property {'left'|'center'|'right'} titleAlignment=left - Title Alignment
- * @property {('vertical'|'horizontal')} orientation=vertical - Orientation
- * @property {indicator} groupBy - Groups
- * @property {Labeling} labeling - Labeling
- * @property {string[]} colors - Colors
- * @property {indicator} coloring - Color Indicator
- * @property {NumericAxis} linearAxis - Linear Axis
- * @property {CategoryAxis} categoryAxis - Category Axis
- * @property {Tooltip} tooltips - Tooltips
- * @property {ColorLegend} legend - Legend
- */
-
-export interface CategoricChart {
-  linearScale: Plottable.Scales.Linear;
-  categoryScale: Plottable.Scales.Category;
-  colorScale: Plottable.Scales.Color;
-  table: Plottable.Components.Table;
-  update: (data: any) => void;
-  destroy: () => void;
-}
-export interface Config {
-  title?: string;
-  titleAlignment: string;
-  orientation: string;
-  groupBy: string;
-  colors: string[];
-  coloring?: string;
-  Labeling: any;
-  linearAxis: any;
-  categoryAxis: any;
-  legend: any;
-}
-export interface CreateCategoricChartArgs {
-  element: string | HTMLElement;
-  plot: Plottable.Plot;
-  config: Config;
-}
-
-export type CreateCategoricChart = (CreateCategoricChartArgs)  => CategoricChart;
-export const createCategoricChart: CreateCategoricChart = ({ element, plot, config }) => {
+export const createCategoricChart = (args: CreateCategoricChartArgs): CategoricChart => {
+  const { element, plot, config } = args;
   const {
-    title = null,
+    title,
 
     titleAlignment = 'left',
 
@@ -109,19 +112,25 @@ export const createCategoricChart: CreateCategoricChart = ({ element, plot, conf
 
     labeling,
 
-    linearAxis,
+    linearScaleOpts = {},
 
-    categoryAxis,
+    categoryScaleOpts = {},
 
-    legend = {},
+    legend,
 
-    // ... more config
+    linearAxisOpts,
+
+    categoryAxisOpts,
   } = config;
 
-  const categoryScale = createCategoryScale(categoryAxis);
-  const linearScale = createLinearScale(linearAxis);
+  const categoryScale = createCategoryScale(categoryScaleOpts);
+  const linearScale = createLinearScale(linearScaleOpts);
   const colorScale = new Plottable.Scales.Color();
-
+  const linearAxis = createNumericAxis({
+    ...(linearAxisOpts as NumericConfigAxis),
+    axisScale: linearScale,
+    axisOrientation: orientation,
+  });
   const table = createChartTable({
     title: createTitle({ title, titleAlignment }),
 
@@ -134,17 +143,12 @@ export const createCategoricChart: CreateCategoricChart = ({ element, plot, conf
           linearScale,
           labeling,
         }),
-        grid: createLinearAxisGridLines({ ...linearAxis, orientation, scale: linearScale }),
+        grid: createLinearAxisGridLines({orientation, scale: linearScale}),
       }),
 
-      linearAxis: createNumericAxis({
-        ...linearAxis,
-        axisScale: linearScale,
-        axisOrientation: orientation,
-      }),
-
+      linearAxis,
       categoryAxis: createCategoryAxis({
-        ...categoryAxis,
+        ...(categoryAxisOpts as CategoryAxisConfig),
         axisScale: categoryScale,
         axisOrientation: orientation,
       }),
@@ -182,9 +186,9 @@ export const createCategoricChart: CreateCategoricChart = ({ element, plot, conf
         data.filter(d => d[groupBy] === groupId).map(item => {
           return {
             group: groupId,
-            label: item[categoryAxis.indicator],
-            value: item[linearAxis.indicator],
-            color: item[coloring] || colors[index] || '#abc',
+            label: item[categoryAxisOpts.indicator],
+            value: item[linearAxisOpts.indicator],
+            color: coloring && item[coloring] || colors[index] || 'grey',
             opacity: 1,
           };
         }));
@@ -195,7 +199,7 @@ export const createCategoricChart: CreateCategoricChart = ({ element, plot, conf
         }
         const axisMaximum = Math.max.apply(null, sums);
 
-        animate([linearScale], [linearAxis.axisMinimum || 0, axisMaximum]);
+        animate([linearScale], [linearScaleOpts.axisMinimum || 0, axisMaximum]);
       }
 
       plot.datasets(datasets.map(d => new Plottable.Dataset(d)));

@@ -1,8 +1,8 @@
 import {Plot} from 'plottable';
-import { createCategoricChart,  CategoricChart} from '.';
-import { createLineTipper } from '../tooltips';
-import { Tooltips } from '../../charts/treemap';
-import {Config as Legend} from '../legend';
+import { createCategoricChart,  CategoricChart} from '@devinit-charts/core/lib/categoric';
+import createLineTipper from '../tooltip';
+import { Tooltip, Labeling } from '@devinit-charts/core/lib/types';
+import {Config as Legend} from '@devinit-charts/core/lib/legend';
 
 export interface LinearAxis  {
   showAxis: boolean;
@@ -16,8 +16,8 @@ export interface Config {
   type: string;
   colors: string[];
   categoryAxis?: any;
-  tooltips?: Tooltips;
-  labeling?: string;
+  tooltips?: Tooltip;
+  labeling?: Labeling;
   linearAxis: any;
   legend?: Legend;
   groupBy?: string;
@@ -51,7 +51,7 @@ export const createLineChart = (element: string | HTMLElement, plot: Plot, confi
   const { categoryScale } = chart;
 
   plot.onAnchor(_plot => {
-    if (tooltips.enable) {
+    if (tooltips.enable && config.labeling) {
       return createLineTipper(element as string, config.labeling, categoryScale)(_plot);
     }
   });

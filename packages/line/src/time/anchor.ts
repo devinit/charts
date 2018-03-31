@@ -1,20 +1,22 @@
-
 import { drag, event } from 'd3';
+import { Table } from 'plottable/build/src/components';
+import { Component, Scales } from 'plottable';
 
-export default (table, timeScale, anchor = { start: 0 }, legend: any, listeners) => {
+export default (table: Table, timeScale: Scales.Time, anchor = { start: 0 }, legend: any, listeners) => {
   const originDate = new Date(timeScale.domainMin());
   const startDate = anchor.start ? new Date(anchor.start.toString()) : originDate;
   let currentYear = startDate.getFullYear().toString();
 
   const minYear = new Date(timeScale.domainMin()).getFullYear();
   const maxYear = new Date(timeScale.domainMax()).getFullYear();
+  // TODO: these scale transformation function were taking in actual Dates,
+  // but the API seems to have changed such that they now take in numbers
+  const origin = timeScale.scaleTransformation(originDate.getTime());
+  const start = timeScale.scaleTransformation(startDate.getTime());
 
-  const origin = timeScale.scaleTransformation(originDate);
-  const start = timeScale.scaleTransformation(startDate);
-
-  const chartArea = table.componentAt(1, 0);
-
-  const plotArea = legend.showLegend ? chartArea.componentAt(0, 0) : chartArea;
+  const chartArea: Component = table.componentAt(1, 0);
+  // TODO: the api may have changed, thats why we have chartArea as any
+  const plotArea = legend.showLegend ? (chartArea as any).componentAt(0, 0) : chartArea;
 
   const timeAxis = plotArea.componentAt(2, 1);
 
