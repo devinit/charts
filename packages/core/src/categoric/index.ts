@@ -71,7 +71,7 @@ export const createLinearPlot = (args: LinearPlotArgs) => {
       .labelFormatter(d => `${prefix}${approximate(d)}${suffix}`).labelsEnabled(true);
   }
 
-  return (plot as Plottable.Plots.Bar<any, any>)
+  return (plot as BarPlot)
     .attr('stroke', d => d.color)
     .attr('fill', d => d.color)
     .attr('fill-opacity', d => d.opacity)
