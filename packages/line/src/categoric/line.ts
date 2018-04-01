@@ -1,50 +1,47 @@
-import {Plot} from 'plottable';
-import { createCategoricChart,  CategoricChart} from '@devinit-charts/core/lib/categoric';
+import {Plots} from 'plottable';
+import { createCategoricChart, CategoricChart,
+  NumericAxisOpts, CategoryAxisOpts} from '@devinit-charts/core/lib/categoric';
 import createLineTipper from '../tooltip';
 import { Tooltip, Labeling } from '@devinit-charts/core/lib/types';
-import {Config as Legend} from '@devinit-charts/core/lib/legend';
+import {LegendConfig} from '@devinit-charts/core/lib/legend';
 
-export interface LinearAxis  {
-  showAxis: boolean;
-  showGridlines: boolean;
-  indicator: string;
-  axisLabel: string;
-  ticking?: string;
-}
 export interface Config {
   title: string;
   type: string;
-  colors: string[];
-  categoryAxis?: any;
+  colors?: string[];
+  categoryAxis: CategoryAxisOpts;
   tooltips?: Tooltip;
   labeling?: Labeling;
-  linearAxis: any;
-  legend?: Legend;
-  groupBy?: string;
+  coloring?: string;
+  linearAxis: NumericAxisOpts;
+  legend?: LegendConfig;
+  groupBy: string;
 }
-export const createLineChart = (element: string | HTMLElement, plot: Plot, config: Config): CategoricChart => {
+type LinePlot = Plots.Line<any>;
+export const createLineChart = (element: string | HTMLElement, plot: LinePlot, config: Config): CategoricChart => {
   const {
-    categoryAxis = {},
+    categoryAxis,
     tooltips = {
       enable: true,
-    },
-    ...more
+    }
   } = config;
 
   const chart: CategoricChart = createCategoricChart({
     element,
     plot,
     config: {
-      categoryAxis: {
+      categoryAxisOpts: {
         // TODO: Fix [https://github.com/palantir/plottable/issues/747](#747)
         // Temporary work around for [https://github.com/palantir/plottable/issues/747](#747)
         // Issue: AreaPlot / LinePlot should default to no padding on xScale
         innerPadding: 999,
-
         ...categoryAxis,
       },
-
-      ...more,
+      linearAxisOpts: config.linearAxis,
+      groupBy: config.groupBy,
+      colors: config.colors,
+      coloring: config.coloring,
+      labeling: {showLabels: false, ...config.labeling}
     },
   });
 

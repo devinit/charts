@@ -23,19 +23,23 @@ export interface CategoricChart {
   destroy: () => void;
 }
 
+export type NumericAxisOpts = NumericConfigAxis & {indicator: string};
+
+export type CategoryAxisOpts = CategoryAxisConfig & {indicator: string};
+
 export interface CategoricConfig {
   title?: string;
   titleAlignment?: Plottable.XAlignment;
-  orientation: string;
+  orientation?: string;
   groupBy: string;
-  colors: string[];
+  colors?: string[];
   coloring?: string;
   labeling: Labeling;
   linearScaleOpts?: LinearScale;
-  linearAxisOpts: NumericConfigAxis & {indicator: string};
-  categoryAxisOpts: CategoryAxisConfig & {indicator: string};
+  linearAxisOpts: NumericAxisOpts;
+  categoryAxisOpts: CategoryAxisOpts;
   categoryScaleOpts?: CategoryScale;
-  legend: LegendConfig & {position: XAlignment};
+  legend?: LegendConfig & {position: XAlignment};
 }
 
 export type BarPlot = Plottable.Plots.Bar<any, any>;
@@ -157,9 +161,9 @@ export const createCategoricChart = (args: CreateCategoricChartArgs): CategoricC
       }),
     }),
 
-    legend: createColorLegend(colorScale, legend),
+    legend: createColorLegend(colorScale, legend || {}),
 
-    legendPosition: legend.position || 'bottom',
+    legendPosition: legend && legend.position || 'bottom',
   });
 
   const animate = createScaleAnimator(500);
@@ -178,7 +182,7 @@ export const createCategoricChart = (args: CreateCategoricChartArgs): CategoricC
     update: (data = []) => {
       const groupIds: any[] = makeUnique(data.map(d => d[groupBy]));
 
-      if (legend.showLegend) {
+      if (legend && legend.showLegend) {
         const scaleDomain: string[] = groupIds.map(groupId => groupId || 'Unknown');
         colorScale
           .domain(scaleDomain)
