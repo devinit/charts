@@ -1,7 +1,7 @@
 /**
  * TODO: refactor along the lines of line & bar chart
  */
-import * as Plottable from 'plottable';
+import {Scales, Components, XAlignment, Plots, Dataset} from 'plottable';
 import {approximate} from '@devinit/prelude/lib/numbers';
 import { createChartTable } from '../table';
 import { createTitle } from '../title';
@@ -12,13 +12,12 @@ import { createCategoryAxis, CategoryAxisConfig, NumericConfigAxis, createNumeri
 import { createLinearAxisGridLines } from '../axes/grid';
 import createScaleAnimator from '../animator/scale';
 import { Labeling } from '../types';
-import { XAlignment } from 'plottable';
 
 export interface CategoricChart {
-  linearScale: Plottable.Scales.Linear;
-  categoryScale: Plottable.Scales.Category;
-  colorScale: Plottable.Scales.Color;
-  table: Plottable.Components.Table;
+  linearScale: Scales.Linear;
+  categoryScale: Scales.Category;
+  colorScale: Scales.Color;
+  table: Components.Table;
   update: (data: any) => void;
   destroy: () => void;
 }
@@ -29,7 +28,7 @@ export type CategoryAxisOpts = CategoryAxisConfig & {indicator: string};
 
 export interface CategoricConfig {
   title?: string;
-  titleAlignment?: Plottable.XAlignment;
+  titleAlignment?: XAlignment;
   orientation?: string;
   groupBy: string;
   colors?: string[];
@@ -42,8 +41,8 @@ export interface CategoricConfig {
   legend?: LegendConfig & {position: XAlignment};
 }
 
-export type BarPlot = Plottable.Plots.Bar<any, any>;
-export type LinePlot =  Plottable.Plots.Line<any>;
+export type BarPlot = Plots.Bar<any, any>;
+export type LinePlot =  Plots.Line<any>;
 
 export interface CreateCategoricChartArgs {
   element: string | HTMLElement;
@@ -54,8 +53,8 @@ export interface CreateCategoricChartArgs {
 export interface LinearPlotArgs {
   plot: BarPlot | LinePlot;
   orientation: string;
-  categoryScale: Plottable.Scales.Category;
-  linearScale: Plottable.Scales.Linear;
+  categoryScale: Scales.Category;
+  linearScale: Scales.Linear;
   labeling: Labeling;
 }
 
@@ -90,7 +89,7 @@ export const createLinearPlot = (args: LinearPlotArgs) => {
 };
 
 export const createPlotWithGridlines = ({ plot, grid }) => {
-  return grid ? new Plottable.Components.Group([grid, plot]) : plot;
+  return grid ? new Components.Group([grid, plot]) : plot;
 };
 
 const createPlotAreaWithAxes = (orientation, { linearAxis, plotArea, categoryAxis }) => {
@@ -99,7 +98,7 @@ const createPlotAreaWithAxes = (orientation, { linearAxis, plotArea, categoryAxi
       ? [[linearAxis, plotArea], [null, categoryAxis]]
       : [[categoryAxis, plotArea], [null, linearAxis]];
 
-  return new Plottable.Components.Table(plotAreaWithAxes);
+  return new Components.Table(plotAreaWithAxes);
 };
 
 export const createCategoricChart = (args: CreateCategoricChartArgs): CategoricChart => {
@@ -132,7 +131,7 @@ export const createCategoricChart = (args: CreateCategoricChartArgs): CategoricC
 
   const categoryScale = createCategoryScale(categoryScaleOpts);
   const linearScale = createLinearScale(linearScaleOpts);
-  const colorScale = new Plottable.Scales.Color();
+  const colorScale = new Scales.Color();
   const linearAxis = createNumericAxis({
     ...(linearAxisOpts as NumericConfigAxis),
     axisScale: linearScale,
@@ -209,7 +208,7 @@ export const createCategoricChart = (args: CreateCategoricChartArgs): CategoricC
         animate([linearScale], [linearScaleOpts.axisMinimum || 0, axisMaximum]);
       }
 
-      plot.datasets(datasets.map(d => new Plottable.Dataset(d)));
+      plot.datasets(datasets.map(d => new Dataset(d)));
     },
 
     destroy() {
