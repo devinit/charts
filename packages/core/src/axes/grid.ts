@@ -1,5 +1,6 @@
 import { Components, Scale } from 'plottable';
 import { configureGridTicking } from './ticking';
+import { Gridlines } from 'plottable/build/src/components';
 
 export interface Config {
   orientation: string;
@@ -8,11 +9,11 @@ export interface Config {
   ticking?: string;
 }
 
-export const createLinearAxisGridLines = (config: Config) => {
+export const createLinearAxisGridLines = (config: Config): Gridlines | undefined => {
   const {
     orientation, scale, showGridlines = false, ticking = 'odd'
   } = config;
-  if (!showGridlines) return null;
+  if (!showGridlines) return undefined;
 
   const xScale = orientation === 'vertical' ? null : scale;
   const yScale = orientation === 'horizontal' ? null : scale;

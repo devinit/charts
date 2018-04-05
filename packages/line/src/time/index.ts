@@ -3,28 +3,34 @@ import { groupBy as group, keys, values, mapValues } from 'lodash';
 import { createTitle } from '@devinit-charts/core/lib/title';
 import { createChartTable } from '@devinit-charts/core/lib/table';
 import { createColorLegend } from '@devinit-charts/core/lib/legend';
-import { createLinearAxisGridLines } from '@devinit-charts/core/lib/axes/grid';
+import { createLinearAxisGridLines} from '@devinit-charts/core/lib/axes/grid';
 import { createPlotWithGridlines } from '@devinit-charts/core/lib/categoric';
-import { createNumericAxis, createTimeAxis } from '@devinit-charts/core/lib/axes';
+import { createNumericAxis, createTimeAxis, AxisConfig, TimeAxisConfig } from '@devinit-charts/core/lib/axes';
 import { createLinearScale, createTimeScale } from '@devinit-charts/core/lib/scale';
 import createLineTipper from '../tooltip';
 import createScaleAnimator from '@devinit-charts/core/lib/animator/scale';
 import { createPlotAreaWithAxes, createTimePlot } from './utils';
+import { LinearAxis } from '@devinit-charts/core/lib/categoric';
+import { Labeling, TimeAxisOpts} from '@devinit-charts/core/lib/types';
 import createTimeAnchor from './anchor';
+import {LegendConfig} from '@devinit-charts/core/lib/legend';
+import { XAlignment } from 'plottable';
 
 export interface Config {
   title?: string;
-  titleAlignment?: any;
+  titleAlignment?: XAlignment;
   groupBy: string;
   colors: string[];
   coloring?: string;
-  labeling?: any;
+  labeling?: Labeling;
+  showGridLines?: boolean;
   time: any;
-  linearAxis: any;
-  timeAxis: any;
+  linearAxis: LinearAxis;
+  timeAxis: TimeAxisOpts & { axisMinimum?: number; axisMaximum?: number};
   anchor?: any;
-  legend?: any;
+  legend?: LegendConfig;
 }
+
 export default ( element: string, plot, config: Config) => {
   const {
     titleAlignment = 'left',
@@ -40,6 +46,7 @@ export default ( element: string, plot, config: Config) => {
     },
 
     // showLabels = true,
+    showGridLines = false,
 
     linearAxis,
 
@@ -47,11 +54,11 @@ export default ( element: string, plot, config: Config) => {
 
     anchor,
 
-    legend = {},
+    legend,
   } = config;
-
-  const timeScale = createTimeScale(timeAxis);
-  const linearScale = createLinearScale(linearAxis);
+  const linearScaleOpts = {axisMaximum: linearAxis.axisMaximum, axisMinimum: linearAxis.axisMinimum};
+  const timeScale = createTimeScale((timeAxis as TimeAxisConfig));
+  const linearScale = createLinearScale(linearScaleOpts);
   const colorScale = new Plottable.Scales.Color();
 
   const table = createChartTable({
@@ -65,39 +72,39 @@ export default ( element: string, plot, config: Config) => {
           linearScale
         }),
         grid: createLinearAxisGridLines({
-          ...linearAxis,
+          ticking: linearAxis && linearAxis.ticking,
+          showGridlines: showGridLines,
           orientation: 'vertical',
           scale: linearScale,
         }),
       }),
 
       linearAxis: createNumericAxis({
-        ...linearAxis,
+        ...(linearAxis as AxisConfig),
         axisScale: linearScale,
         axisOrientation: 'vertical',
       }),
 
       categoryAxis: createTimeAxis({
-        ...timeAxis,
+        ...(timeAxis as TimeAxisConfig ),
         axisScale: timeScale,
-        axisOrientation: 'horizontal',
       }),
 
       anchor,
     }),
 
-    legend: createColorLegend(colorScale, legend),
+    legend: createColorLegend(colorScale, legend || {}),
 
-    legendPosition: legend.position || 'bottom',
+    legendPosition: legend && legend.position || 'bottom',
   });
 
   const animate = createScaleAnimator(500);
 
   const listeners: any[] = [];
 
-  plot.onAnchor(createLineTipper(element, labeling, timeScale));
+  plot.onAnchor(createLineTipper(element, labeling || {}, timeScale));
 
-  let moveAnchor: (year: number) => void;
+  let moveAnchor: (year: string) => void;
 
   table.addClass('time');
 
@@ -110,7 +117,7 @@ export default ( element: string, plot, config: Config) => {
       // TODO: Use onRender event instead
       // see https://github.com/palantir/plottable/issues/1755
       setTimeout(() => {
-        moveAnchor = createTimeAnchor(_table, timeScale, anchor, legend, listeners);
+        moveAnchor = createTimeAnchor({table: _table, timeScale, anchor, legend, listeners});
       }, 500);
     };
 
@@ -130,7 +137,7 @@ export default ( element: string, plot, config: Config) => {
               group: item[groupBy],
               label: item[timeAxis.indicator],
               value: item[linearAxis.indicator],
-              color: config.coloring && item[config.coloring] || colors[index] || '#abc',
+              color: config.coloring && item[config.coloring] || colors[index] || 'grey',
               opacity: 1,
             })),
             item => item.label
@@ -140,10 +147,10 @@ export default ( element: string, plot, config: Config) => {
 
       const groupIds = keys(groups).sort((a, b) => a > b ? -1 : 1);
 
-      if (legend.showLegend) {
+      if (legend && legend.showLegend) {
         colorScale
           .domain(groupIds.map(groupId => groupId || 'Unknown'))
-          .range(groupIds.map((_d, i) => colors[i] || '#abc'));
+          .range(groupIds.map((_d, i) => colors[i] || 'grey'));
       }
 
       const datasets = groupIds.map((groupId, index) => {
@@ -162,7 +169,7 @@ export default ( element: string, plot, config: Config) => {
                   group: groupId,
                   label: year,
                   value: 0,
-                  color: colors[index] || '#abc',
+                  color: colors[index] || 'grey',
                   opacity: 1,
                 },
               ];

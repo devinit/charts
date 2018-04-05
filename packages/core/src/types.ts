@@ -1,3 +1,4 @@
+import { TimeAxisConfig} from './axes';
 export interface Labeling {
     prefix?: string;
     showLabels?: boolean;
@@ -12,3 +13,5 @@ export interface Tooltip {
 }
 
 export type Listener = (item: string) => void;
+
+export type TimeAxisOpts = TimeAxisConfig & {indicator: string};

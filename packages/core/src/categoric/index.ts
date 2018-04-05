@@ -1,14 +1,14 @@
 /**
  * TODO: refactor along the lines of line & bar chart
  */
-import {Scales, Components, XAlignment, Plots, Dataset} from 'plottable';
+import {Scales, Components, XAlignment, Plots, Dataset, Component} from 'plottable';
 import {approximate} from '@devinit/prelude/lib/numbers';
 import { createChartTable } from '../table';
 import { createTitle } from '../title';
 import { createColorLegend, LegendConfig } from '../legend';
 import { makeUnique } from '../dataset';
-import { createCategoryScale, createLinearScale, LinearScale, CategoryScale } from '../scale';
-import { createCategoryAxis, CategoryAxisConfig, NumericConfigAxis, createNumericAxis } from '../axes';
+import { createCategoryScale, createLinearScale } from '../scale';
+import { createCategoryAxis, createNumericAxis, AxisConfig } from '../axes';
 import { createLinearAxisGridLines } from '../axes/grid';
 import createScaleAnimator from '../animator/scale';
 import { Labeling } from '../types';
@@ -22,9 +22,17 @@ export interface CategoricChart {
   destroy: () => void;
 }
 
-export type NumericAxisOpts = NumericConfigAxis & {indicator: string};
+export type LinearAxis = AxisConfig & {
+  axisMinimum?: number;
+  axisMaximum?: number;
+  indicator: string;
+};
 
-export type CategoryAxisOpts = CategoryAxisConfig & {indicator: string};
+export type CategoryAxis = AxisConfig & {
+  innerPadding?: number;
+  outerPadding?: number;
+  indicator: string;
+};
 
 export interface CategoricConfig {
   title?: string;
@@ -34,10 +42,8 @@ export interface CategoricConfig {
   colors?: string[];
   coloring?: string;
   labeling: Labeling;
-  linearScaleOpts?: LinearScale;
-  linearAxisOpts: NumericAxisOpts;
-  categoryAxisOpts: CategoryAxisOpts;
-  categoryScaleOpts?: CategoryScale;
+  linearAxisOpts: LinearAxis;
+  categoryAxisOpts: CategoryAxis;
   legend?: LegendConfig & {position: XAlignment};
 }
 
@@ -88,11 +94,18 @@ export const createLinearPlot = (args: LinearPlotArgs) => {
     );
 };
 
-export const createPlotWithGridlines = ({ plot, grid }) => {
+export const createPlotWithGridlines = (config: {plot: Component, grid?: Component}): Component => {
+  const { plot, grid } = config;
   return grid ? new Components.Group([grid, plot]) : plot;
 };
+export interface PlotWithAxesOpts {
+  linearAxis?: Component;
+  plotArea: Component;
+  categoryAxis?: Component;
+}
 
-const createPlotAreaWithAxes = (orientation, { linearAxis, plotArea, categoryAxis }) => {
+const createPlotAreaWithAxes = (orientation: string, config: PlotWithAxesOpts) => {
+  const { linearAxis, plotArea, categoryAxis } = config;
   const plotAreaWithAxes =
     orientation === 'vertical'
       ? [[linearAxis, plotArea], [null, categoryAxis]]
@@ -118,10 +131,6 @@ export const createCategoricChart = (args: CreateCategoricChartArgs): CategoricC
 
     labeling,
 
-    linearScaleOpts = {},
-
-    categoryScaleOpts = {},
-
     legend,
 
     linearAxisOpts,
@@ -129,11 +138,15 @@ export const createCategoricChart = (args: CreateCategoricChartArgs): CategoricC
     categoryAxisOpts,
   } = config;
 
+  const linearScaleOpts = {axisMaximum: linearAxisOpts.axisMaximum, axisMinimum: linearAxisOpts.axisMinimum};
+
+  const categoryScaleOpts = {innerPadding: categoryAxisOpts.innerPadding, outerPadding: categoryAxisOpts.outerPadding};
+
   const categoryScale = createCategoryScale(categoryScaleOpts);
   const linearScale = createLinearScale(linearScaleOpts);
   const colorScale = new Scales.Color();
   const linearAxis = createNumericAxis({
-    ...(linearAxisOpts as NumericConfigAxis),
+    ...(linearAxisOpts as AxisConfig),
     axisScale: linearScale,
     axisOrientation: orientation,
   });
@@ -154,7 +167,7 @@ export const createCategoricChart = (args: CreateCategoricChartArgs): CategoricC
 
       linearAxis,
       categoryAxis: createCategoryAxis({
-        ...(categoryAxisOpts as CategoryAxisConfig),
+        ...(categoryAxisOpts as AxisConfig),
         axisScale: categoryScale,
         axisOrientation: orientation,
       }),

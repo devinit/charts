@@ -1,7 +1,14 @@
 
-import * as Plottable from 'plottable';
+import {Components, Scales, Plot, Component} from 'plottable';
 
-export const createTimePlot = ({ plot, timeScale, linearScale }) => {
+export interface CreateTimePlotConfig {
+  plot: Plot;
+  timeScale: Scales.Time;
+  linearScale: Scales.Linear;
+}
+
+export const createTimePlot = (opts) => {
+  const { plot, timeScale, linearScale } = opts;
   return plot
     .attr('stroke', d => d.color)
     .attr('fill', d => d.color)
@@ -9,6 +16,13 @@ export const createTimePlot = ({ plot, timeScale, linearScale }) => {
     .x(d => new Date(d.label.toString()), timeScale)
     .y(d => d.value, linearScale);
 };
+
+export interface CreatePlotAreaWithAxesConfig {
+  linearAxis: Component;
+  plotArea: Component;
+  categoryAxis: Component;
+  anchor: Component;
+}
 
 export const createPlotAreaWithAxes = (config) => {
   const {
@@ -18,7 +32,7 @@ export const createPlotAreaWithAxes = (config) => {
     anchor
   } = config;
 
-  const table = new Plottable.Components.Table([
+  const table = new Components.Table([
     [null, null, null],
     [linearAxis, plotArea, null],
     [null, categoryAxis, null],

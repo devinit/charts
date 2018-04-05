@@ -1,6 +1,7 @@
-import { AxisOrientation, Axes, Components, Scales, Component} from 'plottable';
+import { AxisOrientation, Axes, Components, Scales, Component, XAlignment, YAlignment} from 'plottable';
 import {approximate} from '@devinit/prelude/lib/numbers';
 import {configureAxisTicking, configureTimeAxisTicking} from '../axes/ticking';
+import { AxisLabel } from 'plottable/build/src/components';
 
 export interface AxisConfig {
   showAxis?: boolean;
@@ -28,7 +29,13 @@ export const absolutify = shouldAbsolutify => number =>
  * @param {NumericAxis} config
  * @returns {{format: (function(*=)), modify: (function(*=))}}
  */
-export const createAxisModifier = config => {
+export interface AxisModifier {
+  modifier?: string;
+  modifierParam?: number;
+  absolute?: boolean;
+}
+
+export const createAxisModifier = (config: AxisModifier) => {
   const {modifier = 'multiply', modifierParam = 1, absolute = false} = config;
 
   const absoluteFn = absolutify(absolute);
@@ -56,7 +63,7 @@ export const createAxisModifier = config => {
   };
 };
 
-export const createAxisTable = (alignment, axis, label) => {
+export const createAxisTable = (alignment: XAlignment | YAlignment, axis: Component, label?: AxisLabel) => {
   if (alignment === 'top') {
     return new Components.Table([[label], [axis]]);
   }
@@ -84,37 +91,13 @@ export const getAxisLabelRotation = alignment => {
   }
 };
 
-/**
- * @typedef {Object} NumericAxis - Numeric Axis configuration
- * @private
- * @property {indicator} indicator - Data Indicator
- * @property {boolean} showAxis - Show Axis
- * @property {boolean} showGridlines - Show Grid lines
- * @property {'all'|'even'|'odd'|'sparse'} ticking=all - Ticking method
- * @property {'log'|'multiply'|'power'} modifier=multiply - Axis Modifiers
- * @property {number} modifierParam=1 - Axis Modifier Parameter
- * @property {string} axisLabel - Label
- * @property {number} axisMargin - Margin
- * @property {number} axisMinimum - Axis Minimum
- * @property {number} axisMaximum - Axis Maximum
- * @property {string} prefix - Tick Label Prefix
- * @property {string} suffix - Tick Label Suffix
- */
-
-/**
- *
- * @param {NumericAxis} axisConfig
- * @param {Plottable.Axes.Numeric} axis
- * @param {function} format
- * @returns {Plottable.Axes.Numeric}
- */
-export type NumericConfigAxis = AxisConfig & {
+export type NumericAxisConfig = AxisConfig & {
   axisScale: Scales.Linear;
   axisOrientation?: string;
 };
 
 export const createNumericAxis =
-  (axisConfig: NumericConfigAxis, format?: (any) => any, axis?: Axes.Numeric): Components.Table
+  (axisConfig: NumericAxisConfig, format?: (any) => any, axis?: Axes.Numeric): Component
   | undefined => {
   const {
     showAxis = true,
@@ -136,7 +119,7 @@ export const createNumericAxis =
   axis.showEndTickLabels(true);
   axis.margin(0);
 
-  let label: Components.AxisLabel | null = null;
+  let label: Components.AxisLabel | undefined;
 
   if (axisConfig.axisLabel) {
     axis.margin(axisMargin);
@@ -171,7 +154,7 @@ export type TimeAxisConfig = AxisConfig & {
   axisScale: Scales.Time;
 };
 
-export const createTimeAxis = (config: TimeAxisConfig, axis?: any): Component | undefined => {
+export const createTimeAxis = (config: TimeAxisConfig, axis?: Axes.Time): Component | undefined => {
   if (!config.showAxis) return undefined;
 
   if (!axis) axis = new Axes.Time(config.axisScale, 'bottom');
@@ -179,9 +162,9 @@ export const createTimeAxis = (config: TimeAxisConfig, axis?: any): Component | 
   axis.showEndTickLabels(true);
   axis.margin(0);
 
-  let label: Components.AxisLabel | null = null;
+  let label: Components.AxisLabel | undefined;
 
-  if (config.axisLabel) {
+  if (config.axisLabel && config.axisMargin) {
     axis.margin(config.axisMargin);
     label =
       new Components.AxisLabel(config.axisLabel, getAxisLabelRotation('bottom'));
@@ -220,8 +203,8 @@ export type CategoryAxisConfig = AxisConfig & {
   axisDirection?: AxisOrientation;
 };
 
-export const createCategoryAxis = (config: CategoryAxisConfig, axis?: Axes.Category) => {
-  if (!config.showAxis) return null;
+export const createCategoryAxis = (config: CategoryAxisConfig, axis?: Axes.Category): Component | undefined => {
+  if (!config.showAxis) return undefined;
 
   const alignment = config.axisDirection || (config.axisOrientation === 'vertical' ? 'bottom' : 'left');
 
@@ -229,7 +212,7 @@ export const createCategoryAxis = (config: CategoryAxisConfig, axis?: Axes.Categ
 
   axis.margin(0);
 
-  let label: Components.AxisLabel | null = null;
+  let label: Components.AxisLabel | undefined;
 
   if (config.axisLabel) {
     axis.margin(config.axisMargin || 10);

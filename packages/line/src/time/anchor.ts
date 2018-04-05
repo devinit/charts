@@ -1,8 +1,20 @@
 import { drag, event } from 'd3';
 import { Table } from 'plottable/build/src/components';
+import { LegendConfig } from '@devinit-charts/core/lib/legend';
 import { Component, Scales } from 'plottable';
 
-export default (table: Table, timeScale: Scales.Time, anchor = { start: 0 }, legend: any, listeners) => {
+export type Listener = (year: string) => void;
+export interface TimeAchorConfig {
+  table: Table;
+  timeScale: Scales.Time;
+  anchor?: {start: number, end?: number};
+  legend?: LegendConfig;
+  listeners?: Listener[];
+}
+
+export default (opts: TimeAchorConfig) => {
+  const {table, timeScale, anchor = {start: 0}, listeners = [], legend}  = opts;
+
   const originDate = new Date(timeScale.domainMin());
   const startDate = anchor.start ? new Date(anchor.start.toString()) : originDate;
   let currentYear = startDate.getFullYear().toString();
@@ -16,7 +28,7 @@ export default (table: Table, timeScale: Scales.Time, anchor = { start: 0 }, leg
 
   const chartArea: Component = table.componentAt(1, 0);
   // TODO: the api may have changed, thats why we have chartArea as any
-  const plotArea = legend.showLegend ? (chartArea as any).componentAt(0, 0) : chartArea;
+  const plotArea = legend && legend.showLegend ? (chartArea as any).componentAt(0, 0) : chartArea;
 
   const timeAxis = plotArea.componentAt(2, 1);
 
@@ -66,12 +78,12 @@ export default (table: Table, timeScale: Scales.Time, anchor = { start: 0 }, leg
     .attr('stroke', '#444')
     .attr('stroke-width', 2);
 
-  const changeAnchorPosition = (year): void => {
+  const changeAnchorPosition = (year: string): void => {
     // Prevent duplicate movements,
     // oh and they'll be duplicate movements
     // -- remove this condition at your own risk.
     // just kidding, i think
-    if (year !== currentYear && year >= minYear && year <= maxYear) {
+    if (year !== currentYear && +year >= +minYear && +year <= +maxYear) {
       const _foregroundBounds = foreground.node().getBoundingClientRect();
       const _timeAxisBounds = timeAxis
         .content()
@@ -80,7 +92,7 @@ export default (table: Table, timeScale: Scales.Time, anchor = { start: 0 }, leg
 
       const _leftOffset = _timeAxisBounds.left - _foregroundBounds.left;
 
-      const _xPosition = timeScale.scaleTransformation(year);
+      const _xPosition = timeScale.scaleTransformation(+year);
 
       circle.attr('cx', leftOffset + xPosition);
 

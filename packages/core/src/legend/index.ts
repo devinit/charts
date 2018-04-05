@@ -26,6 +26,7 @@ import {Components, Scales, XAlignment, SymbolFactories} from 'plottable';
 export interface LegendConfig {
   showLegend?: boolean;
   symbol?: string;
+  position?: string; // not used here, but used elsewhere
   alignment?: XAlignment;
   rowSpan?: any;
 }

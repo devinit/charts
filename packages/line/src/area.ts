@@ -1,6 +1,6 @@
-import * as Plottable from 'plottable';
+import { Plots } from 'plottable';
 import { CategoricChart} from '@devinit-charts/core/lib/categoric';
-import { createLineChart} from './categoric/line';
+import { createLineChart,  Config} from './categoric';
 
 /**
  * @typedef {LinearCategoryChart} Area
@@ -9,17 +9,8 @@ import { createLineChart} from './categoric/line';
  *
  */
 
-export interface Config {
-  type: 'area';
-  title: string;
-  colors: string[];
-  linearAxis: LinearAxis;
-  categoryAxis: CategoryAxis;
-  tooltips: any;
-  labeling: any;
-}
 const area = (element: HTMLElement, data: any, config: Config): CategoricChart => {
-  const plot = new Plottable.Plots.Area();
+  const plot = new Plots.Area();
 
   // ... apply area configuration
 
