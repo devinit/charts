@@ -1,6 +1,6 @@
 import * as Plottable from 'plottable';
-import createBarChart from '../factories/categoric/bar';
-import { createFullStackedDataset } from '../factories/dataset';
+import createBarChart, {Config} from './categoric';
+import { createFullStackedDataset } from '@devinit-charts/core/lib/dataset';
 
 /**
  * @typedef {LinearCategoryChart} FullStackedBar
@@ -11,28 +11,8 @@ import { createFullStackedDataset } from '../factories/dataset';
 export interface Labeling {
   suffix: string;
 }
-export interface LinearAxis  {
-  showAxis: boolean;
-  showGridlines: boolean;
-  innerPadding: number;
-  outerPadding: number;
-  indicator: string;
-}
-export interface CategoryAxis {
-  showAxis: boolean;
-  axisLabel: string;
-  indicator: string;
-  innerPadding: number;
-  outerPadding: number;
-}
-export interface Config {
-  title: string;
-  type: 'bar';
-  linearAxis: LinearAxis;
-  categoryAxis: CategoryAxis;
-  labeling: Labeling;
-  orientation: any;
-}
+
+
 export default (element, data, config: Config) => {
   const { orientation, linearAxis } = config;
   const plot = new Plottable.Plots.StackedBar(orientation);

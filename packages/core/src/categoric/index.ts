@@ -12,6 +12,7 @@ import { createCategoryAxis, createNumericAxis, AxisConfig } from '../axes';
 import { createLinearAxisGridLines } from '../axes/grid';
 import createScaleAnimator from '../animator/scale';
 import { Labeling } from '../types';
+import { BarOrientation } from 'plottable/build/src/plots';
 
 export interface CategoricChart {
   linearScale: Scales.Linear;
@@ -37,7 +38,7 @@ export type CategoryAxis = AxisConfig & {
 export interface CategoricConfig {
   title?: string;
   titleAlignment?: XAlignment;
-  orientation?: string;
+  orientation?: BarOrientation;
   groupBy: string;
   colors?: string[];
   coloring?: string;
