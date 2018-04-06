@@ -114,10 +114,11 @@ export default (element: HTMLElement, plot: BarPlot, config: Config): CategoricC
   const {
     interactions = { enable: false },
     tooltips = { enable: true },
-    labeling,
+    labeling = {showLabels: false},
     orientation,
     highlight
   } = config;
+
   const chart: CategoricChart = createCategoricChart({ element, plot, config });
 
   plot.onAnchor((_plotComponent: Component) => {
@@ -125,11 +126,11 @@ export default (element: HTMLElement, plot: BarPlot, config: Config): CategoricC
       if (interactions.enable) {
         createBarInteraction({orientation, labeling, highlight})(plot);
       }
-      if (config.labeling.custom) {
+      if (labeling.custom) {
         createCustomLabels({prefix: labeling.prefix, plot});
       }
       if (tooltips.enable) {
-        createBarTipper(element, config.labeling, config.orientation || 'vertical')(plot);
+        createBarTipper(element, labeling, config.orientation || 'vertical')(plot);
       }
     }, 500);
   });

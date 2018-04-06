@@ -8,10 +8,6 @@ import { createFullStackedDataset } from '@devinit-charts/core/lib/dataset';
  * @property {'full-stacked-bar'} type
  *
  */
-export interface Labeling {
-  suffix: string;
-}
-
 
 export default (element, data, config: Config) => {
   const { orientation, linearAxis } = config;
@@ -28,7 +24,7 @@ export default (element, data, config: Config) => {
   });
 
   const update = _data =>
-    linearChart.update(createFullStackedDataset(_data, linearAxis.indicator, config.categoryAxis.indicator), );
+    linearChart.update(createFullStackedDataset(_data, linearAxis.indicator, config.categoryAxis.indicator));
 
   const chart = {
     ...linearChart,

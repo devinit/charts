@@ -1,12 +1,11 @@
 import * as Plottable from 'plottable';
-import { CategoricChart } from '@devinit-charts/core/lib/categoric';
 import createBarChart, {Config} from './categoric';
+import { CategoricChart } from '@devinit-charts/core/lib/categoric';
 
-export default (element: HTMLElement, data: any[], config: Config): CategoricChart => {
-
+export default (element, data, config: Config): CategoricChart => {
   const { orientation } = config;
 
-  const plot = new Plottable.Plots.StackedBar(orientation);
+  const plot = new Plottable.Plots.Bar(orientation);
 
   const chart = createBarChart(element, plot, config);
 

@@ -42,9 +42,9 @@ export interface CategoricConfig {
   groupBy: string;
   colors?: string[];
   coloring?: string;
-  labeling: Labeling;
-  linearAxisOpts: LinearAxis;
-  categoryAxisOpts: CategoryAxis;
+  labeling?: Labeling;
+  linearAxis: LinearAxis;
+  categoryAxis: CategoryAxis;
   legend?: LegendConfig & {position: XAlignment};
 }
 
@@ -130,24 +130,24 @@ export const createCategoricChart = (args: CreateCategoricChartArgs): CategoricC
 
     coloring = null,
 
-    labeling,
+    labeling = {showLabels: false},
 
     legend,
 
-    linearAxisOpts,
+    linearAxis,
 
-    categoryAxisOpts,
+    categoryAxis,
   } = config;
 
-  const linearScaleOpts = {axisMaximum: linearAxisOpts.axisMaximum, axisMinimum: linearAxisOpts.axisMinimum};
+  const linearScaleOpts = {axisMaximum: linearAxis.axisMaximum, axisMinimum: linearAxis.axisMinimum};
 
-  const categoryScaleOpts = {innerPadding: categoryAxisOpts.innerPadding, outerPadding: categoryAxisOpts.outerPadding};
+  const categoryScaleOpts = {innerPadding: categoryAxis.innerPadding, outerPadding: categoryAxis.outerPadding};
 
   const categoryScale = createCategoryScale(categoryScaleOpts);
   const linearScale = createLinearScale(linearScaleOpts);
   const colorScale = new Scales.Color();
-  const linearAxis = createNumericAxis({
-    ...(linearAxisOpts as AxisConfig),
+  const linearAxisComponent = createNumericAxis({
+    ...(linearAxis as AxisConfig),
     axisScale: linearScale,
     axisOrientation: orientation,
   });
@@ -166,9 +166,9 @@ export const createCategoricChart = (args: CreateCategoricChartArgs): CategoricC
         grid: createLinearAxisGridLines({orientation, scale: linearScale}),
       }),
 
-      linearAxis,
+      linearAxis: linearAxisComponent,
       categoryAxis: createCategoryAxis({
-        ...(categoryAxisOpts as AxisConfig),
+        ...(categoryAxis as AxisConfig),
         axisScale: categoryScale,
         axisOrientation: orientation,
       }),
@@ -206,8 +206,8 @@ export const createCategoricChart = (args: CreateCategoricChartArgs): CategoricC
         data.filter(d => d[groupBy] === groupId).map(item => {
           return {
             group: groupId,
-            label: item[categoryAxisOpts.indicator],
-            value: item[linearAxisOpts.indicator],
+            label: item[categoryAxis.indicator],
+            value: item[linearAxis.indicator],
             color: coloring && item[coloring] || colors[index] || 'grey',
             opacity: 1,
           };

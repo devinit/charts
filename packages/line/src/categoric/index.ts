@@ -1,20 +1,11 @@
 import {Plots} from 'plottable';
-import { createCategoricChart, CategoricChart, LinearAxis, CategoryAxis} from '@devinit-charts/core/lib/categoric';
+import { createCategoricChart, CategoricChart, CategoricConfig} from '@devinit-charts/core/lib/categoric';
 import createLineTipper from '../tooltip';
-import { Tooltip, Labeling} from '@devinit-charts/core/lib/types';
-import {LegendConfig} from '@devinit-charts/core/lib/legend';
+import { Tooltip} from '@devinit-charts/core/lib/types';
 
-export interface Config {
-  title?: string;
-  colors?: string[];
-  categoryAxis: CategoryAxis;
+export type Config = CategoricConfig & {
   tooltips?: Tooltip;
-  labeling?: Labeling;
-  coloring?: string;
-  linearAxis: LinearAxis;
-  legend?: LegendConfig;
-  groupBy: string;
-}
+};
 
 type LinePlot = Plots.Line<any>;
 
@@ -22,6 +13,10 @@ export const createLineChart = (element: string | HTMLElement, plot: LinePlot, c
   const {
     categoryAxis,
     linearAxis,
+    labeling,
+    coloring,
+    colors,
+    groupBy,
     tooltips = {
       enable: true,
     }
@@ -31,18 +26,18 @@ export const createLineChart = (element: string | HTMLElement, plot: LinePlot, c
     element,
     plot,
     config: {
-      categoryAxisOpts: {
+      categoryAxis: {
         // TODO: Fix [https://github.com/palantir/plottable/issues/747](#747)
         // Temporary work around for [https://github.com/palantir/plottable/issues/747](#747)
         // Issue: AreaPlot / LinePlot should default to no padding on xScale
         innerPadding: 999,
         ...categoryAxis,
       },
-      linearAxisOpts: {indicator: linearAxis.indicator, ...linearAxis},
-      groupBy: config.groupBy,
-      colors: config.colors,
-      coloring: config.coloring,
-      labeling: {showLabels: false, ...config.labeling}
+      linearAxis,
+      groupBy,
+      colors,
+      coloring,
+      labeling
     },
   });
 
