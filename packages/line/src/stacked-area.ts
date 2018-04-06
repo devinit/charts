@@ -1,7 +1,6 @@
-import * as Plottable from 'plottable';
-import { CategoricChart } from '../factories/categoric';
-import { createLineChart } from '../factories/categoric/line';
-import { CategoryAxis } from './full-stacked-bar';
+import {Plots} from 'plottable';
+import {CategoricChart} from '@devinit-charts/core/lib/categoric';
+import { createLineChart,  Config} from './categoric';
 
 /**
  * @typedef {LinearCategoryChart} StackedArea
@@ -9,28 +8,9 @@ import { CategoryAxis } from './full-stacked-bar';
  * @property {'stacked-area'} type
  *
  */
-export interface LinearAxis {
-  showAxis: boolean;
-  showGridlines: boolean;
-  axisLabel: string;
-  indicator: string;
-}
-export interface CategoryAxis {
-  showAxis: boolean;
-  axisLabel: string;
-  indicator: string;
-}
-export interface Config {
-  type: 'stacked-area';
-  title: string;
-  groupBy: string;
-  colors: string[];
-  linearAxis: LinearAxis;
-  categoryAxis: CategoryAxis;
 
-}
-export default (element, data, config: Config): CategoricChart => {
-  const plot = new Plottable.Plots.StackedArea();
+export default (element: HTMLElement, data: any[], config: Config): CategoricChart => {
+  const plot = new Plots.StackedArea();
 
   const chart = createLineChart(element, plot, config);
 

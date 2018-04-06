@@ -3,7 +3,7 @@ import { Table } from 'plottable/build/src/components';
 import { LegendConfig } from '@devinit-charts/core/lib/legend';
 import { Component, Scales } from 'plottable';
 
-export type Listener = (year: string) => void;
+export type Listener = (year: number) => void;
 export interface TimeAchorConfig {
   table: Table;
   timeScale: Scales.Time;
@@ -78,12 +78,12 @@ export default (opts: TimeAchorConfig) => {
     .attr('stroke', '#444')
     .attr('stroke-width', 2);
 
-  const changeAnchorPosition = (year: string): void => {
+  const changeAnchorPosition = (year: number): void => {
     // Prevent duplicate movements,
     // oh and they'll be duplicate movements
     // -- remove this condition at your own risk.
     // just kidding, i think
-    if (year !== currentYear && +year >= +minYear && +year <= +maxYear) {
+    if (year !== +currentYear && year >= +minYear && year <= +maxYear) {
       const _foregroundBounds = foreground.node().getBoundingClientRect();
       const _timeAxisBounds = timeAxis
         .content()
@@ -103,12 +103,12 @@ export default (opts: TimeAchorConfig) => {
       // ... notify movement listeners
       listeners.forEach(callback => {
         if (callback && callback.call) {
-          callback(year);
+          callback(+year);
         }
       });
 
       // ... update global current year
-      currentYear = year;
+      currentYear = year.toString();
     }
   };
 
@@ -121,7 +121,7 @@ export default (opts: TimeAchorConfig) => {
 
       const xDate = timeScale.invertedTransformation((origin + x) - leftOffset);
 
-      const draggedYear = new Date(xDate).getFullYear().toString();
+      const draggedYear = new Date(xDate).getFullYear();
 
       changeAnchorPosition(draggedYear);
     }

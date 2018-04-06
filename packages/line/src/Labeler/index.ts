@@ -1,7 +1,9 @@
 /**
  * the labels plotable provides  for barchart are not ideal for now
  * for instance they are cut off via height from some bars
+ * this module contains custom labelling functions to fix that
  */
+import {Plot,  SimpleSelection} from 'plottable';
 import {groupBy, range} from 'lodash';
 import {approximate} from '@devinit/prelude/lib/numbers';
 
@@ -15,11 +17,12 @@ interface Args {
   suffix: string;
   prefix: string;
   drawStackedBarSum?: boolean;
+  foreground: SimpleSelection<void>;
 }
 
-const drawLabel = (opts: Args, foreground) => {
+const drawLabel = (opts: Args) => {
   // forExtend is for drawing sums of values in a stacked bar
-  const {width, height, x, y, value, color, suffix, prefix, drawStackedBarSum = false} = opts;
+  const {width, height, x, y, value, color, suffix, prefix, drawStackedBarSum = false, foreground} = opts;
   const yPos: number = height && !drawStackedBarSum && height < 30 ? y + 2 : y + 10;
   foreground
     .append('foreignObject')
@@ -64,15 +67,23 @@ const getGroupValues = (entities) => {
   });
 };
 
-export const createCustomLabels = (config, plot) => {
+export interface CustomLabelsConfig {
+  prefix?: string;
+  color: string;
+  suffix?: string;
+  drawStackedBarSum?: boolean;
+  plot: Plot;
+}
+
+export const createCustomLabels = (config: CustomLabelsConfig) => {
+  const {prefix = ' ', suffix = ' ', plot, drawStackedBarSum} = config;
   const foreground = plot.foreground();
-  const {prefix = ' ', suffix = ' '} = config;
   const entities = plot.entities();
   entities.forEach(entity => {
     const entityValues = getValuesFromEntity(entity);
-    drawLabel({...entityValues, color: 'white', prefix, suffix}, foreground);
+    drawLabel({...entityValues, color: 'white', prefix, suffix, foreground});
   });
-  if (!entities[0].datum.group || !config.drawStackedBarSum) return false;
+  if (!entities[0].datum.group || !drawStackedBarSum) return false;
   const groupEntities = getGroupValues(entities);
   groupEntities.forEach(group => {
     drawLabel({
@@ -80,6 +91,8 @@ export const createCustomLabels = (config, plot) => {
       prefix,
       color: 'black',
       suffix,
-      drawStackedBarSum: config.drawStackedBarSum}, foreground);
+      drawStackedBarSum: config.drawStackedBarSum,
+      foreground
+    });
   });
 };

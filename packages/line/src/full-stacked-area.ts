@@ -1,7 +1,6 @@
-import * as Plottable from 'plottable';
-import { CategoricChart} from '@devinit-charts/core/lib/categoric';
+import {Plots} from 'plottable';
+import {CategoricChart} from '@devinit-charts/core/lib/categoric';
 import { createLineChart,  Config} from './categoric';
-
 import { createFullStackedDataset } from '@devinit-charts/core/lib/dataset';
 
 /**
@@ -11,9 +10,9 @@ import { createFullStackedDataset } from '@devinit-charts/core/lib/dataset';
  *
  */
 
-export default (element: HTMLElement, data: any, config: Config) => {
-  const { linearAxis = {} } = config;
-  const plot = new Plottable.Plots.StackedArea();
+export default (element: HTMLElement, data: any[], config: Config): CategoricChart => {
+  const { linearAxis } = config;
+  const plot = new Plots.StackedArea();
 
   const linearChart = createLineChart(element, plot, {
     ...config,
@@ -25,7 +24,8 @@ export default (element: HTMLElement, data: any, config: Config) => {
   });
 
   const update = _data =>
-    linearChart.update(createFullStackedDataset(_data, config.linearAxis.indicator, config.categoryAxis.indicator), );
+    linearChart
+      .update(createFullStackedDataset(_data, config.linearAxis.indicator, config.categoryAxis.indicator));
 
   const chart = {
     ...linearChart,

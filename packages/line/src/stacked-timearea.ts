@@ -1,8 +1,8 @@
-import * as Plottable from 'plottable';
-import createTimePlot from '../factories/time';
+import {Plots} from 'plottable';
+import createTimePlot, { Config, TimeChart } from './time';
 
-export default (element, data, config) => {
-  const plot = new Plottable.Plots.StackedArea();
+export default (element, data: any[], config: Config): TimeChart => {
+  const plot = new Plots.StackedArea();
 
   const chart = createTimePlot( element, plot, config);
 

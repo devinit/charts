@@ -1,4 +1,4 @@
-import * as Plottable from 'plottable';
+import {Dataset, Scales, Components} from 'plottable';
 import { groupBy as group, keys, values, mapValues } from 'lodash';
 import { createTitle } from '@devinit-charts/core/lib/title';
 import { createChartTable } from '@devinit-charts/core/lib/table';
@@ -9,10 +9,10 @@ import { createNumericAxis, createTimeAxis, AxisConfig, TimeAxisConfig } from '@
 import { createLinearScale, createTimeScale } from '@devinit-charts/core/lib/scale';
 import createLineTipper from '../tooltip';
 import createScaleAnimator from '@devinit-charts/core/lib/animator/scale';
-import { createPlotAreaWithAxes, createTimePlot } from './utils';
+import { createPlotAreaWithAxes, createTimePlot} from './utils';
 import { LinearAxis } from '@devinit-charts/core/lib/categoric';
 import { Labeling, TimeAxisOpts} from '@devinit-charts/core/lib/types';
-import createTimeAnchor from './anchor';
+import createTimeAnchor, {Listener} from './anchor';
 import {LegendConfig} from '@devinit-charts/core/lib/legend';
 import { XAlignment } from 'plottable';
 
@@ -30,8 +30,15 @@ export interface Config {
   anchor?: any;
   legend?: LegendConfig;
 }
+export interface TimeChart {
+  table: Components.Table;
+  update: (data: any) => void;
+  onAnchorMoved: (callback: Listener) => void;
+  moveAnchor: (year: number) => void;
+  destroy: () => void;
+}
 
-export default ( element: string, plot, config: Config) => {
+export default ( element: string, plot, config: Config): TimeChart => {
   const {
     titleAlignment = 'left',
 
@@ -59,7 +66,7 @@ export default ( element: string, plot, config: Config) => {
   const linearScaleOpts = {axisMaximum: linearAxis.axisMaximum, axisMinimum: linearAxis.axisMinimum};
   const timeScale = createTimeScale((timeAxis as TimeAxisConfig));
   const linearScale = createLinearScale(linearScaleOpts);
-  const colorScale = new Plottable.Scales.Color();
+  const colorScale = new Scales.Color();
 
   const table = createChartTable({
     title: createTitle({ title: config.title, titleAlignment }),
@@ -100,11 +107,11 @@ export default ( element: string, plot, config: Config) => {
 
   const animate = createScaleAnimator(500);
 
-  const listeners: any[] = [];
+  const listeners: Listener[] = [];
 
   plot.onAnchor(createLineTipper(element, labeling || {}, timeScale));
 
-  let moveAnchor: (year: string) => void;
+  let moveAnchor: Listener;
 
   table.addClass('time');
 
@@ -127,7 +134,7 @@ export default ( element: string, plot, config: Config) => {
   const chart = {
     table,
 
-    update: (data = []) => {
+    update: (data: any[] = []) => {
       const groups = mapValues(
         group(data, datum => datum[groupBy]),
         (items, key, map) => {
@@ -193,19 +200,19 @@ export default ( element: string, plot, config: Config) => {
         animate([linearScale], [linearAxis.axisMinimum || 0, axisMaximum]);
       }
 
-      plot.datasets(datasets.map(d => new Plottable.Dataset(d)));
+      plot.datasets(datasets.map(d => new Dataset(d)));
     },
 
-    onAnchorMoved: (callback: any = null) => {
+    onAnchorMoved: (callback?: Listener) => {
       if (callback && callback.call) {
         listeners.push(callback);
       }
     },
 
-    moveAnchor: year => {
+    moveAnchor: (year: number) => {
       if (!moveAnchor) {
         // Retry if anchor is not ready
-        setTimeout(() => moveAnchor(year.toString()), 200);
+        setTimeout(() => moveAnchor(year), 200);
       } else {
         moveAnchor(year);
       }
