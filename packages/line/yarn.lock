@@ -567,9 +567,9 @@ pgpass@1.x:
   dependencies:
     split "^1.0.0"
 
-plottable@3.8.1:
-  version "3.8.1"
-  resolved "https://registry.yarnpkg.com/plottable/-/plottable-3.8.1.tgz#70617e1ca4a8377a7b93626dce43793c97030994"
+plottable@3.8.2:
+  version "3.8.2"
+  resolved "https://registry.yarnpkg.com/plottable/-/plottable-3.8.2.tgz#0091fc956d041ba1de0bb183e56a84ef19d6e7bc"
   dependencies:
     "@types/d3" "^4.5.0"
     "@types/is-plain-object" "^0.0.2"
