@@ -72,8 +72,8 @@
   ],
   "git-pre-hooks": {
     "pre-push": [
-      "npm run compile",
-      "npm run lint"
+      "lerna run build",
+      "lerna run lint"
     ]
   },
   "jest": {
