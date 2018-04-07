@@ -4,18 +4,7 @@
   "description": "Modular D3 charts for DevInit DataHub",
   "main": "lib/index.js",
   "scripts": {
-    "test": "jest",
-    "test:dev": "jest -w",
-    "start": "WEBPACK_ENV=development wepack-serve --config ./webpack.config.js",
-    "compile": "tsc",
-    "lint": "tslint -c tslint.json 'src/**/*.ts' 'schema/**/*.ts' ",
-    "build": "webpack --profile --colors --mode=production",
-    "build:production": "WEBPACK_ENV=production webpack --profile --colors",
-    "patch": "release-it -i patch -n",
-    "feature": "release-it -i minor -n",
-    "breaking": "release-it -i major -n",
-    "schema": "mkdir -p dist && jsdoc --template schema --destination dist/di-charts.schema.json lib/charts lib/factories",
-    "schema:dev": "npm run compile && npm run schema"
+    "test": "jest"
   },
   "devDependencies": {
     "@storybook/addon-actions": "3.3.15",
