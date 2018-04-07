@@ -4,8 +4,7 @@ node_js:
   - v9
 
 install:
-  - yarn --ignore-scripts
-  - npm i -g lerna
+  - yarn
 
 script:
   - lerna run build --scope @devinit-charts/core
