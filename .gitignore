@@ -49,3 +49,7 @@ jspm_packages
 
 # JSDoc
 out
+
+_tree
+
+_bubble

@@ -4,6 +4,8 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/539c39de03d64cb5b776ef388eef29d6)](https://www.codacy.com/app/epicallan/charts?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=devinit/charts&amp;utm_campaign=Badge_Grade)
 [![Dependency Status](https://gemnasium.com/badges/github.com/devinit/charts.svg)](https://gemnasium.com/github.com/devinit/charts)
 
+# This library is undergoing some major refactoring, so current implementation in the readme file is for previous old code which you can find (here)[https://github.com/freelyformd/charts]
+
 configurable d3 charts from csv like data
 
 ## Install

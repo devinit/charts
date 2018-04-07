@@ -1,7 +1,7 @@
 {
     "name": "@devinit-charts/tree",
     "version": "1.0.0",
-    "description": "Modular D3 tree charts for Devinit DataHub",
+    "description": "Core package for devinit charts",
     "main": "lib/index.js",
     "scripts": {
       "test": "jest",
