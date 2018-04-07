@@ -11,7 +11,7 @@
       "d3": "4.13.0",
       "d3-drag": "^1.1.0",
       "lodash": "^4.17.5",
-      "plottable": "3.8.1",
+      "plottable": "3.8.2",
       "tooltip.js": "^1.2.0"
     },
     "directories": {

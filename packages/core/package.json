@@ -15,7 +15,7 @@
       "@devinit/prelude": "1.1.1",
       "d3": "4.13.0",
       "lodash": "4.17.5",
-      "plottable": "3.8.1"
+      "plottable": "3.8.2"
     },
     "directories": {
       "lib": "./lib",
