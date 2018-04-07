@@ -34,6 +34,3 @@ deploy:
     on:
       branch: master
 
-cache:
-  - yarn
-  - node_modules
