@@ -3,17 +3,9 @@ import Tooltip from 'tooltip.js';
 import * as hash from 'object-hash';
 import { color } from 'd3';
 import {approximate} from '@devinit/prelude/lib/numbers';
-import { ITooltip } from './types';
 
-export default (container: HTMLElement, tooltips: ITooltip) => {
+export default (container: HTMLElement) => {
   let currentId: string | null = null;
-  const { enable = true } = tooltips;
-
-  // ...
-  if (!enable)  {
-    // tslint:disable-next-line:no-empty
-    return () => {};
-  }
 
   return plot => {
     const tooltipAnchor = plot

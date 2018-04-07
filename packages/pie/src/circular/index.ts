@@ -1,10 +1,11 @@
 import * as Plottable from 'plottable';
-import { createTitle } from '../title';
-import { createColorLegend } from '../legend';
-import { createChartTable } from '../table';
-import createTooltips from '../tooltips/circular';
-import { createCircularPlot } from './helpers';
-import { Tooltips } from '../../charts/bubble';
+import { createTitle } from '@devinit-charts/core/lib/title';
+import { createColorLegend, LegendConfig } from '@devinit-charts/core/lib/legend';
+import { createChartTable } from '@devinit-charts/core/lib/table';
+import {Tooltip, Labeling} from '@devinit-charts/core/lib/types';
+import createTooltips from '../tooltip';
+import { createCircularPlot, Config as CPConfig } from './helpers';
+import { XAlignment } from 'plottable';
 
 /**
  * @typedef {Object} CircularChart - Circular chart configuration
@@ -38,40 +39,28 @@ export interface CircularChartArgs {
 }
 
 export type CircularChart = (CreateCategoricChartArgs)  => CircularChartResult;
-export interface Labeling {
-  showLabels: boolean;
-  prefix: string;
-  suffix: string;
+
+export interface CircularOpts {
+  label?: string;
+  value?: string;
+  innerRadius?: number;
+  strokeWidth?: number;
+  strokeColor?: string;
+  showLabels?: boolean;
 }
-export interface Circular {
-  label: string;
-  value: string;
-  innerRadius: number;
-  strokeWidth: number;
-  strokeColor: string;
-  showLabels: boolean;
-}
-export interface Legend {
-  showLegend: false;
-  position: string;
-  alignment: string;
-  symbol: any;
-  rowSpan: any;
-}
-export type TooltipG = Tooltips & {
-  titleIndicator?: any;
-};
-export interface ConfigCircular {
+
+export interface Config {
   title?: string;
-  titleAlignment: any;
-  colors: string[];
+  titleAlignment?: XAlignment;
+  colors?: string[];
   coloring?: string;
-  labeling: Labeling;
-  circular: any;
-  legend: any;
-  tooltips?: TooltipG;
+  labeling?: Labeling;
+  circular?: CircularOpts;
+  legend?: LegendConfig;
+  tooltips?: Tooltip;
 }
-const circularChart = ( element: HTMLElement, plot, config: ConfigCircular) => {
+
+const circularChart = ( element: HTMLElement, plot, config: Config) => {
   const {
     titleAlignment = 'left',
 
@@ -82,6 +71,7 @@ const circularChart = ( element: HTMLElement, plot, config: ConfigCircular) => {
       prefix: '',
       suffix: ''
     },
+
     circular = {
       label: 'label',
       value: 'value',
@@ -94,20 +84,16 @@ const circularChart = ( element: HTMLElement, plot, config: ConfigCircular) => {
     legend = {
       showLegend: false,
       position: 'bottom',
-      alignment: 'center',
+      alignment: 'center' as XAlignment,
     },
-
-    tooltips = {
-      enable: true,
-      titleIndicator: ''
-    }
+    tooltips = {enable: false}
   } = config;
 
   const colorScale = new Plottable.Scales.Color();
 
   const table = createChartTable({
     title: createTitle({title: config.title, titleAlignment }),
-    chart: createCircularPlot({ plot, ...circular, labeling }),
+    chart: createCircularPlot({ plot, ...circular, labeling } as CPConfig),
     legend: createColorLegend(colorScale, legend),
     legendPosition: legend.position,
   });
@@ -116,14 +102,14 @@ const circularChart = ( element: HTMLElement, plot, config: ConfigCircular) => {
 
   plot.onAnchor(_plot => {
     setTimeout(() => {
-      createTooltips(element, tooltips)(_plot);
+      if (tooltips.enable) createTooltips(element)(_plot);
     }, 500);
   });
 
   const update = (data = []) => {
     const series = data.map((d, i) => ({
-      label: d[circular.label],
-      value: parseFloat(d[circular.value]),
+      label: d[circular && circular.label || ''], // make typescript happy
+      value: parseFloat(d[circular.value || '']), // make typescript happy
       color: config.coloring && d[config.coloring] || colors[i] || 'grey',
     }));
 

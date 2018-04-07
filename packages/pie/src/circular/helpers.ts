@@ -1,13 +1,16 @@
 import * as Plottable from 'plottable';
 import {approximate} from '@devinit/prelude/lib/numbers';
+import {Labeling} from '@devinit-charts/core/lib/types';
+import { Pie } from 'plottable/build/src/plots';
 
 export interface Config {
-  plot: any;
-  labeling: any;
+  plot: Pie;
+  labeling: Labeling;
   innerRadius: number;
   strokeColor: string;
   strokeWidth: number;
 }
+
 export const createCircularPlot = (config: Config): Plottable.Plot => {
   const {
     plot,
