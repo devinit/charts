@@ -5,10 +5,11 @@ node_js:
 
 install:
   - yarn --ignore-scripts
+  - npm i -g lerna
 
 script:
-  - npm run compile
-  - npm run lint
+  - lerna run build
+  - lerna run lint
 
 deploy:
   - provider: releases

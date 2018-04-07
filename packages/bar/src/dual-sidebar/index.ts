@@ -43,6 +43,10 @@ export default (element, data, config: Config) => {
 
     linearAxis,
 
+    coloring,
+
+    colors,
+
     labeling =  {showLabels : false},
 
     tooltips = { enable: true },
@@ -265,7 +269,7 @@ export default (element, data, config: Config) => {
             return flattenDeep(values(grp))
               .map(datum => ({
                 ...datum,
-                color: (config.coloring && datum[config.coloring]) || config.colors[groupIndex] || '#abc',
+                color: (coloring && datum[coloring]) || colors && colors[groupIndex] || '#grey',
               }));
           })
         );

@@ -8,6 +8,7 @@ export interface XComponent {
   rightPlotArea: Plot | Group;
   leftCategoryAxis?: Component;
   rightCategoryAxis?: Component;
+  right?: Component;
   dualSidebar: {gutter: number};
 }
 
