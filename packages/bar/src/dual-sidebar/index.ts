@@ -1,55 +1,25 @@
 import * as Plottable from 'plottable';
 import * as hash from 'object-hash';
 import { flattenDeep, groupBy as group, keys, mapValues, uniq, values } from 'lodash';
-import { createChartTable } from '../../factories/table';
-import { createTitle } from '../../factories/title';
-import { createCategoryScale, createLinearScale } from '../../factories/scale';
-import { createAxisModifier, createCategoryAxis, createNumericAxis } from '../../factories/axis';
-import { createLinearAxisGridLines } from '../../factories/grid';
-import { createBarTipper } from '../../factories/tooltips';
+import { createChartTable } from '@devinit-charts/core/lib/table';
+import { createTitle } from '@devinit-charts/core/lib/title';
+import { createCategoryScale, createLinearScale } from '@devinit-charts/core/lib/scale';
+import { createAxisModifier, createCategoryAxis, createNumericAxis } from '@devinit-charts/core/lib/axes';
+import { createLinearAxisGridLines } from '@devinit-charts/core/lib/axes/grid';
+import createBarTipper from '../tooltip';
 import drawLabels from './labels';
+import { CategoricConfig } from '@devinit-charts/core/lib/categoric';
 import {createPlotWithGridlines, createPlotAreaWithAxes, createLinearPlot} from './helpers';
-import { BarOrientation } from 'plottable/build/src/plots';
 
-/**
- * @typedef {LinearCategoryChart} DualSidebar
- * @public
- * @property {'dual-sidebar'} type
- * @property {'indicator'} splitBy
- * @property {string} splitBy
- * @property {'indicator'}
- *
- */
-
-/**
- * @typedef {Object} DualSidebarConfig
- * @property {number} gutter=100 - Gutter
- */
-export interface Axis {
-  showAxis: boolean;
-  ticking: string;
-  indicator: any;
-}
-export interface Config {
- title?: string;
- titleAlignment: Plottable.XAlignment;
- labeling: any;
- orientation?: BarOrientation;
- splitBy: string;
- groupBy: string;
- subGroupBy: string;
- orderBy: string;
- colors?: any;
- coloring?: string;
- showLabels?: boolean;
- linearAxis: any;
- categoryAxis: any;
- dualSidebar?: any;
- tooltips?: any;
- showAxis: boolean;
-  ticking: string;
-  indicator: any;
-}
+export type Config = CategoricConfig & {
+  splitBy: string;
+  orderBy: string;
+  subGroupBy: string;
+  dualSidebar?: {gutter: number};
+  interactions?: {enable?: boolean};
+  highlight?: string[]; // bars to highlight
+  tooltips?: {enable?: boolean};
+};
 
 export interface Hash {
   data: null | string;
@@ -71,14 +41,15 @@ export default (element, data, config: Config) => {
 
     orderBy,
 
-    showLabels = false,
+    linearAxis,
 
-    dualSidebar = {
-      gutter: 100,
-    },
+    labeling =  {showLabels : false},
 
     tooltips = { enable: true },
   } = config;
+
+  const dualSidebar =
+    config.dualSidebar && config.dualSidebar.gutter ?  config.dualSidebar : { gutter: 100 };
 
   const leftPlot = new Plottable.Plots.Bar(config.orientation);
   const rightPlot = new Plottable.Plots.Bar(config.orientation);
@@ -86,12 +57,23 @@ export default (element, data, config: Config) => {
   const leftCategoryScale = createCategoryScale(config.categoryAxis);
   const rightCategoryScale = createCategoryScale(config.categoryAxis);
 
+  const linearScaleArgs = {
+    axisMinimum: config.linearAxis.axisMaximum,
+    axisMaximum: config.linearAxis.axisMinimum
+  };
+
   const leftLinearScale = createLinearScale({
-    ...config.linearAxis,
-    axisMinimum: config.linearAxis.axisMaximum && -config.linearAxis.axisMaximum,
-    axisMaximum: config.linearAxis.axisMinimum && -config.linearAxis.axisMinimum,
+    axisMinimum: linearScaleArgs.axisMaximum && -linearScaleArgs.axisMaximum,
+    axisMaximum: linearScaleArgs.axisMinimum && -linearScaleArgs.axisMinimum,
   });
-  const rightLinearScale = createLinearScale(config.linearAxis);
+
+  const rightLinearScale = createLinearScale(linearScaleArgs);
+
+  const baseLinearAxisGridArgs = {
+    showGridlines: false,
+    ticking: linearAxis.ticking,
+    orientation,
+  };
 
   const table = createChartTable({
     title: createTitle({ title, titleAlignment }),
@@ -103,11 +85,14 @@ export default (element, data, config: Config) => {
             plot: leftPlot,
             categoryScale: leftCategoryScale,
             linearScale: leftLinearScale,
-            showLabels,
+            showLabels: labeling.showLabels,
           },
           modify,
         ),
-        grid: createLinearAxisGridLines({ ...config.linearAxis, orientation, scale: leftLinearScale }),
+        grid: createLinearAxisGridLines({
+            ...baseLinearAxisGridArgs,
+            scale: leftLinearScale
+          }),
       }),
 
       rightPlotArea: createPlotWithGridlines({
@@ -116,16 +101,15 @@ export default (element, data, config: Config) => {
             plot: rightPlot,
             categoryScale: rightCategoryScale,
             linearScale: rightLinearScale,
-            showLabels,
+            showLabels: labeling.showLabels,
           },
           modify,
         ),
-        grid: createLinearAxisGridLines({ ...config.linearAxis, orientation, scale: rightLinearScale }),
+        grid: createLinearAxisGridLines({  ...baseLinearAxisGridArgs, scale: rightLinearScale }),
       }),
 
       leftLinearAxis: createNumericAxis(
         {
-          ...config.linearAxis,
           axisScale: leftLinearScale,
           axisOrientation: orientation,
         },
@@ -134,10 +118,8 @@ export default (element, data, config: Config) => {
 
       rightLinearAxis: createNumericAxis(
         {
-          ...config.linearAxis,
           axisScale: rightLinearScale,
-          axisOrientation: orientation,
-          absolute: true,
+          axisOrientation: orientation
         },
         format,
       ),
@@ -168,7 +150,7 @@ export default (element, data, config: Config) => {
   leftPlot.onAnchor(plot => {
     setTimeout(() => {
       if (tooltips.enable) {
-        createBarTipper(element, config.labeling, 'inverted-horizontal')(plot);
+        createBarTipper(element, labeling, 'inverted-horizontal')(plot);
       }
     }, 500);
   });
@@ -176,7 +158,7 @@ export default (element, data, config: Config) => {
   rightPlot.onAnchor(plot => {
     setTimeout(() => {
       if (tooltips.enable) {
-        createBarTipper(element, config.labeling, 'horizontal')(plot);
+        createBarTipper(element, labeling, 'horizontal')(plot);
       }
     }, 500);
   });

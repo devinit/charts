@@ -1,21 +1,23 @@
-import * as Plottable from 'plottable';
+import { Gridlines, Table, Group } from 'plottable/build/src/components';
+import { Plot, Components, Component, } from 'plottable';
+
+export interface XComponent {
+  leftLinearAxis?: Component;
+  rightLinearAxis?: Component;
+  leftPlotArea: Plot | Group;
+  rightPlotArea: Plot | Group;
+  leftCategoryAxis?: Component;
+  rightCategoryAxis?: Component;
+  dualSidebar: {gutter: number};
+}
 
 export interface Args {
-  plot: any;
-  grid: any;
+  plot: Plot;
+  grid?: Gridlines;
 }
-export interface Components {
-  leftLinearAxis: any;
-  rightLinearAxis: any;
-  leftPlotArea: string;
-  rightPlotArea: string;
-  leftCategoryAxis?: any;
-  rightCategoryAxis?: any;
-  dualSidebar: any;
-  right?: any;
-}
+
 export const createPlotWithGridlines = (args: Args) => {
-  return args.grid ? new Plottable.Components.Group([args.grid, args.plot]) : args.plot;
+  return args.grid ? new Components.Group([args.grid, args.plot]) : args.plot;
 };
 
 export const createLinearPlot = ({plot, categoryScale, linearScale, showLabels}, modify) => {
@@ -32,21 +34,21 @@ export const createLinearPlot = ({plot, categoryScale, linearScale, showLabels},
     .y(d => d.index, categoryScale);
 };
 
-export const createPlotAreaWithAxes = (components: Components) => {
-  const leftBar = new Plottable.Components.Table([
+export const createPlotAreaWithAxes = (components: XComponent ): Table => {
+  const leftBar = new Components.Table([
     [components.right, components.rightPlotArea],
     [null, components.rightLinearAxis],
   ]);
 
-  const rightBar = new Plottable.Components.Table([
+  const rightBar = new Components.Table([
     [components.leftPlotArea, components.leftCategoryAxis],
     [components.leftLinearAxis, null],
   ]);
 
-  const barTable = new Plottable.Components.Table([[rightBar, leftBar]]);
+  const barTable = new Components.Table([[rightBar, leftBar]]);
 
-  const table = new Plottable.Components.Table([
-    [new Plottable.Components.Table(), barTable, new Plottable.Components.Table()],
+  const table = new Components.Table([
+    [new Components.Table(), barTable, new Components.Table()],
   ]);
 
   barTable.columnPadding(components.dualSidebar.gutter);

@@ -1,9 +1,10 @@
 import { Components, Scale } from 'plottable';
 import { configureGridTicking } from './ticking';
 import { Gridlines } from 'plottable/build/src/components';
+import { BarOrientation } from 'plottable/build/src/plots';
 
 export interface Config {
-  orientation: string;
+  orientation: BarOrientation;
   scale: Scale<any, any>;
   showGridlines?: boolean;
   ticking?: string;

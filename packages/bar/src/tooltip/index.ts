@@ -3,6 +3,7 @@ import Tooltip from 'tooltip.js';
 import {Labeling} from '@devinit-charts/core/lib/types';
 import { approximate } from '@devinit/prelude/lib/numbers';
 import { BarPlot } from '@devinit-charts/core/lib/categoric';
+import { Component } from 'plottable';
 
 export default (container: HTMLElement, labeling: Labeling, orientation: string) => {
   let currentHash = null;
@@ -10,7 +11,7 @@ export default (container: HTMLElement, labeling: Labeling, orientation: string)
     prefix = '',
     suffix = ''
   } = labeling;
-  return (plot: BarPlot) => {
+  return (plot: BarPlot | Component) => { // TODO: Having this is a union type is a hack
     const tooltipAnchor = plot
       .foreground()
       .append('circle')
@@ -50,7 +51,7 @@ export default (container: HTMLElement, labeling: Labeling, orientation: string)
     };
 
     const getEntities = point =>
-      plot.entitiesIn(
+      (plot as BarPlot).entitiesIn( // TODO: this is a hack FixMe
         orientation === 'vertical'
           ? {min: point.x - 1, max: point.x + 1}
           : {min: 0, max: plot.width()},
