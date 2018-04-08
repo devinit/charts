@@ -7,6 +7,7 @@ install:
   - npm install
 
 script:
+  - lerna bootstrap
   - lerna run build --scope @devinit-charts/core
   - lerna bootstrap
   - lerna run build --scope @devinit-charts/bar
