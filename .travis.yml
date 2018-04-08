@@ -15,26 +15,6 @@ script:
   - lerna run build --scope @devinit-charts/pie
   - lerna run lint
 
-deploy:
-  - provider: releases
-    api_key:
-      secure: "DnN70PBXSGfFc8iGanKrLk2GUepoTv3wX711dCiDFEqlU3izC5SyzacQ57v3sYHj8Mp2Hdsa3J9OpZfX5ILG9yAw+rPx8tT0l7N0bBCXFEDsaJwBH93Dr3bkwT8SkHSz9dyTxDcS0OLksPOI09JT5yC3AyC+KGZSeL6fM7J2YZf0oVsYmVljc1ZsYQMQFmWC1+oNamMQ8NskMGkYAKVhM7kjV/n3tzf8sT77XDHJxwRH3H/xBELgTQnPVqGzlgNjy4tdTJTkHvmLDuFJKUGhYEMUug2sRxHoYpxDf2Ym8Sy02Abk6hvyPFMLTIOkaV1wTdS3RKA70K22h0AslP0a13pE9GLC+T2mmeNjb71uuDx5wCjm7iLwTeYYWU1RV5chkwb9m7V7O5iACevQbWUaR5Cp2f9ogJKAck/1xlv91FXjTFXbquYenqBJDAOW5m0VcIhpFQ6b8RktuH/xbiqSzlVlcPvOUbaSYOhmmP79sBygc1TxS9YMT9SKJaAa7Ao5Me2k0p4KUeLDTu7gXK/pkBn9DYwola+fuXToK2sAdvCqAKL3j4T5vUPh8uV7gM8rNakMn6Jwt4MgxSndjlSsTrB5+r3ZVdDyWBtWzf3EPjHkCPvR3pg5REAGTCih8DYcyq7IZ9BUfBgfKKd0jwDd58WE5p+0NZdAWHTC6hUPkuw="
-    file_glob: true
-    file: 'dist/di-*'
-    skip_cleanup: true
-    on:
-      tags: true
-      repo: devinit/charts
-      branch: master
-
-  - provider: pages
-    local_dir: 'dist'
-    skip_cleanup: true
-    github_token:
-      secure: "Xb1bMhe8CzqOwy6CxbQqJG7QVkx6Ury7TKUFqE6/V2EF6mwsu/Q2vpJKFMI2Geiqlsf0tVWiqxe1wFFXjZw5zwDoeRFV0R9GJp8PrtcQMP7qiJPpktZTDXDetapoyb+obrSkYls1hTGDanz0UIA51J8S5nIc17tFCtjFkmBOVviMvfTTQz2ubCLSP7xgteeyznZLAfs8E300wcnBCRHOyWMKW8kVHPuOiVjW23WLkWtXI/c1BDa8W2po4lLWQWetOe/z1rUx3adtsGp/N7qMazQoRRaOh48Qo1VUUJbPTCpFsUKXQNd2VfYXm7EgqsspDZqdBqgr/AsWemP0ZS/7ylIp4QSN3CO14uM8VzxFavphOTjgd8++2+qgzSqeR9kJB+nvjAYlbCkyZK4XR9zz215duceEXCZUKdkwcgCtxrHlCFhag3ev2h0FV9exJxgTWhG0pdH5SkODXYGTIJd+IefwZo78D65speF2V4/VZXlsRduZOjjUxcuRdNCh7DaAmehN9DK8Gyy7lXTeZZ0iSWAh9W5HJNzZh6yBY5z1gxJanPcDPyCj+QHRgqmJoJ6DXzkXaQdY19PR3+CGp3Aytqj3UZTxOMV0hCG756ovoVwgwrP4j4TVhgRHKT/xoSIjedLPaXuUH0CdH0xtf0poqXFDShnHnEg2b20g7wxw6r0="
-    on:
-      branch: master
-
 cache:
   - node_modules
   - ~/.npm
