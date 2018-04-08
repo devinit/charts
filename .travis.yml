@@ -4,7 +4,7 @@ node_js:
   - v9
 
 install:
-  - yarn
+  - yarn --ignore-scripts
 
 deploy:
   - provider: releases
