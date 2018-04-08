@@ -23,7 +23,6 @@
       "dist"
     ],
     "include": [
-      "src",
-      "schema"
+      "src"
     ]
   }
