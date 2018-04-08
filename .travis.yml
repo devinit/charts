@@ -6,13 +6,6 @@ node_js:
 install:
   - yarn
 
-script:
-  - lerna run build --scope @devinit-charts/core
-  - lerna run build --scope @devinit-charts/bar
-  - lerna run build --scope @devinit-charts/line
-  - lerna run build --scope @devinit-charts/pie
-  - lerna run lint
-
 deploy:
   - provider: releases
     api_key:
