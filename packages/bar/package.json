@@ -4,8 +4,6 @@
     "description": "Modular D3 bar charts for Devinit DataHub",
     "main": "lib/index.js",
     "scripts": {
-      "test": "jest",
-      "test:dev": "jest -w",
       "build": "tsc",
       "lint": "tslint -c ../../tslint.json 'src/**/*.ts' ",
       "patch": "release-it -i patch -n",

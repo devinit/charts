@@ -3,9 +3,6 @@
   "version": "1.6.53",
   "description": "Modular D3 charts for DevInit DataHub",
   "main": "lib/index.js",
-  "scripts": {
-    "test": "jest"
-  },
   "devDependencies": {
     "@storybook/addon-actions": "3.3.15",
     "@storybook/addon-info": "3.3.15",

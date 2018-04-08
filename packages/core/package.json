@@ -3,8 +3,6 @@
     "version": "1.0.0",
     "description": "Core package for devinit charts",
     "scripts": {
-      "test": "jest",
-      "test:dev": "jest -w",
       "build": "tsc",
       "lint": "tslint -c ../../tslint.json 'src/**/*.ts' ",
       "patch": "release-it -i patch -n",

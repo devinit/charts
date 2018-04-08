@@ -4,7 +4,11 @@
     "description": "Core package for devinit charts",
     "main": "lib/index.js",
     "scripts": {
-      "test": "jest"
+      "build": "tsc",
+      "lint": "tslint -c ../../tslint.json 'src/**/*.ts' ",
+      "patch": "release-it -i patch -n",
+      "feature": "release-it -i minor -n",
+      "breaking": "release-it -i major -n"
     },
     "dependencies": {
       "@devinit/prelude": "^1.1.1",
