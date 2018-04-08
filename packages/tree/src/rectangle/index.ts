@@ -64,8 +64,8 @@ export default ( element: HTMLElement, plot: RectanglePlot, config: Config): TRe
   plot
     .x(d => d[`${x}0`], xScale)
     .y(d => d[`${y}0`], yScale)
-    .x2(d => d[`${x}1`], xScale)
-    .y2(d => d[`${y}1`], yScale)
+    .x2(d => d[`${x}1`])
+    .y2(d => d[`${y}1`])
     .attr('fill', d => d.color || '#abc')
     .attr('stroke', '#fff')
     .attr('stroke-width', 1)
