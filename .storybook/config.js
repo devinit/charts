@@ -12,9 +12,9 @@ setDefaults({
 })
 
 function loadStories() {
-    require('../packages/bar/stories/bar.stories')
-    require('../packages/line/stories/line.stories')
-    require('../packages/pie/stories/pie.stories')
+    require('../packages/bubble/src/stories/index')
+    // require('../packages/line/stories/line.stories')
+    // require('../packages/pie/stories/pie.stories')
 }
 
 configure(loadStories, module)

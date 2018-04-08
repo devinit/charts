@@ -5,6 +5,7 @@
       "declaration": true,
       "moduleResolution": "node",
       "sourceMap": true,
+      "jsx": "react",
       "strict": true,
       "lib": ["es2017", "dom"],
       "experimentalDecorators": true,
