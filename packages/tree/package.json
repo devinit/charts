@@ -11,6 +11,7 @@
       "breaking": "release-it -i major -n"
     },
     "dependencies": {
+      "@devinit-charts/core": "1.0.0",
       "@devinit/prelude": "^1.1.1",
       "d3": "5.0.0",
       "d3-drag": "^1.1.0",

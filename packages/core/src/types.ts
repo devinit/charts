@@ -8,8 +8,8 @@ export interface Labeling {
 }
 
 export interface Tooltip {
-    enable: boolean;
-    titleIndicator: string;
+    enable?: boolean;
+    titleIndicator?: string;
 }
 
 export type Listener = (item: string) => void;
