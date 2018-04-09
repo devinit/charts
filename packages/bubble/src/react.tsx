@@ -5,6 +5,7 @@ import draw, {BubbleData} from '.';
 export interface Props {
     data: BubbleData[];
 }
+
 const chart: React.SFC<Props> = ({data}) => {
     const config = {labeling: true};
     const opts = {

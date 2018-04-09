@@ -12,7 +12,7 @@ setDefaults({
 })
 
 function loadStories() {
-    require('../packages/bubble/src/stories/index')
+    require('../packages/bubble/src/stories/index.tsx')
     // require('../packages/line/stories/line.stories')
     // require('../packages/pie/stories/pie.stories')
 }

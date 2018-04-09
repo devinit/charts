@@ -17,6 +17,7 @@ npm install @devinit/charts
 
 ## Developing
 
+run ``` yarn --ignore-scripts ``` for installing dependencies
 To start contributing, clone this repository and run `npm start`
 
 Browse to localhost:8080, to see some charts
