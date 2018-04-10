@@ -2,6 +2,7 @@ import { configure } from '@storybook/react'
 import { setDefaults } from '@storybook/addon-info'
 import './style.css'
 
+
 setDefaults({
     header: false,
     inline: true,
