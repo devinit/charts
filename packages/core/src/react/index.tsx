@@ -21,6 +21,7 @@ export interface Props <T, U, S>  {
 class Chart<T, U, S> extends React.Component <Props<T, U, S>> {
   public props: Props<T, U, S>;
   public element: HTMLElement | null;
+
   public chart: S & BasicChart<U>;
 
   constructor(props: Props<T, U, S>) {
