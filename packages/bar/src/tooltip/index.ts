@@ -18,13 +18,13 @@ export default (container: HTMLElement, labeling: Labeling, orientation: string)
       .attr('r', 3)
       .attr('fill', 'transparent');
 
-    const placement = _orientation => {
+    const placement = pOrientation => {
       return {
         'vertical': 'top',
         'horizontal': 'right',
         'inverted-vertical': 'bottom',
         'inverted-horizontal': 'left',
-      }[_orientation];
+      }[pOrientation];
     };
 
     const tip = Tooltip(tooltipAnchor.node(), {
