@@ -12,7 +12,7 @@
     "dependencies": {
       "@devinit/prelude": "1.1.1",
       "d3": "5.0.0",
-      "lodash": "4.17.5",
+      "lodash": "4.17.11",
       "plottable": "3.8.2",
       "react": "16.3.1",
       "react-dom": "16.3.1"
