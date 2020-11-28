@@ -12,7 +12,7 @@
     "@storybook/addon-storyshots": "3.4.0",
     "@storybook/addons": "3.4.0",
     "@storybook/react": "3.4.0",
-    "@types/d3": "5.0.0",
+    "@types/d3": "5.16.4",
     "@types/d3-drag": "1.2.0",
     "@types/jest": "22.2.2",
     "@types/lodash": "4.14.106",
